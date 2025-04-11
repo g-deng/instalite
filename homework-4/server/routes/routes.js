@@ -1,0 +1,296 @@
+import { ChatOpenAI } from "@langchain/openai";
+import { PromptTemplate } from "@langchain/core/prompts";
+import { StringOutputParser } from "@langchain/core/output_parsers";
+import { OpenAIEmbeddings } from "@langchain/openai";
+import { formatDocumentsAsString } from "langchain/util/document";
+import { RunnableSequence, RunnablePassthrough } from "@langchain/core/runnables";
+import { Chroma } from "@langchain/community/vectorstores/chroma";
+
+import { get_db_connection } from '../models/rdbms.js';
+import RouteHelper from '../routes/route_helper.js';
+
+import bcrypt from 'bcrypt';
+
+// Database connection setup
+const db = get_db_connection();
+
+var helper = new RouteHelper();
+
+var vectorStore = null;
+
+async function queryDatabase(query, params = []) {
+    await db.connect();
+
+    return db.send_sql(query, params);
+}
+
+function getHelloWorld(req, res) {
+    res.status(200).send({message: "Hello, world!"});
+}
+
+async function getVectorStore() {
+    if (vectorStore == null) {
+        vectorStore = await Chroma.fromExistingCollection(new OpenAIEmbeddings(), {
+            collectionName: "imdb_reviews2",
+            url: "http://localhost:8000", // Optional, will default to this value
+            });
+    } else
+        console.log('Vector store already initialized');
+    return vectorStore;
+}
+
+// POST /register 
+async function postRegister(req, res) {
+    var linked_id = req.body.linked_id;
+    var user = req.body.username;
+    var raw_pass = req.body.password;
+    if (linked_id.trim().length == 0 || 
+        user.trim().length == 0 || 
+        raw_pass.trim().length == 0 || 
+        !helper.isOK(user)) {
+        console.log('Invalid values in the request');
+        res.status(400).send({error: "One or more of the fields you entered was empty or invalid, please try again."}); 
+    } else {
+        console.debug('Checking if user exists');
+
+        // TODO: check if user exists
+        // IF NOT: encrypt password, store in database, set session
+        try {
+            const exist_query = 'SELECT * FROM users WHERE username = ?';
+            const exist_params = [user];
+            const result = await queryDatabase(exist_query, exist_params);
+            if (result[0].length > 0) {
+                console.log(result[0]);
+                res.status(409).send({error: "An account with this username already exists, please try again."});
+            } else {
+                const password = await helper.encryptPassword(raw_pass);
+                const query = 'INSERT INTO users (username, hashed_password, linked_nconst) VALUES (?, ?, ?)';
+                const params = [user, password, linked_id];
+                const result = await queryDatabase(query, params);
+
+                const user_id_query = 'SELECT user_id FROM users WHERE username = ?';
+                const user_id_params = [user];
+                const user_id_result = await queryDatabase(user_id_query, user_id_params);
+                req.session.username = user;
+                req.session.user_id = user_id_result[0][0].user_id;
+                console.log(req.session);
+                res.status(200).send({message: `{username: '${user}'}`});
+            }
+        } catch (error) {
+            res.status(500).send({error: 'An error occurred while registering the user, please try again.'});
+        }
+    }
+};
+
+
+// POST /login
+async function postLogin(req, res) {
+    console.log(req.body);
+    var username = req.body.username;
+    var plain_password = req.body.password;
+    console.log('Logging in user: ' + username);
+
+    // TODO: check if user exists
+    // then match password. If appropriate, set session
+    if (username.trim().length == 0 || 
+        plain_password.trim().length == 0 || 
+        !helper.isOK(username)) {
+        console.log('Invalid values in the request');
+        res.status(400).send({error: 'One or more of the fields you entered was empty, please try again.'}); 
+    } else {
+        try {
+            const query = 'SELECT * FROM users WHERE username = ?';
+            const params = [username];
+            const result = await queryDatabase(query, params);
+            if (result[0].length > 0) {
+                const user = result[0][0];
+                const match = await bcrypt.compare(plain_password, user.hashed_password);
+                if (!match) {
+                    res.status(401).send({error: 'Username and/or password are invalid.'});
+                } else {
+                    req.session.username = username;
+                    req.session.user_id = user.user_id;
+                    res.status(200).send({message: `{username: '${username}'}`});
+                }
+            } else {
+                res.status(401).send({error: 'Username and/or password are invalid.'});
+            }
+        } catch (error) {
+            res.status(500).send({error: 'Error querying database'});
+        }
+    }
+};
+
+
+// GET /logout
+function postLogout(req, res) {
+  req.session.user_id = null;
+  res.status(200).send({message: "You were successfully logged out."});
+};
+
+
+// GET /friends
+async function getFriends(req, res) {    
+    console.log('Getting friends for ' + req.session.user_id);
+    // TODO from friends table
+    try {
+        if(!helper.isLoggedIn(req, req.session.user_id)) {
+            res.status(403).send({error: 'Not logged in.'});
+        } else {
+            const query = `
+            SELECT n2.nconst, n2.primaryName FROM followers 
+            JOIN names AS n1 ON n1.nconst = followers.follower
+            JOIN names AS n2 ON n2.nconst = followers.followed
+            JOIN users ON users.linked_nconst = n1.nconst
+            WHERE users.user_id = ?
+            `;
+            const params = [req.session.user_id];
+            const result = await queryDatabase(query, params);
+            const fixed_result = result[0].map(row => ({
+                followed: row.nconst,
+                primaryName: row.primaryName
+            }));
+            res.status(200).send({results: fixed_result});
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({error: 'Error querying database'});
+    }
+}
+
+// GET /recommendations
+async function getFriendRecs(req, res) {
+    // TODO from recommendations table
+    try {
+        if(!helper.isLoggedIn(req, req.session.user_id)) {
+            res.status(403).send({error: 'Not logged in.'});
+        } else {
+            const query = `
+            SELECT n1.nconst, n1.primaryName FROM recommendations
+            JOIN names AS n1 ON recommendations.recommendation = n1.nconst
+            JOIN names AS n2 ON recommendations.person = n2.nconst
+            JOIN users ON users.linked_nconst = n2.nconst
+            WHERE users.user_id = ?
+            `;
+            const params = [req.session.user_id];
+            const result = await queryDatabase(query, params);
+            const fixed_result = result[0].map(row => ({
+                followed: row.nconst,
+                primaryName: row.primaryName
+            }));
+            res.status(200).send({results: fixed_result});
+        }
+    } catch (error) {
+        res.status(500).send({error: 'Error querying database'});
+    }
+}
+
+
+// POST /createPost
+async function createPost(req, res) {
+    // TODO: add post to database
+    var title = req.body.title;
+    var content = req.body.content;
+    var parent_id = req.body.parent_id;
+    if (title.trim().length == 0 || content.trim().length == 0) {
+        res.status(400).send({error: 'One or more of the fields you entered was empty, please try again.'});
+    } else if (!helper.isLoggedIn(req, req.session.user_id)) {
+        console.log(req.session);
+        res.status(403).send({error: 'Not logged in.'});
+    } else {
+        try {
+            const query = `
+            INSERT INTO posts (parent_post, title, content, author_id) VALUES (?, ?, ?, ?)
+            `;
+            const params = [parent_id, title, content, req.session.user_id];
+            await queryDatabase(query, params);
+            res.status(201).send({message: 'Post created.'});  
+        } catch (error) {
+            res.status(500).send({error: 'Error querying database'});
+        }
+    }
+}
+
+// GET /feed
+async function getFeed(req, res) {
+    // TODO: query for posts from self or followed
+    if (!helper.isLoggedIn(req, req.session.user_id)) {
+        res.status(403).send({error: 'Not logged in.'});
+    } else {
+        try {
+            console.log('getting feed');
+            const query1 = `
+            SELECT posts.post_id, users.username, posts.parent_post, posts.title, posts.content 
+            FROM posts
+            JOIN users ON posts.author_id = users.user_id
+            WHERE users.user_id = ?
+            `;
+            const params1 = [req.session.user_id];
+            const result1 = await queryDatabase(query1, params1);
+
+            const query2 = `
+            SELECT posts.post_id, u2.username, posts.parent_post, posts.title, posts.content FROM followers
+            JOIN users AS u1 ON u1.linked_nconst = followers.follower
+            JOIN users AS u2 on u2.linked_nconst = followers.followed
+            JOIN posts ON posts.author_id = u2.user_id
+            WHERE u1.user_id = ?
+            `;
+            const params2 = [req.session.user_id];
+            // const result2 = await queryDatabase(query2, params2);
+            // const result = [...result1[0], ...result2[0]];
+            const fixed_result = result1.map(row => ({
+                username: row.username,
+                parent_post: row.parent_post,
+                title: row.title,
+                content: row.content
+            }));
+            res.status(200).send({results: fixed_result});
+        } catch (error) {
+            res.status(500).send({error: 'Error querying database'});
+        }
+    }
+}
+
+async function getMovie(req, res) {
+    console.log('Getting movie database');
+    const vs = await getVectorStore();
+    console.log('Connected...');
+    const retriever = vs.asRetriever();
+    console.log('Ready to run RAG chain...');
+
+    const prompt =
+    PromptTemplate.fromTemplate(`Answer the question. Context: {context}. Question: {question}`);
+    const llm = new ChatOpenAI({ modelName: "gpt-4o-mini", temperature: 0 });
+
+    const ragChain = RunnableSequence.from([
+        {
+            context: retriever.pipe(formatDocumentsAsString),
+            question: new RunnablePassthrough(),
+          },
+      prompt,
+      llm,
+      new StringOutputParser(),
+    ]);
+
+    console.log(req.body.question);
+
+    const result = await ragChain.invoke(req.body.question);
+    console.log(result);
+    res.status(200).send({message:result});
+}
+
+/* Here we construct an object that contains a field for each route
+   we've defined, so we can call the routes from app.js. */
+
+export {
+    getHelloWorld,
+    postLogin,
+    postRegister,
+    postLogout,
+    getFriends,
+    getFriendRecs,
+    getMovie,
+    createPost,
+    getFeed
+};
+
