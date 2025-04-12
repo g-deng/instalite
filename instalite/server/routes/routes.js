@@ -31,7 +31,7 @@ function getHelloWorld(req, res) {
 async function getVectorStore() {
     if (vectorStore == null) {
         vectorStore = await Chroma.fromExistingCollection(new OpenAIEmbeddings(), {
-            collectionName: "imdb_reviews2",
+            collectionName: "indexedData", //imdb_reviews2
             url: "http://localhost:8000", // Optional, will default to this value
             });
     } else
