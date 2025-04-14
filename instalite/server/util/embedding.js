@@ -6,7 +6,6 @@ dotenv.config()
 export async function generateEmbedding(text) {
   const url = "https://api.openai.com/v1/embeddings";
   const model = "text-embedding-ada-002";
-  console.log("API Key:", process.env.OPENAI_API_KEY);
   const response = await axios.post(
     url,
     { input: text, model },
