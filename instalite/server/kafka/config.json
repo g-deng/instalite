@@ -1,0 +1,6 @@
+{
+    "groupId": "wahoo",
+    "bootstrapServers": ["localhost:9092"],
+    "topic": "FederatedPosts",
+    "port": 4567
+}
