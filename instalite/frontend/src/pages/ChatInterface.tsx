@@ -26,6 +26,10 @@ export default function ChatInterface() {
         navigate("/"+ username+"/friends");
     };
 
+    const chatMode = () => {
+        navigate("/"+ username+"/chatMode");
+    };
+
     const sendMessage = async () => {
         // CUT HERE 
         try {
@@ -53,6 +57,8 @@ export default function ChatInterface() {
               onClick={feed}>Feed</button>&nbsp;
             <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
               onClick={friends}>Friends</button>
+            <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
+              onClick={chatMode}>ChatMode</button>
             </div>
         </div>
             <div className='font-bold text-3xl'>Internet Movie DB Chat</div>

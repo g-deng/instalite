@@ -1,4 +1,5 @@
 import { getHelloWorld, postLogin, postRegister, getFriends, getFriendRecs, createPost, getFeed, getMovie } from './routes.js';
+import { sendChatInvite, acceptChatInvite, getUserProfile, getUserChats, getChatMessages, getUserFriends, leaveChat, checkGroupValidity } from './chat_routes.js';
 import './routes.js'
 
 function register_routes(app) {
@@ -10,6 +11,15 @@ function register_routes(app) {
     app.post('/:username/createPost', createPost); 
     app.get('/:username/feed', getFeed); 
     app.post('/:username/movies', getMovie);
-  }
+    app.post('/:username/sendChatInvite', sendChatInvite);
+    app.post('/:username/acceptChatInvite', acceptChatInvite);
+    app.get('/:username/profile', getUserProfile);
+    app.get('/:username/chats', getUserChats);
+    app.get('/:username/chat/:roomId', getChatMessages);
+    app.get('/:username/userFriends', getUserFriends);
+    app.get('/:username/chats/:roomId/messages', getChatMessages);
+    app.post('/:username/leaveChat', leaveChat);
+    app.post('/:username/checkGroupValidity', checkGroupValidity);
+  } 
   
   export default register_routes;

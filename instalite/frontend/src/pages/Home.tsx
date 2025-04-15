@@ -23,6 +23,10 @@ export default function Home() {
       navigate("/"+ username+"/chat");
     };
 
+    const chatMode = () => {
+      navigate("/"+ username+"/chatMode");
+    };
+
   const fetchData = async () => {
       // CUT HERE
       try {
@@ -48,6 +52,8 @@ export default function Home() {
               onClick={friends}>Friends</button>&nbsp;
                 <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
               onClick={chat}>Chat</button>
+                <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
+              onClick={chatMode}>ChatMode</button>
 
             </div>
         </div>
