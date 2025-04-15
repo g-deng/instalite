@@ -1,4 +1,5 @@
-import { getHelloWorld, postLogin, postRegister, getFriends, getFriendRecs, createPost, getFeed, getMovie } from './routes.js';
+import { getHelloWorld, postLogin, postRegister, getFriends, getFriendRecs, getMovie } from './routes.js';
+import { createPost, getFeed } from './feed_routes.js';
 import './routes.js'
 
 function register_routes(app) {

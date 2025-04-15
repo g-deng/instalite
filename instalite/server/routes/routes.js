@@ -185,72 +185,6 @@ async function getFriendRecs(req, res) {
     }
 }
 
-
-// POST /createPost
-async function createPost(req, res) {
-    // TODO: add post to database
-    var title = req.body.title;
-    var content = req.body.content;
-    var parent_id = req.body.parent_id;
-    if (title.trim().length == 0 || content.trim().length == 0) {
-        res.status(400).send({error: 'One or more of the fields you entered was empty, please try again.'});
-    } else if (!helper.isLoggedIn(req, req.session.user_id)) {
-        console.log(req.session);
-        res.status(403).send({error: 'Not logged in.'});
-    } else {
-        try {
-            const query = `
-            INSERT INTO posts (parent_post, title, content, author_id) VALUES (?, ?, ?, ?)
-            `;
-            const params = [parent_id, title, content, req.session.user_id];
-            await queryDatabase(query, params);
-            res.status(201).send({message: 'Post created.'});  
-        } catch (error) {
-            res.status(500).send({error: 'Error querying database'});
-        }
-    }
-}
-
-// GET /feed
-async function getFeed(req, res) {
-    // TODO: query for posts from self or followed
-    if (!helper.isLoggedIn(req, req.session.user_id)) {
-        res.status(403).send({error: 'Not logged in.'});
-    } else {
-        try {
-            console.log('getting feed');
-            const query1 = `
-            SELECT posts.post_id, users.username, posts.parent_post, posts.title, posts.content 
-            FROM posts
-            JOIN users ON posts.author_id = users.user_id
-            WHERE users.user_id = ?
-            `;
-            const params1 = [req.session.user_id];
-            const result1 = await queryDatabase(query1, params1);
-
-            const query2 = `
-            SELECT posts.post_id, u2.username, posts.parent_post, posts.title, posts.content FROM followers
-            JOIN users AS u1 ON u1.linked_nconst = followers.follower
-            JOIN users AS u2 on u2.linked_nconst = followers.followed
-            JOIN posts ON posts.author_id = u2.user_id
-            WHERE u1.user_id = ?
-            `;
-            const params2 = [req.session.user_id];
-            // const result2 = await queryDatabase(query2, params2);
-            // const result = [...result1[0], ...result2[0]];
-            const fixed_result = result1.map(row => ({
-                username: row.username,
-                parent_post: row.parent_post,
-                title: row.title,
-                content: row.content
-            }));
-            res.status(200).send({results: fixed_result});
-        } catch (error) {
-            res.status(500).send({error: 'Error querying database'});
-        }
-    }
-}
-
 async function getMovie(req, res) {
     console.log('Getting movie database');
     const vs = await getVectorStore();
@@ -289,8 +223,6 @@ export {
     postLogout,
     getFriends,
     getFriendRecs,
-    getMovie,
-    createPost,
-    getFeed
+    getMovie
 };
 
