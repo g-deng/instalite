@@ -1,95 +1,108 @@
 {
-  "name": "milestone1",
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
-  "type": "module",
-  "scripts": {
-    "start": "node --experimental-vm-modules server/app.js",
-    "create_tables": "node server/models/create_tables.js",
-    "test": "node --experimental-vm-modules node_modules/.bin/jest --detectOpenHandles --forceExit --outputFile=test_results.json --json",
-    "kafka": "node server/kafka/consumer.js"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.509.0",
-    "@aws-sdk/client-s3": "^3.740.0",
-    "@aws-sdk/credential-provider-ini": "3.734.0",
-    "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.0",
-    "@langchain/community": "^0.3.36",
-    "@langchain/core": "^0.3.42",
-    "@langchain/openai": "^0.4.7",
-    "@mui/material": "^5.15.10",
-    "axios": "^1.7.9",
-    "bcrypt": "^5.0.1",
-    "cheerio": "^1.0.0-rc.12",
-    "chromadb": "^1.10.5",
-    "cors": "^2.8.5",
-    "dotenv": "16.4.7",
-    "esbuild": "^0.19.11",
-    "eslint": "^8.56.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-json": "^3.1.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.1.1",
-    "express": "^4.21.2",
-    "express-session": "^1.18.1",
-    "fs": "^0.0.1-security",
-    "kafkajs": "^2.2.4",
-    "kafkajs-snappy": "^1.1.0",
-    "langchain": "^0.3.19",
-    "long": "^5.2.4",
-    "mysql2": "^3.12.0",
-    "nodemon": "^3.0.3",
-    "playwright": "^1.50.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-scripts": "5.0.1",
-    "rimraf": "^5.0.5",
-    "seedrandom": "^3.0.5",
-    "split": "^1.0.1",
-    "typeorm": "^0.3.20"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.26.10",
-    "@babel/preset-env": "^7.26.9",
-    "@babel/preset-react": "^7.16.7",
-    "@playwright/test": "^1.50.1",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.2.0",
-    "@testing-library/user-event": "^14.6.1",
-    "babel-jest": "^29.7.0",
-    "jest": "^29.7.0",
-    "msw": "0.47.0",
-    "ts-jest": "^29.2.5",
-    "whatwg-fetch": "3.6.0"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "jest": {
-    "moduleNameMapper": {
-      "^uuid$": "uuid",
-      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    "name": "milestone1",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "type": "module",
+    "scripts": {
+        "index": "node --experimental-vm-modules server/index_data.js",
+        "start": "node --experimental-vm-modules server/app.js",
+        "create_tables": "node server/models/create_tables.js",
+        "test": "node --experimental-vm-modules node_modules/.bin/jest --detectOpenHandles --forceExit --outputFile=test_results.json --json",
+        "kafka": "node server/kafka/consumer.js"
     },
-    "transform": {
-      "^.+\\.(js|jsx|mjs)$": "babel-jest"
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@aws-sdk/client-dynamodb": "^3.509.0",
+        "@aws-sdk/client-s3": "^3.740.0",
+        "@aws-sdk/credential-provider-ini": "3.734.0",
+        "@emotion/react": "^11.14.0",
+        "@emotion/styled": "^11.14.0",
+        "@langchain/aws": "^0.1.3",
+        "@langchain/community": "^0.3.40",
+        "@langchain/core": "^0.3.42",
+        "@langchain/openai": "^0.4.7",
+        "@microsoft/api-extractor": "^7.39.1",
+        "@mui/material": "^6.4.5",
+        "@tensorflow/tfjs": "^4.22.0",
+        "@tensorflow/tfjs-node": "^4.22.0",
+        "@types/node": "^20.11.5",
+        "@types/offscreencanvas": "^2019.7.3",
+        "@typescript-eslint/eslint-plugin": "^6.19.0",
+        "@typescript-eslint/parser": "^6.19.0",
+        "@vladmandic/build": "^0.9.3",
+        "@vladmandic/face-api": "^1.7.13",
+        "@vladmandic/pilogger": "^0.4.9",
+        "aws-sdk": "^2.1692.0",
+        "axios": "^0.28.1",
+        "bcrypt": "^5.0.1",
+        "cheerio": "^1.0.0-rc.12",
+        "chromadb": "^2.2.0",
+        "cors": "^2.8.5",
+        "dotenv": "16.4.7",
+        "esbuild": "^0.19.11",
+        "eslint": "^8.56.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-plugin-import": "^2.29.1",
+        "eslint-plugin-json": "^3.1.0",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-promise": "^6.1.1",
+        "express": "^4.21.2",
+        "express-session": "^1.18.1",
+        "fs": "^0.0.1-security",
+        "langchain": "^0.3.13",
+        "long": "^5.3.1",
+        "multer": "^1.4.5-lts.2",
+        "mysql2": "^3.14.0",
+        "node-fetch": "^3.3.2",
+        "nodemon": "^3.0.3",
+        "playwright": "^1.50.1",
+        "react-scripts": "5.0.1",
+        "rimraf": "^5.0.5",
+        "seedrandom": "^3.0.5",
+        "split": "^1.0.1",
+        "tslib": "^2.6.2",
+        "typedoc": "^0.25.7",
+        "typescript": "^4"
     },
-    "testMatch": [
-      "**/server/tests/*test*.js?(x)"
-    ],
-    "testEnvironment": "node"
-  }
+    "devDependencies": {
+        "@babel/core": "^7.26.10",
+        "@babel/preset-env": "^7.26.9",
+        "@babel/preset-react": "^7.16.7",
+        "@playwright/test": "^1.50.1",
+        "@testing-library/jest-dom": "^6.6.3",
+        "@testing-library/react": "^16.2.0",
+        "@testing-library/user-event": "^14.6.1",
+        "babel-jest": "^29.7.0",
+        "jest": "^29.7.0",
+        "msw": "0.47.0",
+        "ts-jest": "^29.2.5",
+        "whatwg-fetch": "3.6.0"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "jest": {
+        "moduleNameMapper": {
+            "^uuid$": "uuid",
+            "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+        },
+        "transform": {
+            "^.+\\.(js|jsx|mjs)$": "babel-jest"
+        },
+        "testMatch": [
+            "**/server/tests/*test*.js?(x)"
+        ],
+        "testEnvironment": "node"
+    }
 }

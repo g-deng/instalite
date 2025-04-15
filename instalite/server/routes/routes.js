@@ -5,6 +5,8 @@ import { OpenAIEmbeddings } from "@langchain/openai";
 import { formatDocumentsAsString } from "langchain/util/document";
 import { RunnableSequence, RunnablePassthrough } from "@langchain/core/runnables";
 import { Chroma } from "@langchain/community/vectorstores/chroma";
+import S3KeyValueStore from '../models/s3.js';
+import FaceEmbed from '../algorithms/face_embed.js';
 
 import { get_db_connection } from '../models/rdbms.js';
 import RouteHelper from '../routes/route_helper.js';
@@ -13,6 +15,9 @@ import bcrypt from 'bcrypt';
 
 // Database connection setup
 const db = get_db_connection();
+
+const face = new FaceEmbed();
+await face.loadModel();
 
 var helper = new RouteHelper();
 
@@ -213,6 +218,43 @@ async function getMovie(req, res) {
     res.status(200).send({message:result});
 }
 
+async function uploadImage(req, res) {
+    const bucketName = 'nets2120-chroma-' + process.env.USER_ID;
+
+    const s3_user = new S3KeyValueStore(bucketName, "user");
+
+    try {
+        // Check if a file is provided
+        if (!req.file) {
+            return res.status(400).send({ error: "No file uploaded." });
+        }
+
+        const file = req.file;
+
+        // Generate a unique file name
+        const fileName = `${Date.now()}_${file.originalname}`;
+        const filePath = file.path;
+        const keyPrefix = 'uploads/';
+
+        // Upload the file to S3
+        await s3_user.uploadFile(filePath, bucketName, keyPrefix);
+
+        console.log(`Image uploaded to S3: ${fileName}`);
+
+        const file_obj = await s3_user.convertFileToBinary(filePath, bucketName, keyPrefix);
+        const embeddings = await face.getEmbeddingsFromBuffer(file_obj);
+        const embedding = embeddings[0];
+
+        res.status(200).send({
+            message: `Image uploaded successfully to ${fileName}`,
+            embedding: embedding,
+        });
+    } catch (error) {
+        console.error("Error uploading image:", error);
+        res.status(500).send({ error: "An error occurred while uploading the image." });
+    }
+}
+
 /* Here we construct an object that contains a field for each route
    we've defined, so we can call the routes from app.js. */
 
@@ -223,6 +265,7 @@ export {
     postLogout,
     getFriends,
     getFriendRecs,
-    getMovie
+    getMovie,
+    uploadImage,
 };
 

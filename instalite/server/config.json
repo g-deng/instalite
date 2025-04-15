@@ -1,6 +1,17 @@
-{ 
+{
+    "max": 100,
+    "serverPort": 8080,
+    "awsRegion": "us-east-1",
+    "dynamoDbTableName": "imdb_faces",
+    "s3BucketName": "imdb-embeddings-upenn-nets2120-2024sp-dli2004",
+    "chromaDbName": "imdb_photos",
+    "database": {
+        "host": "localhost",
+        "port": "3306",
+        "database": "imdb_basic"
+    },
     "chroma": {
-    "host": "localhost",
-    "port": "8000"
+        "host": "localhost",
+        "port": "8000"
     }
 }

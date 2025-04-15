@@ -1,6 +1,9 @@
-import { getHelloWorld, postLogin, postRegister, getFriends, getFriendRecs, getMovie } from './routes.js';
+import { getHelloWorld, postLogin, postRegister, getFriends, getFriendRecs, getMovie, uploadImage } from './routes.js';
 import { createPost, getFeed } from './feed_routes.js';
-import './routes.js'
+import {get_embedding, get_topk} from './embedding_routes.js';
+import multer from 'multer';
+
+const upload = multer({ dest: 'uploads/' });
 
 function register_routes(app) {
     app.get('/hello', getHelloWorld);
@@ -11,6 +14,9 @@ function register_routes(app) {
     app.post('/:username/createPost', createPost); 
     app.get('/:username/feed', getFeed); 
     app.post('/:username/movies', getMovie);
+    app.post('/upload', upload.single('image'), uploadImage);
+    app.get('/embeddings/:name', get_embedding);
+    app.post('/match', get_topk);
   }
   
   export default register_routes;

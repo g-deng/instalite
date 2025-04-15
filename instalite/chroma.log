@@ -3800,3 +3800,1087 @@ starlette.requests.ClientDisconnect
 [32mINFO[0m:     [14-04-2025 01:17:47] 127.0.0.1:59802 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
 [32mINFO[0m:     [14-04-2025 01:17:47] 127.0.0.1:59786 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/0eb0c87f-c613-42fb-a0c5-8f0267d47bba/add HTTP/1.1" 201
 [32mINFO[0m:     [14-04-2025 01:17:48] 127.0.0.1:59812 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/0eb0c87f-c613-42fb-a0c5-8f0267d47bba/add HTTP/1.1" 201
+[33mWARNING[0m:  [15-04-2025 17:23:38] chroma_server_nofile is set to 65535, but this is less than current soft limit of 1048576. chroma_server_nofile will not be set.
+[32mINFO[0m:     [15-04-2025 17:23:38] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [15-04-2025 17:23:38] Starting component System
+[36mDEBUG[0m:    [15-04-2025 17:23:38] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [15-04-2025 17:23:38] Starting component SqliteDB
+[36mDEBUG[0m:    [15-04-2025 17:23:38] Starting component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [15-04-2025 17:23:38] Starting component Posthog
+[36mDEBUG[0m:    [15-04-2025 17:23:38] Starting component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 17:23:38] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [15-04-2025 17:23:38] Starting component LocalExecutor
+[36mDEBUG[0m:    [15-04-2025 17:23:38] Starting component SegmentAPI
+[36mDEBUG[0m:    [15-04-2025 17:23:38] Starting component SimpleAsyncRateLimitEnforcer
+[32mINFO[0m:     [15-04-2025 17:23:38] Started server process [[36m98643[0m]
+[32mINFO[0m:     [15-04-2025 17:23:38] Waiting for application startup.
+[32mINFO[0m:     [15-04-2025 17:23:38] Application startup complete.
+[32mINFO[0m:     [15-04-2025 17:23:38] Uvicorn running on [1mhttp://0.0.0.0:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [15-04-2025 17:30:04] Shutting down
+[32mINFO[0m:     [15-04-2025 17:30:04] Waiting for application shutdown.
+[36mDEBUG[0m:    [15-04-2025 17:30:04] Stopping component System
+[36mDEBUG[0m:    [15-04-2025 17:30:04] Stopping component SegmentAPI
+[36mDEBUG[0m:    [15-04-2025 17:30:04] Stopping component LocalExecutor
+[36mDEBUG[0m:    [15-04-2025 17:30:04] Stopping component LocalSegmentManager
+[36mDEBUG[0m:    [15-04-2025 17:30:04] Stopping component SimpleAsyncRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 17:30:04] Stopping component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 17:30:04] Stopping component Posthog
+[36mDEBUG[0m:    [15-04-2025 17:30:04] Stopping component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [15-04-2025 17:30:04] Stopping component SqliteDB
+[36mDEBUG[0m:    [15-04-2025 17:30:04] Stopping component OpenTelemetryClient
+[32mINFO[0m:     [15-04-2025 17:30:04] Application shutdown complete.
+[32mINFO[0m:     [15-04-2025 17:30:04] Finished server process [[36m98643[0m]
+[33mWARNING[0m:  [15-04-2025 17:30:06] chroma_server_nofile is set to 65535, but this is less than current soft limit of 1048576. chroma_server_nofile will not be set.
+[32mINFO[0m:     [15-04-2025 17:30:07] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [15-04-2025 17:30:07] Starting component System
+[36mDEBUG[0m:    [15-04-2025 17:30:07] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [15-04-2025 17:30:07] Starting component SqliteDB
+[36mDEBUG[0m:    [15-04-2025 17:30:07] Starting component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [15-04-2025 17:30:07] Starting component Posthog
+[36mDEBUG[0m:    [15-04-2025 17:30:07] Starting component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 17:30:07] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [15-04-2025 17:30:07] Starting component LocalExecutor
+[36mDEBUG[0m:    [15-04-2025 17:30:07] Starting component SegmentAPI
+[36mDEBUG[0m:    [15-04-2025 17:30:07] Starting component SimpleAsyncRateLimitEnforcer
+[32mINFO[0m:     [15-04-2025 17:30:07] Started server process [[36m3160[0m]
+[32mINFO[0m:     [15-04-2025 17:30:07] Waiting for application startup.
+[32mINFO[0m:     [15-04-2025 17:30:07] Application startup complete.
+[32mINFO[0m:     [15-04-2025 17:30:07] Uvicorn running on [1mhttp://0.0.0.0:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [15-04-2025 17:52:09] Shutting down
+[32mINFO[0m:     [15-04-2025 17:52:09] Waiting for application shutdown.
+[36mDEBUG[0m:    [15-04-2025 17:52:09] Stopping component System
+[36mDEBUG[0m:    [15-04-2025 17:52:09] Stopping component SegmentAPI
+[36mDEBUG[0m:    [15-04-2025 17:52:09] Stopping component LocalExecutor
+[36mDEBUG[0m:    [15-04-2025 17:52:09] Stopping component LocalSegmentManager
+[36mDEBUG[0m:    [15-04-2025 17:52:09] Stopping component SimpleAsyncRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 17:52:09] Stopping component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 17:52:09] Stopping component Posthog
+[36mDEBUG[0m:    [15-04-2025 17:52:09] Stopping component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [15-04-2025 17:52:09] Stopping component SqliteDB
+[36mDEBUG[0m:    [15-04-2025 17:52:09] Stopping component OpenTelemetryClient
+[32mINFO[0m:     [15-04-2025 17:52:09] Application shutdown complete.
+[32mINFO[0m:     [15-04-2025 17:52:09] Finished server process [[36m3160[0m]
+[33mWARNING[0m:  [15-04-2025 17:52:12] chroma_server_nofile is set to 65535, but this is less than current soft limit of 1048576. chroma_server_nofile will not be set.
+[32mINFO[0m:     [15-04-2025 17:52:12] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [15-04-2025 17:52:12] Starting component System
+[36mDEBUG[0m:    [15-04-2025 17:52:12] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [15-04-2025 17:52:12] Starting component SqliteDB
+[36mDEBUG[0m:    [15-04-2025 17:52:12] Starting component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [15-04-2025 17:52:12] Starting component Posthog
+[36mDEBUG[0m:    [15-04-2025 17:52:12] Starting component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 17:52:12] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [15-04-2025 17:52:12] Starting component LocalExecutor
+[36mDEBUG[0m:    [15-04-2025 17:52:12] Starting component SegmentAPI
+[36mDEBUG[0m:    [15-04-2025 17:52:12] Starting component SimpleAsyncRateLimitEnforcer
+[32mINFO[0m:     [15-04-2025 17:52:13] Started server process [[36m19091[0m]
+[32mINFO[0m:     [15-04-2025 17:52:13] Waiting for application startup.
+[32mINFO[0m:     [15-04-2025 17:52:13] Application startup complete.
+[32mINFO[0m:     [15-04-2025 17:52:13] Uvicorn running on [1mhttp://0.0.0.0:8000[0m (Press CTRL+C to quit)
+[31mERROR[0m:    [15-04-2025 17:54:40] no such table: tenants
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 111, in receive
+    return self.receive_nowait()
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 124, in receive
+    return receiver.item
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 148, in call_next
+    message = await recv_stream.receive()
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/server/fastapi/__init__.py", line 120, in catch_exceptions_middleware
+    return await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 154, in call_next
+    raise app_exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 177, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+  File "/usr/lib/python3.10/contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 179, in __call__
+    response = await self.dispatch_func(request, call_next)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/server/fastapi/__init__.py", line 144, in check_http_version_middleware
+    return await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 154, in call_next
+    raise app_exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/telemetry/opentelemetry/__init__.py", line 134, in async_wrapper
+    return await f(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/server/fastapi/__init__.py", line 656, in get_tenant
+    await to_thread.run_sync(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/telemetry/opentelemetry/__init__.py", line 150, in wrapper
+    return f(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/api/segment.py", line 197, in get_tenant
+    return self._sysdb.get_tenant(name=name)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/db/mixins/sysdb.py", line 206, in get_tenant
+    row = cur.execute(sql, params).fetchone()
+sqlite3.OperationalError: no such table: tenants
+[32mINFO[0m:     [15-04-2025 17:54:40] 127.0.0.1:37764 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 500
+[31mERROR[0m:    [15-04-2025 17:55:55] no such table: tenants
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 111, in receive
+    return self.receive_nowait()
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 124, in receive
+    return receiver.item
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 148, in call_next
+    message = await recv_stream.receive()
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/server/fastapi/__init__.py", line 120, in catch_exceptions_middleware
+    return await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 154, in call_next
+    raise app_exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 177, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+  File "/usr/lib/python3.10/contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 179, in __call__
+    response = await self.dispatch_func(request, call_next)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/server/fastapi/__init__.py", line 144, in check_http_version_middleware
+    return await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 154, in call_next
+    raise app_exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/telemetry/opentelemetry/__init__.py", line 134, in async_wrapper
+    return await f(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/server/fastapi/__init__.py", line 656, in get_tenant
+    await to_thread.run_sync(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/telemetry/opentelemetry/__init__.py", line 150, in wrapper
+    return f(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/api/segment.py", line 197, in get_tenant
+    return self._sysdb.get_tenant(name=name)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/db/mixins/sysdb.py", line 206, in get_tenant
+    row = cur.execute(sql, params).fetchone()
+sqlite3.OperationalError: no such table: tenants
+[32mINFO[0m:     [15-04-2025 17:55:55] 127.0.0.1:35072 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 500
+[31mERROR[0m:    [15-04-2025 17:58:26] no such table: tenants
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 111, in receive
+    return self.receive_nowait()
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 124, in receive
+    return receiver.item
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 148, in call_next
+    message = await recv_stream.receive()
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/server/fastapi/__init__.py", line 120, in catch_exceptions_middleware
+    return await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 154, in call_next
+    raise app_exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 177, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+  File "/usr/lib/python3.10/contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 179, in __call__
+    response = await self.dispatch_func(request, call_next)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/server/fastapi/__init__.py", line 144, in check_http_version_middleware
+    return await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 154, in call_next
+    raise app_exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/telemetry/opentelemetry/__init__.py", line 134, in async_wrapper
+    return await f(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/server/fastapi/__init__.py", line 656, in get_tenant
+    await to_thread.run_sync(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/telemetry/opentelemetry/__init__.py", line 150, in wrapper
+    return f(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/api/segment.py", line 197, in get_tenant
+    return self._sysdb.get_tenant(name=name)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/db/mixins/sysdb.py", line 206, in get_tenant
+    row = cur.execute(sql, params).fetchone()
+sqlite3.OperationalError: no such table: tenants
+[32mINFO[0m:     [15-04-2025 17:58:26] 127.0.0.1:50250 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 500
+[31mERROR[0m:    [15-04-2025 17:59:41] no such table: tenants
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 111, in receive
+    return self.receive_nowait()
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 124, in receive
+    return receiver.item
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 148, in call_next
+    message = await recv_stream.receive()
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/server/fastapi/__init__.py", line 120, in catch_exceptions_middleware
+    return await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 154, in call_next
+    raise app_exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 177, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+  File "/usr/lib/python3.10/contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 179, in __call__
+    response = await self.dispatch_func(request, call_next)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/server/fastapi/__init__.py", line 144, in check_http_version_middleware
+    return await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 154, in call_next
+    raise app_exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/telemetry/opentelemetry/__init__.py", line 134, in async_wrapper
+    return await f(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/server/fastapi/__init__.py", line 656, in get_tenant
+    await to_thread.run_sync(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/telemetry/opentelemetry/__init__.py", line 150, in wrapper
+    return f(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/api/segment.py", line 197, in get_tenant
+    return self._sysdb.get_tenant(name=name)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/db/mixins/sysdb.py", line 206, in get_tenant
+    row = cur.execute(sql, params).fetchone()
+sqlite3.OperationalError: no such table: tenants
+[32mINFO[0m:     [15-04-2025 17:59:41] 127.0.0.1:60662 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 500
+[31mERROR[0m:    [15-04-2025 18:00:09] no such table: tenants
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 111, in receive
+    return self.receive_nowait()
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 106, in receive_nowait
+    raise WouldBlock
+anyio.WouldBlock
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 124, in receive
+    return receiver.item
+AttributeError: 'MemoryObjectItemReceiver' object has no attribute 'item'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 148, in call_next
+    message = await recv_stream.receive()
+  File "/usr/local/lib/python3.10/dist-packages/anyio/streams/memory.py", line 126, in receive
+    raise EndOfStream
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/server/fastapi/__init__.py", line 120, in catch_exceptions_middleware
+    return await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 154, in call_next
+    raise app_exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 177, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+  File "/usr/lib/python3.10/contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_utils.py", line 82, in collapse_excgroups
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 179, in __call__
+    response = await self.dispatch_func(request, call_next)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/server/fastapi/__init__.py", line 144, in check_http_version_middleware
+    return await call_next(request)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 154, in call_next
+    raise app_exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/base.py", line 141, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/usr/local/lib/python3.10/dist-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/usr/local/lib/python3.10/dist-packages/starlette/routing.py", line 73, in app
+    response = await f(request)
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 301, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.10/dist-packages/fastapi/routing.py", line 212, in run_endpoint_function
+    return await dependant.call(**values)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/telemetry/opentelemetry/__init__.py", line 134, in async_wrapper
+    return await f(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/server/fastapi/__init__.py", line 656, in get_tenant
+    await to_thread.run_sync(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/to_thread.py", line 56, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 2461, in run_sync_in_worker_thread
+    return await future
+  File "/usr/local/lib/python3.10/dist-packages/anyio/_backends/_asyncio.py", line 962, in run
+    result = context.run(func, *args)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/telemetry/opentelemetry/__init__.py", line 150, in wrapper
+    return f(*args, **kwargs)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/api/segment.py", line 197, in get_tenant
+    return self._sysdb.get_tenant(name=name)
+  File "/usr/local/lib/python3.10/dist-packages/chromadb/db/mixins/sysdb.py", line 206, in get_tenant
+    row = cur.execute(sql, params).fetchone()
+sqlite3.OperationalError: no such table: tenants
+[32mINFO[0m:     [15-04-2025 18:00:09] 127.0.0.1:35626 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 500
+[32mINFO[0m:     [15-04-2025 18:02:30] Shutting down
+[32mINFO[0m:     [15-04-2025 18:02:30] Waiting for application shutdown.
+[36mDEBUG[0m:    [15-04-2025 18:02:30] Stopping component System
+[36mDEBUG[0m:    [15-04-2025 18:02:30] Stopping component SegmentAPI
+[36mDEBUG[0m:    [15-04-2025 18:02:30] Stopping component LocalExecutor
+[36mDEBUG[0m:    [15-04-2025 18:02:30] Stopping component LocalSegmentManager
+[36mDEBUG[0m:    [15-04-2025 18:02:30] Stopping component SimpleAsyncRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 18:02:30] Stopping component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 18:02:30] Stopping component Posthog
+[36mDEBUG[0m:    [15-04-2025 18:02:30] Stopping component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [15-04-2025 18:02:30] Stopping component SqliteDB
+[36mDEBUG[0m:    [15-04-2025 18:02:30] Stopping component OpenTelemetryClient
+[32mINFO[0m:     [15-04-2025 18:02:30] Application shutdown complete.
+[32mINFO[0m:     [15-04-2025 18:02:30] Finished server process [[36m19091[0m]
+[33mWARNING[0m:  [15-04-2025 18:02:33] chroma_server_nofile is set to 65535, but this is less than current soft limit of 1048576. chroma_server_nofile will not be set.
+[32mINFO[0m:     [15-04-2025 18:02:33] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [15-04-2025 18:02:33] Starting component System
+[36mDEBUG[0m:    [15-04-2025 18:02:33] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [15-04-2025 18:02:33] Starting component SqliteDB
+[36mDEBUG[0m:    [15-04-2025 18:02:33] Starting component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [15-04-2025 18:02:33] Starting component Posthog
+[36mDEBUG[0m:    [15-04-2025 18:02:33] Starting component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 18:02:33] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [15-04-2025 18:02:33] Starting component LocalExecutor
+[36mDEBUG[0m:    [15-04-2025 18:02:33] Starting component SegmentAPI
+[36mDEBUG[0m:    [15-04-2025 18:02:33] Starting component SimpleAsyncRateLimitEnforcer
+[32mINFO[0m:     [15-04-2025 18:02:34] Started server process [[36m26659[0m]
+[32mINFO[0m:     [15-04-2025 18:02:34] Waiting for application startup.
+[32mINFO[0m:     [15-04-2025 18:02:34] Application startup complete.
+[32mINFO[0m:     [15-04-2025 18:02:34] Uvicorn running on [1mhttp://0.0.0.0:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [15-04-2025 18:02:38] 127.0.0.1:48200 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:02:38] 127.0.0.1:48204 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:02:38] 127.0.0.1:48200 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 400
+[32mINFO[0m:     [15-04-2025 18:06:06] 127.0.0.1:49490 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:06:06] 127.0.0.1:49502 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:06:06] 127.0.0.1:49490 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 400
+[32mINFO[0m:     [15-04-2025 18:07:42] 127.0.0.1:40008 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:07:42] 127.0.0.1:40012 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:07:42] 127.0.0.1:40008 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 400
+[32mINFO[0m:     [15-04-2025 18:08:57] 127.0.0.1:51936 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:08:57] 127.0.0.1:51952 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:08:57] 127.0.0.1:51936 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 400
+[32mINFO[0m:     [15-04-2025 18:09:33] 127.0.0.1:38120 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:09:33] 127.0.0.1:38134 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:09:33] 127.0.0.1:38120 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:09:36] 127.0.0.1:38120 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[36mDEBUG[0m:    [15-04-2025 18:09:36] Starting component PersistentLocalHnswSegment
+[32mINFO[0m:     [15-04-2025 18:09:36] 127.0.0.1:38134 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:04] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:04] 127.0.0.1:52668 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[36mDEBUG[0m:    [15-04-2025 18:11:04] Collection imdb_photos already exists, returning existing collection.
+[32mINFO[0m:     [15-04-2025 18:11:04] 127.0.0.1:52654 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:05] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:11:05] Add of existing embedding ID: 0
+[33mWARNING[0m:  [15-04-2025 18:11:05] Insert of existing embedding ID: 0
+[32mINFO[0m:     [15-04-2025 18:11:05] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:06] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:06] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:07] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:07] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:07] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:07] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:08] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:08] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:08] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:08] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:08] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:09] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:09] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:09] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:10] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:10] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:10] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:10] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:11] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:11] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:12] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:12] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:12] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:12] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:13] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:13] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:13] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:13] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:13] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:13] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:14] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:14] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:15] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:15] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:15] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:15] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:15] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:16] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:16] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:16] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:16] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:16] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:17] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:17] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:17] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:17] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:18] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:18] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:18] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:18] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:19] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:19] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:19] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:19] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:20] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:20] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:20] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:20] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:20] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:20] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:21] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:21] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:21] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:21] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:21] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:21] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:22] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:22] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:22] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:22] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:22] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:22] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:22] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:22] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:23] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:23] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:23] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:23] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:23] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:23] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:24] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:24] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:24] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:24] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:24] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:24] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:25] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:25] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:25] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:25] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:26] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:26] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:26] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:26] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:27] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:27] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:27] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:27] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:27] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:27] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:27] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:27] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:28] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:28] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:28] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:28] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:29] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:29] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:29] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:29] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:30] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:30] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:30] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:30] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:30] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:30] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:30] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:30] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:31] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:31] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:31] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:31] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:31] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:31] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:31] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:31] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:32] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:32] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:11:32] 127.0.0.1:52654 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:11:32] 127.0.0.1:52668 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:03] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:12:03] 127.0.0.1:48590 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[36mDEBUG[0m:    [15-04-2025 18:12:03] Collection imdb_photos already exists, returning existing collection.
+[32mINFO[0m:     [15-04-2025 18:12:03] 127.0.0.1:48580 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:12:04] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:04] Add of existing embedding ID: 0
+[33mWARNING[0m:  [15-04-2025 18:12:04] Insert of existing embedding ID: 0
+[32mINFO[0m:     [15-04-2025 18:12:04] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:04] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:04] Add of existing embedding ID: 1
+[33mWARNING[0m:  [15-04-2025 18:12:04] Insert of existing embedding ID: 1
+[32mINFO[0m:     [15-04-2025 18:12:04] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:05] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:05] Add of existing embedding ID: 2
+[33mWARNING[0m:  [15-04-2025 18:12:05] Insert of existing embedding ID: 2
+[32mINFO[0m:     [15-04-2025 18:12:05] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:05] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:05] Add of existing embedding ID: 3
+[33mWARNING[0m:  [15-04-2025 18:12:05] Insert of existing embedding ID: 3
+[32mINFO[0m:     [15-04-2025 18:12:05] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:05] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:05] Add of existing embedding ID: 4
+[33mWARNING[0m:  [15-04-2025 18:12:05] Insert of existing embedding ID: 4
+[32mINFO[0m:     [15-04-2025 18:12:05] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:05] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:06] Add of existing embedding ID: 5
+[33mWARNING[0m:  [15-04-2025 18:12:06] Insert of existing embedding ID: 5
+[32mINFO[0m:     [15-04-2025 18:12:06] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:06] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:06] Add of existing embedding ID: 6
+[33mWARNING[0m:  [15-04-2025 18:12:06] Insert of existing embedding ID: 6
+[32mINFO[0m:     [15-04-2025 18:12:06] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:06] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:06] Add of existing embedding ID: 7
+[33mWARNING[0m:  [15-04-2025 18:12:06] Insert of existing embedding ID: 7
+[32mINFO[0m:     [15-04-2025 18:12:06] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:06] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:07] Add of existing embedding ID: 8
+[33mWARNING[0m:  [15-04-2025 18:12:07] Insert of existing embedding ID: 8
+[32mINFO[0m:     [15-04-2025 18:12:07] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:07] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:07] Add of existing embedding ID: 9
+[33mWARNING[0m:  [15-04-2025 18:12:07] Insert of existing embedding ID: 9
+[32mINFO[0m:     [15-04-2025 18:12:07] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:07] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:07] Add of existing embedding ID: 10
+[33mWARNING[0m:  [15-04-2025 18:12:07] Insert of existing embedding ID: 10
+[32mINFO[0m:     [15-04-2025 18:12:07] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:08] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:08] Add of existing embedding ID: 11
+[33mWARNING[0m:  [15-04-2025 18:12:08] Insert of existing embedding ID: 11
+[32mINFO[0m:     [15-04-2025 18:12:08] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:08] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:08] Add of existing embedding ID: 12
+[33mWARNING[0m:  [15-04-2025 18:12:08] Insert of existing embedding ID: 12
+[32mINFO[0m:     [15-04-2025 18:12:08] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:09] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:09] Add of existing embedding ID: 13
+[33mWARNING[0m:  [15-04-2025 18:12:09] Insert of existing embedding ID: 13
+[32mINFO[0m:     [15-04-2025 18:12:09] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:09] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:09] Add of existing embedding ID: 14
+[33mWARNING[0m:  [15-04-2025 18:12:09] Insert of existing embedding ID: 14
+[32mINFO[0m:     [15-04-2025 18:12:09] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:09] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:09] Add of existing embedding ID: 15
+[33mWARNING[0m:  [15-04-2025 18:12:09] Insert of existing embedding ID: 15
+[32mINFO[0m:     [15-04-2025 18:12:09] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:10] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:10] Add of existing embedding ID: 16
+[33mWARNING[0m:  [15-04-2025 18:12:10] Insert of existing embedding ID: 16
+[32mINFO[0m:     [15-04-2025 18:12:10] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:10] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:10] Add of existing embedding ID: 17
+[33mWARNING[0m:  [15-04-2025 18:12:10] Insert of existing embedding ID: 17
+[32mINFO[0m:     [15-04-2025 18:12:10] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:10] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:10] Add of existing embedding ID: 18
+[33mWARNING[0m:  [15-04-2025 18:12:10] Insert of existing embedding ID: 18
+[32mINFO[0m:     [15-04-2025 18:12:10] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:11] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:11] Add of existing embedding ID: 19
+[33mWARNING[0m:  [15-04-2025 18:12:11] Insert of existing embedding ID: 19
+[32mINFO[0m:     [15-04-2025 18:12:11] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:11] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:11] Add of existing embedding ID: 20
+[33mWARNING[0m:  [15-04-2025 18:12:11] Insert of existing embedding ID: 20
+[32mINFO[0m:     [15-04-2025 18:12:11] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:11] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:11] Add of existing embedding ID: 21
+[33mWARNING[0m:  [15-04-2025 18:12:11] Insert of existing embedding ID: 21
+[32mINFO[0m:     [15-04-2025 18:12:11] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:12] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:12] Add of existing embedding ID: 22
+[33mWARNING[0m:  [15-04-2025 18:12:12] Insert of existing embedding ID: 22
+[32mINFO[0m:     [15-04-2025 18:12:12] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:12] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:12] Add of existing embedding ID: 23
+[33mWARNING[0m:  [15-04-2025 18:12:12] Insert of existing embedding ID: 23
+[32mINFO[0m:     [15-04-2025 18:12:12] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:12] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:12] Add of existing embedding ID: 24
+[33mWARNING[0m:  [15-04-2025 18:12:12] Insert of existing embedding ID: 24
+[32mINFO[0m:     [15-04-2025 18:12:12] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:13] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:13] Add of existing embedding ID: 25
+[33mWARNING[0m:  [15-04-2025 18:12:13] Insert of existing embedding ID: 25
+[32mINFO[0m:     [15-04-2025 18:12:13] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:13] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:13] Add of existing embedding ID: 26
+[33mWARNING[0m:  [15-04-2025 18:12:13] Insert of existing embedding ID: 26
+[32mINFO[0m:     [15-04-2025 18:12:13] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:13] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:13] Add of existing embedding ID: 27
+[33mWARNING[0m:  [15-04-2025 18:12:13] Insert of existing embedding ID: 27
+[32mINFO[0m:     [15-04-2025 18:12:13] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:14] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:14] Add of existing embedding ID: 28
+[33mWARNING[0m:  [15-04-2025 18:12:14] Insert of existing embedding ID: 28
+[32mINFO[0m:     [15-04-2025 18:12:14] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:15] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:15] Add of existing embedding ID: 29
+[33mWARNING[0m:  [15-04-2025 18:12:15] Insert of existing embedding ID: 29
+[32mINFO[0m:     [15-04-2025 18:12:15] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:15] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:15] Add of existing embedding ID: 30
+[33mWARNING[0m:  [15-04-2025 18:12:15] Insert of existing embedding ID: 30
+[32mINFO[0m:     [15-04-2025 18:12:15] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:15] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:15] Add of existing embedding ID: 31
+[33mWARNING[0m:  [15-04-2025 18:12:15] Insert of existing embedding ID: 31
+[32mINFO[0m:     [15-04-2025 18:12:15] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:15] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:15] Add of existing embedding ID: 32
+[33mWARNING[0m:  [15-04-2025 18:12:15] Insert of existing embedding ID: 32
+[32mINFO[0m:     [15-04-2025 18:12:15] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:16] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:16] Add of existing embedding ID: 33
+[33mWARNING[0m:  [15-04-2025 18:12:16] Insert of existing embedding ID: 33
+[32mINFO[0m:     [15-04-2025 18:12:16] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:16] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:16] Add of existing embedding ID: 34
+[33mWARNING[0m:  [15-04-2025 18:12:16] Insert of existing embedding ID: 34
+[32mINFO[0m:     [15-04-2025 18:12:16] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:16] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:16] Add of existing embedding ID: 35
+[33mWARNING[0m:  [15-04-2025 18:12:16] Insert of existing embedding ID: 35
+[32mINFO[0m:     [15-04-2025 18:12:16] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:16] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:16] Add of existing embedding ID: 36
+[33mWARNING[0m:  [15-04-2025 18:12:16] Insert of existing embedding ID: 36
+[32mINFO[0m:     [15-04-2025 18:12:16] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:17] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:17] Add of existing embedding ID: 37
+[33mWARNING[0m:  [15-04-2025 18:12:17] Insert of existing embedding ID: 37
+[32mINFO[0m:     [15-04-2025 18:12:17] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:17] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:17] Add of existing embedding ID: 38
+[33mWARNING[0m:  [15-04-2025 18:12:17] Insert of existing embedding ID: 38
+[32mINFO[0m:     [15-04-2025 18:12:17] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:17] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:17] Add of existing embedding ID: 39
+[33mWARNING[0m:  [15-04-2025 18:12:17] Insert of existing embedding ID: 39
+[32mINFO[0m:     [15-04-2025 18:12:17] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:17] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:17] Add of existing embedding ID: 40
+[33mWARNING[0m:  [15-04-2025 18:12:17] Insert of existing embedding ID: 40
+[32mINFO[0m:     [15-04-2025 18:12:17] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:18] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:18] Add of existing embedding ID: 41
+[33mWARNING[0m:  [15-04-2025 18:12:18] Insert of existing embedding ID: 41
+[32mINFO[0m:     [15-04-2025 18:12:18] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:18] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:18] Add of existing embedding ID: 42
+[33mWARNING[0m:  [15-04-2025 18:12:18] Insert of existing embedding ID: 42
+[32mINFO[0m:     [15-04-2025 18:12:18] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:18] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:18] Add of existing embedding ID: 43
+[33mWARNING[0m:  [15-04-2025 18:12:18] Insert of existing embedding ID: 43
+[32mINFO[0m:     [15-04-2025 18:12:18] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:19] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:19] Add of existing embedding ID: 44
+[33mWARNING[0m:  [15-04-2025 18:12:19] Insert of existing embedding ID: 44
+[32mINFO[0m:     [15-04-2025 18:12:19] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:19] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:19] Add of existing embedding ID: 45
+[33mWARNING[0m:  [15-04-2025 18:12:19] Insert of existing embedding ID: 45
+[32mINFO[0m:     [15-04-2025 18:12:19] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:20] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:20] Add of existing embedding ID: 46
+[33mWARNING[0m:  [15-04-2025 18:12:20] Insert of existing embedding ID: 46
+[32mINFO[0m:     [15-04-2025 18:12:20] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:20] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:20] Add of existing embedding ID: 47
+[33mWARNING[0m:  [15-04-2025 18:12:20] Insert of existing embedding ID: 47
+[32mINFO[0m:     [15-04-2025 18:12:20] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:20] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:20] Add of existing embedding ID: 48
+[33mWARNING[0m:  [15-04-2025 18:12:20] Insert of existing embedding ID: 48
+[32mINFO[0m:     [15-04-2025 18:12:20] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:20] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:20] Add of existing embedding ID: 49
+[33mWARNING[0m:  [15-04-2025 18:12:20] Insert of existing embedding ID: 49
+[32mINFO[0m:     [15-04-2025 18:12:20] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:21] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:21] Add of existing embedding ID: 50
+[33mWARNING[0m:  [15-04-2025 18:12:21] Insert of existing embedding ID: 50
+[32mINFO[0m:     [15-04-2025 18:12:21] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:21] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:21] Add of existing embedding ID: 51
+[33mWARNING[0m:  [15-04-2025 18:12:21] Insert of existing embedding ID: 51
+[32mINFO[0m:     [15-04-2025 18:12:21] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:21] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:21] Add of existing embedding ID: 52
+[33mWARNING[0m:  [15-04-2025 18:12:21] Insert of existing embedding ID: 52
+[32mINFO[0m:     [15-04-2025 18:12:21] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:22] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:22] Add of existing embedding ID: 53
+[33mWARNING[0m:  [15-04-2025 18:12:22] Insert of existing embedding ID: 53
+[32mINFO[0m:     [15-04-2025 18:12:22] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:22] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:22] Add of existing embedding ID: 54
+[33mWARNING[0m:  [15-04-2025 18:12:22] Insert of existing embedding ID: 54
+[32mINFO[0m:     [15-04-2025 18:12:22] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:23] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:23] Add of existing embedding ID: 55
+[33mWARNING[0m:  [15-04-2025 18:12:23] Insert of existing embedding ID: 55
+[32mINFO[0m:     [15-04-2025 18:12:23] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:23] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:23] Add of existing embedding ID: 56
+[33mWARNING[0m:  [15-04-2025 18:12:23] Insert of existing embedding ID: 56
+[32mINFO[0m:     [15-04-2025 18:12:23] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:23] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:23] Add of existing embedding ID: 57
+[33mWARNING[0m:  [15-04-2025 18:12:23] Insert of existing embedding ID: 57
+[32mINFO[0m:     [15-04-2025 18:12:23] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:23] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:23] Add of existing embedding ID: 58
+[33mWARNING[0m:  [15-04-2025 18:12:23] Insert of existing embedding ID: 58
+[32mINFO[0m:     [15-04-2025 18:12:23] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:24] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:24] Add of existing embedding ID: 59
+[33mWARNING[0m:  [15-04-2025 18:12:24] Insert of existing embedding ID: 59
+[32mINFO[0m:     [15-04-2025 18:12:24] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:24] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:24] Add of existing embedding ID: 60
+[33mWARNING[0m:  [15-04-2025 18:12:24] Insert of existing embedding ID: 60
+[32mINFO[0m:     [15-04-2025 18:12:24] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:24] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:24] Add of existing embedding ID: 61
+[33mWARNING[0m:  [15-04-2025 18:12:24] Insert of existing embedding ID: 61
+[32mINFO[0m:     [15-04-2025 18:12:24] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:24] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:24] Add of existing embedding ID: 62
+[33mWARNING[0m:  [15-04-2025 18:12:24] Insert of existing embedding ID: 62
+[32mINFO[0m:     [15-04-2025 18:12:24] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:24] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:24] Add of existing embedding ID: 63
+[33mWARNING[0m:  [15-04-2025 18:12:24] Insert of existing embedding ID: 63
+[32mINFO[0m:     [15-04-2025 18:12:24] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:25] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:25] Add of existing embedding ID: 64
+[33mWARNING[0m:  [15-04-2025 18:12:25] Insert of existing embedding ID: 64
+[32mINFO[0m:     [15-04-2025 18:12:25] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:12:25] 127.0.0.1:48580 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[33mWARNING[0m:  [15-04-2025 18:12:25] Add of existing embedding ID: 65
+[33mWARNING[0m:  [15-04-2025 18:12:25] Insert of existing embedding ID: 65
+[32mINFO[0m:     [15-04-2025 18:12:25] 127.0.0.1:48590 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/add HTTP/1.1" 201
+[32mINFO[0m:     [15-04-2025 18:13:03] Shutting down
+[32mINFO[0m:     [15-04-2025 18:13:03] Waiting for application shutdown.
+[36mDEBUG[0m:    [15-04-2025 18:13:03] Stopping component System
+[36mDEBUG[0m:    [15-04-2025 18:13:03] Stopping component SegmentAPI
+[36mDEBUG[0m:    [15-04-2025 18:13:03] Stopping component LocalExecutor
+[36mDEBUG[0m:    [15-04-2025 18:13:03] Stopping component PersistentLocalHnswSegment
+[36mDEBUG[0m:    [15-04-2025 18:13:03] Stopping component LocalSegmentManager
+[36mDEBUG[0m:    [15-04-2025 18:13:03] Stopping component SimpleAsyncRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 18:13:03] Stopping component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 18:13:03] Stopping component Posthog
+[36mDEBUG[0m:    [15-04-2025 18:13:03] Stopping component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [15-04-2025 18:13:03] Stopping component SqliteDB
+[36mDEBUG[0m:    [15-04-2025 18:13:03] Stopping component OpenTelemetryClient
+[32mINFO[0m:     [15-04-2025 18:13:03] Application shutdown complete.
+[32mINFO[0m:     [15-04-2025 18:13:03] Finished server process [[36m26659[0m]
+[33mWARNING[0m:  [15-04-2025 18:13:05] chroma_server_nofile is set to 65535, but this is less than current soft limit of 1048576. chroma_server_nofile will not be set.
+[32mINFO[0m:     [15-04-2025 18:13:06] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [15-04-2025 18:13:06] Starting component System
+[36mDEBUG[0m:    [15-04-2025 18:13:06] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [15-04-2025 18:13:06] Starting component SqliteDB
+[36mDEBUG[0m:    [15-04-2025 18:13:06] Starting component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [15-04-2025 18:13:06] Starting component Posthog
+[36mDEBUG[0m:    [15-04-2025 18:13:06] Starting component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 18:13:06] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [15-04-2025 18:13:06] Starting component LocalExecutor
+[36mDEBUG[0m:    [15-04-2025 18:13:06] Starting component SegmentAPI
+[36mDEBUG[0m:    [15-04-2025 18:13:06] Starting component SimpleAsyncRateLimitEnforcer
+[32mINFO[0m:     [15-04-2025 18:13:06] Started server process [[36m34222[0m]
+[32mINFO[0m:     [15-04-2025 18:13:06] Waiting for application startup.
+[32mINFO[0m:     [15-04-2025 18:13:06] Application startup complete.
+[32mINFO[0m:     [15-04-2025 18:13:06] Uvicorn running on [1mhttp://0.0.0.0:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [15-04-2025 18:37:13] 127.0.0.1:35652 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:37:13] 127.0.0.1:35666 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:37:13] 127.0.0.1:35652 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[36mDEBUG[0m:    [15-04-2025 18:37:13] Starting component PersistentLocalHnswSegment
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 0
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 0
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 1
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 2
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 3
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 4
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 5
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 6
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 7
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 8
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 9
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 10
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 11
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 12
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 13
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 14
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 15
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 16
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 17
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 18
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 19
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 20
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 21
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 22
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 23
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 24
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 25
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 26
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 27
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 28
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 29
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 30
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 31
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 32
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 33
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 34
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 35
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 36
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 37
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 38
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 39
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 40
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 41
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 42
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 43
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 44
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 45
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 46
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 47
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 48
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 49
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 50
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 51
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 52
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 53
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 54
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 55
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 56
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 57
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 58
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 59
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 60
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 61
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 62
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 63
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 64
+[33mWARNING[0m:  [15-04-2025 18:37:13] Add of existing embedding ID: 65
+[32mINFO[0m:     [15-04-2025 18:37:13] 127.0.0.1:35666 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/get HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:37:13] 127.0.0.1:35652 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 18:37:13] 127.0.0.1:35666 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/query HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 19:36:19] 127.0.0.1:58342 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 19:36:19] 127.0.0.1:58356 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 19:36:19] 127.0.0.1:58342 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 19:36:19] 127.0.0.1:58356 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/query HTTP/1.1" 200
