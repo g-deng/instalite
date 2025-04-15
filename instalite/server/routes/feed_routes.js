@@ -4,6 +4,9 @@
 // for now just temporary light versions for the demo
 ////////////////////////
 
+import { get_db_connection } from '../models/rdbms.js';
+import RouteHelper from '../routes/route_helper.js';
+
 // Database connection setup
 const db = get_db_connection();
 
