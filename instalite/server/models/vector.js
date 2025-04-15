@@ -63,6 +63,24 @@ function get_db_connection_singleton() {
       );
     },
 
+    put_item_into_table_chatbot: async function (tableName, key, content, embedding, metadata) {
+      var collection = await this.client.getCollection({ name: tableName });
+      console.log(collection);
+      console.log('*****');
+      console.log(key);
+      console.log(embedding);
+      console.log(content);
+      console.log("about to add");
+      return collection.add(
+        {
+          ids: [key],
+          documents: [content],
+          embeddings: [embedding],
+          metadatas: [metadata],
+        }
+      );
+    },
+
     get_item_from_table: async function (tableName, key) {
       var collection = await this.client.getCollection({ name: tableName });
       var data = await collection.get({
