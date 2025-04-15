@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node --experimental-vm-modules server/app.js",
     "create_tables": "node server/models/create_tables.js",
-    "test": "node --experimental-vm-modules node_modules/.bin/jest --detectOpenHandles --forceExit --outputFile=test_results.json --json"
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --detectOpenHandles --forceExit --outputFile=test_results.json --json",
+    "kafka": "node server/kafka/consumer.js"
   },
   "author": "",
   "license": "ISC",
