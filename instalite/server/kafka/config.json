@@ -1,5 +1,5 @@
 {
-    "groupId": "wahoo",
+    "groupId": "whapp9",
     "bootstrapServers": ["localhost:9092"],
-    "topics": ["Bluesky-Kafka", "FederatedPosts"]
+    "serverRootURL": "http://localhost:8080"
 }

@@ -27,7 +27,7 @@ async function createPost(req, res) {
     var parent_id = req.body.parent_id;
     if (title.trim().length == 0 || content.trim().length == 0) {
         res.status(400).send({error: 'One or more of the fields you entered was empty, please try again.'});
-    } else if (!helper.isLoggedIn(req, req.session.user_id)) {
+    } else if (!helper.isLoggedIn(req, req.params.username)) {
         console.log(req.session);
         res.status(403).send({error: 'Not logged in.'});
     } else {
@@ -69,9 +69,9 @@ async function getFeed(req, res) {
             WHERE u1.user_id = ?
             `;
             const params2 = [req.session.user_id];
-            // const result2 = await queryDatabase(query2, params2);
-            // const result = [...result1[0], ...result2[0]];
-            const fixed_result = result1.map(row => ({
+            const result2 = await queryDatabase(query2, params2);
+            const result = [...result1[0], ...result2[0]];
+            const fixed_result = result.map(row => ({
                 username: row.username,
                 parent_post: row.parent_post,
                 title: row.title,
