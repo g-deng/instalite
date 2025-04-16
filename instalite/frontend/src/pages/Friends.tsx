@@ -31,7 +31,9 @@ export default function Friends() {
     const chat = () => {
         navigate("/"+ username+"/chat");
     };
-  
+    const chatMode = () => {
+        navigate("/"+ username+"/chatMode");
+    };
     useEffect(() => {
         const fetchData = async () => {
             // CUT HERE
@@ -64,6 +66,8 @@ export default function Friends() {
               onClick={feed}>Feed</button>&nbsp;
             <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
               onClick={chat}>Chat</button>
+              <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
+              onClick={chatMode}>ChatMode</button>
             </div>
         </div>
         <div className='h-full w-full mx-auto max-w-[1800px] flex space-x-4 p-3'>

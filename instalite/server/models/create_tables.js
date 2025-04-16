@@ -68,6 +68,49 @@ async function create_tables() {
       FOREIGN KEY (parent_post) REFERENCES posts(post_id), \
       FOREIGN KEY (author_id) REFERENCES users(user_id) \
       );')
+
+    // Create tables for chat mode
+    await dbaccess.create_tables('CREATE TABLE IF NOT EXISTS chat_rooms ( \
+      room_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, \
+      room_name VARCHAR(255), \
+      is_group_chat BOOLEAN DEFAULT FALSE \
+      );')
+
+    await dbaccess.create_tables('CREATE TABLE IF NOT EXISTS chat_members ( \
+      room_id INT NOT NULL, \
+      user_id INT NOT NULL, \
+      joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, \
+      PRIMARY KEY (room_id, user_id), \
+      FOREIGN KEY (room_id) REFERENCES chat_rooms(room_id), \
+      FOREIGN KEY (user_id) REFERENCES users(user_id) \
+      );')
+
+    await dbaccess.create_tables('CREATE TABLE IF NOT EXISTS chat_messages ( \
+      message_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, \
+      room_id INT NOT NULL, \
+      sender_id INT NOT NULL, \
+      content TEXT NOT NULL, \
+      timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, \
+      FOREIGN KEY (room_id) REFERENCES chat_rooms(room_id), \
+      FOREIGN KEY (sender_id) REFERENCES users(user_id) \
+      );')
+
+    await dbaccess.create_tables('CREATE TABLE IF NOT EXISTS chat_invites ( \
+      sender_id INT NOT NULL, \
+      receiver_id INT NOT NULL, \
+      room_id INT, \
+      PRIMARY KEY (sender_id, receiver_id), \
+      FOREIGN KEY (sender_id) REFERENCES users(user_id), \
+      FOREIGN KEY (receiver_id) REFERENCES users(user_id), \
+      FOREIGN KEY (room_id) REFERENCES chat_rooms(room_id) \
+      );')
+
+    await dbaccess.create_tables('CREATE TABLE IF NOT EXISTS online_users ( \
+      user_id INT NOT NULL PRIMARY KEY, \
+      socket_id VARCHAR(255), \
+      FOREIGN KEY (user_id) REFERENCES users(user_id) \
+      );')
+
     return null;
 }
 

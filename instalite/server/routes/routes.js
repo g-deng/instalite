@@ -106,7 +106,9 @@ async function postLogin(req, res) {
         try {
             const query = 'SELECT * FROM users WHERE username = ?';
             const params = [username];
+            console.log("hi");
             const result = await queryDatabase(query, params);
+            console.log(result);
             if (result[0].length > 0) {
                 const user = result[0][0];
                 const match = await bcrypt.compare(plain_password, user.hashed_password);

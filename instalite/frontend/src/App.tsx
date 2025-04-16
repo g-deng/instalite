@@ -5,6 +5,7 @@ import Signup from "./pages/Signup";
 // import React from "react";
 import Friends from "./pages/Friends";
 import ChatInterface from "./pages/ChatInterface";
+import ChatMode from "./pages/ChatMode";
 import Upload from "./pages/Upload";
 
 function App() {
@@ -17,7 +18,8 @@ function App() {
                 <Route path='/:username/friends' element={<Friends />} />
                 <Route path="/:username/chat" element={<ChatInterface />} />
                 <Route path="/upload" element={<Upload />} />
-            </Routes>
+                <Route path="/:username/chatMode" element={<ChatMode />} />
+      </Routes>
         </BrowserRouter>
     )
 }
