@@ -4,7 +4,6 @@ import {get_embedding, get_topk} from './embedding_routes.js';
 import multer from 'multer';
 
 const upload = multer({ dest: 'uploads/' });
-import { getHelloWorld, postLogin, postRegister, getFriends, getFriendRecs, createPost, getFeed, getMovie } from './routes.js';
 import { sendChatInvite, acceptChatInvite, getUserProfile, getUserChats, getChatMessages, getUserFriends, leaveChat, checkGroupValidity } from './chat_routes.js';
 import './routes.js'
 
