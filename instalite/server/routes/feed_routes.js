@@ -5,6 +5,7 @@
 ////////////////////////
 
 import { get_db_connection } from '../models/rdbms.js';
+import { sendPostToKafka } from '../kafka/producer.js';
 import RouteHelper from '../routes/route_helper.js';
 
 // Database connection setup
@@ -18,6 +19,31 @@ async function queryDatabase(query, params = []) {
     return db.send_sql(query, params);
 }
 
+async function getKafkaDemo(req, res) {
+    const topic = req.params.topic;
+    console.log(`Topic: ${topic}`);
+    try {
+        const idQuery = `SELECT user_id FROM users WHERE username = ?`;
+        const result = await queryDatabase(idQuery, [topic]);
+        const user_id = result[0][0].user_id;
+        const query1 = `
+            SELECT posts.post_id, users.username, posts.parent_post, posts.title, posts.content 
+            FROM posts
+            JOIN users ON posts.author_id = users.user_id
+            WHERE users.user_id = ?
+        `;
+        const posts = await queryDatabase(query1, user_id);
+        const fixed_result = posts.map(row => ({
+            username: row.username,
+            parent_post: row.parent_post,
+            title: row.title,
+            content: row.content
+        }));
+        res.status(200).send({results: fixed_result});
+    } catch (error) {
+        res.status(500).send({error: 'Error querying database'});
+    }
+}
 
 // POST /createPost
 async function createPost(req, res) {
@@ -36,7 +62,24 @@ async function createPost(req, res) {
             INSERT INTO posts (parent_post, title, content, author_id) VALUES (?, ?, ?, ?)
             `;
             const params = [parent_id, title, content, req.session.user_id];
-            await queryDatabase(query, params);
+            const result = await queryDatabase(query, params);
+
+            console.log(result);
+            const post_id = result[0].insertId;
+            console.log(`Post created with ID: ${post_id}`);
+            const kafkaPost = {
+                post_json: {
+                    username: req.session.username,
+                    post_text: content,
+                    post_uuid_within_site: post_id,
+                    content_type: 'text/html',
+                    source_site: 'instalite-wahoo',
+                }
+            };
+
+            await sendPostToKafka(kafkaPost);
+            console.log('sent to Kafka');
+            console.log(kafkaPost);
             res.status(201).send({message: 'Post created.'});  
         } catch (error) {
             res.status(500).send({error: 'Error querying database'});
@@ -86,5 +129,6 @@ async function getFeed(req, res) {
 
 export {
     createPost,
-    getFeed
+    getFeed,
+    getKafkaDemo
 };

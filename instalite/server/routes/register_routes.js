@@ -1,5 +1,5 @@
 import { getHelloWorld, postLogin, postRegister, getFriends, getFriendRecs, getMovie, uploadImage } from './routes.js';
-import { createPost, getFeed } from './feed_routes.js';
+import { createPost, getFeed, getKafkaDemo } from './feed_routes.js';
 import {get_embedding, get_topk} from './embedding_routes.js';
 import multer from 'multer';
 
@@ -17,6 +17,7 @@ function register_routes(app) {
     app.post('/upload', upload.single('image'), uploadImage);
     app.get('/embeddings/:name', get_embedding);
     app.post('/match', get_topk);
+    app.get('/kafkademo/:topic', getKafkaDemo);
   }
   
   export default register_routes;
