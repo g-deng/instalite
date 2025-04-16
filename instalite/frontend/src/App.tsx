@@ -7,6 +7,7 @@ import Friends from "./pages/Friends";
 import ChatInterface from "./pages/ChatInterface";
 import ChatMode from "./pages/ChatMode";
 import Upload from "./pages/Upload";
+import KafkaDemo from "./pages/KafkaDemo";
 
 function App() {
     return (
@@ -19,7 +20,8 @@ function App() {
                 <Route path="/:username/chat" element={<ChatInterface />} />
                 <Route path="/upload" element={<Upload />} />
                 <Route path="/:username/chatMode" element={<ChatMode />} />
-      </Routes>
+                <Route path="/kafkademo" element={<KafkaDemo/>} />
+            </Routes>
         </BrowserRouter>
     )
 }

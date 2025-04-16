@@ -26,13 +26,18 @@ async function getKafkaDemo(req, res) {
         const idQuery = `SELECT user_id FROM users WHERE username = ?`;
         const result = await queryDatabase(idQuery, [topic]);
         const user_id = result[0][0].user_id;
+        console.log(`User ID: ${user_id}`);
         const query1 = `
             SELECT posts.post_id, users.username, posts.parent_post, posts.title, posts.content 
             FROM posts
             JOIN users ON posts.author_id = users.user_id
             WHERE users.user_id = ?
+            ORDER BY posts.post_id DESC
+            LIMIT 1000
         `;
-        const posts = await queryDatabase(query1, user_id);
+        const postsResult = await queryDatabase(query1, [user_id]);
+        const posts = postsResult[0];
+        console.log(posts.length);
         const fixed_result = posts.map(row => ({
             username: row.username,
             parent_post: row.parent_post,
