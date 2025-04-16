@@ -30,7 +30,7 @@ const consumer = kafka.consumer({
 });
 
 
-const run = async () => {
+const runKafkaConsumer = async () => {
     // Consuming
     await consumer.connect();
 
@@ -152,4 +152,6 @@ const addKafkaPostToDB = async (post) => {
     }
 }
 
-run().catch(console.error);
+export {
+    runKafkaConsumer
+}

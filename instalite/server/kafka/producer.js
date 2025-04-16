@@ -28,8 +28,6 @@ const connectProducer = async () => {
     await producer.connect();
 };
 
-await connectProducer();
-
 const sendPostToKafka = async (post) => {
     await producer.send({
         topic: 'FederatedPosts',
