@@ -112,8 +112,10 @@ class S3KeyValueStore {
     try {
       await this.client.send(new PutObjectCommand(params));
       console.log(`Successfully uploaded ${key} to ${bucketName}`);
+      return key;
     } catch (err) {
       console.error(`Error uploading ${key}:`, err);
+      return null;
     }
   }
   
