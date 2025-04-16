@@ -9,3 +9,11 @@ aws.credentials
 **/classes/
 **/.DS_Store
 **/*.pem
+node_modules/
+package-lock.json
+**/aws.credentials
+.
+.DS_Store
+.idea/
+.vscode/
+uploads/

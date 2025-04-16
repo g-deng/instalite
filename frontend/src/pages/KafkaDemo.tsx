@@ -10,14 +10,14 @@ function KafkaDemo() {
     const rootURL = config.serverRootURL;
 
     const switchPosts = async () =>  {
+        const response = await axios.get(`${rootURL}/kafkademo/${(topic === 'BlueSky') ? 'FederatedPosts' : 'BlueSky'}`);
+        setPosts(response.data.results);
+        console.log(response.data.results);
         if (topic === 'BlueSky') {
             setTopic('FederatedPosts');
         } else {
             setTopic('BlueSky');   
         }
-        const response = await axios.get(`${rootURL}/kafkademo/${topic}`);
-        setPosts(response.data.results);
-        console.log(response.data.results);
     };
 
     return (
