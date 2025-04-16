@@ -5,11 +5,15 @@
 ////////////////////////
 
 import { get_db_connection } from '../models/rdbms.js';
-import { sendPostToKafka } from '../kafka/producer.js';
+import { sendPostToKafka, connectProducer } from '../kafka/producer.js';
+import { runKafkaConsumer } from '../kafka/consumer.js';
 import RouteHelper from '../routes/route_helper.js';
 
 // Database connection setup
 const db = get_db_connection();
+// Connect to Kafka producer and run the consumer
+await connectProducer();
+await runKafkaConsumer();
 
 var helper = new RouteHelper();
 
