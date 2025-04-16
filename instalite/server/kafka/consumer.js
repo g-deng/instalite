@@ -152,6 +152,14 @@ const addKafkaPostToDB = async (post) => {
     }
 }
 
+const closeKafkaConsumer = async () => { 
+    await consumer.disconnect();
+    console.log('Kafka consumer disconnected');
+}
+
 export {
-    runKafkaConsumer
+    runKafkaConsumer,
+    closeKafkaConsumer,
+    addKafkaPostToDB,
+    registerKafkaUser
 }

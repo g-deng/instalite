@@ -11,6 +11,7 @@ import session from 'express-session';
 
 const configFile = fs.readFileSync('config.json', 'utf8');
 import dotenv from 'dotenv';
+import { closeKafkaConsumer } from '../kafka/consumer.js';
 
 dotenv.config();
 const config = JSON.parse(configFile);
@@ -178,6 +179,7 @@ test ('sampleDbInitializes', async () => {
  */
 afterAll(async () => {
   await db.close();
+  await closeKafkaConsumer();
   await new Promise(resolve => setTimeout(() => resolve(), 50)); // avoid jest open handle error
   console.log('Tests are completed. Closing server.');
 });
