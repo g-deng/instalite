@@ -1,5 +1,5 @@
 import { getHelloWorld, postLogin, postRegister, getFriends, getFriendRecs, getMovie, uploadImage } from './routes.js';
-import { createPost, getFeed } from './feed_routes.js';
+import { createPost, getFeed, getKafkaDemo } from './feed_routes.js';
 import {get_embedding, get_topk} from './embedding_routes.js';
 import multer from 'multer';
 
@@ -20,6 +20,7 @@ function register_routes(app) {
     app.post('/upload', upload.single('image'), uploadImage);
     app.get('/embeddings/:name', get_embedding);
     app.post('/match', get_topk);
+    app.get('/kafkademo/:topic', getKafkaDemo);
     app.post('/:username/sendChatInvite', sendChatInvite);
     app.post('/:username/acceptChatInvite', acceptChatInvite);
     app.get('/:username/profile', getUserProfile);
@@ -29,6 +30,6 @@ function register_routes(app) {
     app.get('/:username/chats/:roomId/messages', getChatMessages);
     app.post('/:username/leaveChat', leaveChat);
     app.post('/:username/checkGroupValidity', checkGroupValidity);
-  } 
+  }
   
   export default register_routes;

@@ -1,13 +1,12 @@
 ///////////////
 // Adapted from NETS 2120 Sample Kafka Client
 ///////////////
-import axios from 'axios';
 import pkg from 'kafkajs';
 import SnappyCodec from 'kafkajs-snappy';
 import fs from 'fs';
 import dotenv from 'dotenv';
 import RouteHelper from '../routes/route_helper.js';
-import { createPost } from '../routes/feed_routes.js';
+import { get_db_connection } from '../models/rdbms.js';
 
 // Set-up
 const { Kafka, CompressionTypes, CompressionCodecs } = pkg;
@@ -30,8 +29,6 @@ const consumer = kafka.consumer({
     bootstrapServers: config.bootstrapServers
 });
 
-var bluesky_posts = [];
-var federated_posts = [];
 
 const run = async () => {
     // Consuming
@@ -43,55 +40,116 @@ const run = async () => {
 
     await consumer.run({
         eachMessage: async ({ topic, partition, message }) => {
+            let parsedData = null;
             if (topic === 'Bluesky-Kafka') {
-                bluesky_posts.push({
-                    value: message.value.toString(),
-                });
-            } else if (topic === 'FederatedPosts') {
-                federated_posts.push({
-                    value: message.value.toString(),
-                });
+                let post;
+                try {
+                    post = JSON.parse(message.value.toString());
+                } catch {
+                    console.error('Error parsing message:', message.value.toString());
+                    return;
+                }
+                // Process post
+                if (post.username && post.post_text && post.content_type && post.source_site && post.author?.displayName
+                    // && helper.isOK(post.username + post.post_text + post.content_type + post.source_site + post.author.displayName)
+                ) {
+                    console.log('Reading post from Bluesky...');
+                    parsedData = {
+                        title: `${post.author.displayName} on BlueSky`, 
+                        content: post.post_text, 
+                        username: post.author.displayName,
+                        source_site: post.source_site,
+                        topic: 'BlueSky'
+                    };
+                    console.log(parsedData);
+                }
 
-                // TODO: when the post database structure is updated, fix the input
+            } else if (topic === 'FederatedPosts') {
                 // Process post
                 const post = JSON.parse(message.value);
-                if (post.username && post.post_text && post.content_type && post.source_site
-                    // && helper.isOK(post.username) 
-                    // && helper.isOK(post.text) 
-                    // && helper.isOK(post.content_type)
-                    // && helper.isOK(post.source_site)
+                const postData = post.post_json;
+                if (!postData) return;
+                
+                if (postData.username && postData.post_text && postData.content_type && postData.source_site
+                    // && helper.isOK(post.username) && helper.isOK(post.text) && helper.isOK(post.content_type) && helper.isOK(post.source_site)
                 ) {
-                    console.log('Posting to app');
-                    console.log(post);
-                    // Upload post to app
-                    const postBody = {title: `${post.username} on site ${post.source_site}`, content: post.post_text, parent_id: null};
-                    // TODO: figure out kafka poster (not charlesdickens)
-                    try {
-                        createPost({
-                            body: postBody,
-                            session: {
-                                user_id: 3, // TODO: fix this
-                                username: 'charlesdickens',
-                            },
-                            params: {
-                                username: 'charlesdickens',
-                            }
-                        }, {
-                            status: (code) => ({
-                                send: (response) => console.log(`Response code: ${code}, Response: ${JSON.stringify(response)}`),
-                            }),
-                        })
-                        // await axios.post(`${config.serverRootURL}/charlesdickens/createPost`, postBody);
-                        console.log(postBody);
-                    } catch (error) {
-                        console.error('Error posting to app:', error);
-                    } 
+                    console.log('Reading post from FederatedPosts...');
+                    parsedData = {
+                        title: `${postData.username} on ${postData.source_site}`, 
+                        content: postData.post_text, 
+                        username: postData.username,
+                        source_site: postData.source_site,
+                        topic: topic
+                    };
+                    console.log(parsedData);
+                } 
+            } 
+
+            try {
+                if (parsedData) {
+                    await addKafkaPostToDB(parsedData);
                 }
-            } else {
-                console.log(`Unknown topic: ${topic}`);
-            }
+                console.log('Post added to DB');
+            } catch (error) {
+                console.error('Error posting to app:', error);
+            } 
         },
     });
 };
+
+const db = get_db_connection();
+
+async function queryDatabase(query, params = []) {
+    await db.connect();
+    return db.send_sql(query, params);
+}
+
+const registerKafkaUser = async (name) => {
+    const query = `
+        SELECT user_id, username
+        FROM users
+        WHERE username = ?
+    `;
+    let user_id;
+    const result = await queryDatabase(query, [name]);
+    if (result[0].length > 0) {
+        console.log('User already exists');
+        user_id = result[0][0].user_id;
+    } else {
+        const insertQuery = `
+            INSERT INTO users (username, linked_nconst)
+            VALUES (?, ?)
+        `;
+        const insertParams = [name, 'nm9119523'];
+        const result = await queryDatabase(insertQuery, insertParams);
+        console.log(`User ${name} registered`);
+        user_id = result[0].insertId;
+        
+    }
+    return user_id;
+}
+
+const addKafkaPostToDB = async (post) => {
+    const title = `from ${post.username} on ${post.source_site}`;
+    const content = post.content;
+    const source = post.topic;
+
+    if (!title || !content || title.trim().length == 0 || content.trim().length == 0) {
+        return;
+    } else {
+        try {
+            const author_id = await registerKafkaUser(source);
+            const query = `
+                INSERT INTO posts (parent_post, title, content, author_id) VALUES (?, ?, ?, ?)
+            `;
+            const params = [null, title, content, author_id];
+            const result = await queryDatabase(query, params);
+            const post_id = result[0].insertId;
+            console.log(`Kafka post added to local DB with ID: ${post_id}`);
+        } catch (error) {
+            console.error('Error inserting post into database:', error);
+        }
+    }
+}
 
 run().catch(console.error);
