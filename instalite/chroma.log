@@ -4884,3 +4884,201 @@ sqlite3.OperationalError: no such table: tenants
 [32mINFO[0m:     [15-04-2025 19:36:19] 127.0.0.1:58356 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
 [32mINFO[0m:     [15-04-2025 19:36:19] 127.0.0.1:58342 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
 [32mINFO[0m:     [15-04-2025 19:36:19] 127.0.0.1:58356 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/query HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 19:39:04] Shutting down
+[32mINFO[0m:     [15-04-2025 19:39:04] Waiting for application shutdown.
+[36mDEBUG[0m:    [15-04-2025 19:39:04] Stopping component System
+[36mDEBUG[0m:    [15-04-2025 19:39:04] Stopping component SegmentAPI
+[36mDEBUG[0m:    [15-04-2025 19:39:04] Stopping component LocalExecutor
+[36mDEBUG[0m:    [15-04-2025 19:39:04] Stopping component PersistentLocalHnswSegment
+[36mDEBUG[0m:    [15-04-2025 19:39:04] Stopping component LocalSegmentManager
+[36mDEBUG[0m:    [15-04-2025 19:39:04] Stopping component SimpleAsyncRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 19:39:04] Stopping component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 19:39:04] Stopping component Posthog
+[36mDEBUG[0m:    [15-04-2025 19:39:04] Stopping component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [15-04-2025 19:39:04] Stopping component SqliteDB
+[36mDEBUG[0m:    [15-04-2025 19:39:04] Stopping component OpenTelemetryClient
+[32mINFO[0m:     [15-04-2025 19:39:04] Application shutdown complete.
+[32mINFO[0m:     [15-04-2025 19:39:04] Finished server process [[36m34222[0m]
+[33mWARNING[0m:  [15-04-2025 23:15:20] chroma_server_nofile is set to 65535, but this is less than current soft limit of 1048576. chroma_server_nofile will not be set.
+[32mINFO[0m:     [15-04-2025 23:15:20] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [15-04-2025 23:15:20] Starting component System
+[36mDEBUG[0m:    [15-04-2025 23:15:20] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [15-04-2025 23:15:20] Starting component SqliteDB
+[36mDEBUG[0m:    [15-04-2025 23:15:20] Starting component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [15-04-2025 23:15:20] Starting component Posthog
+[36mDEBUG[0m:    [15-04-2025 23:15:20] Starting component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 23:15:20] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [15-04-2025 23:15:20] Starting component LocalExecutor
+[36mDEBUG[0m:    [15-04-2025 23:15:20] Starting component SegmentAPI
+[36mDEBUG[0m:    [15-04-2025 23:15:20] Starting component SimpleAsyncRateLimitEnforcer
+[32mINFO[0m:     [15-04-2025 23:15:21] Started server process [[36m92793[0m]
+[32mINFO[0m:     [15-04-2025 23:15:21] Waiting for application startup.
+[32mINFO[0m:     [15-04-2025 23:15:21] Application startup complete.
+[32mINFO[0m:     [15-04-2025 23:15:21] Uvicorn running on [1mhttp://0.0.0.0:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [15-04-2025 23:20:44] Shutting down
+[32mINFO[0m:     [15-04-2025 23:20:44] Waiting for application shutdown.
+[36mDEBUG[0m:    [15-04-2025 23:20:44] Stopping component System
+[36mDEBUG[0m:    [15-04-2025 23:20:44] Stopping component SegmentAPI
+[36mDEBUG[0m:    [15-04-2025 23:20:44] Stopping component LocalExecutor
+[36mDEBUG[0m:    [15-04-2025 23:20:44] Stopping component LocalSegmentManager
+[36mDEBUG[0m:    [15-04-2025 23:20:44] Stopping component SimpleAsyncRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 23:20:44] Stopping component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 23:20:44] Stopping component Posthog
+[36mDEBUG[0m:    [15-04-2025 23:20:44] Stopping component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [15-04-2025 23:20:44] Stopping component SqliteDB
+[36mDEBUG[0m:    [15-04-2025 23:20:44] Stopping component OpenTelemetryClient
+[32mINFO[0m:     [15-04-2025 23:20:44] Application shutdown complete.
+[32mINFO[0m:     [15-04-2025 23:20:44] Finished server process [[36m92793[0m]
+[33mWARNING[0m:  [15-04-2025 23:20:47] chroma_server_nofile is set to 65535, but this is less than current soft limit of 1048576. chroma_server_nofile will not be set.
+[32mINFO[0m:     [15-04-2025 23:20:47] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [15-04-2025 23:20:47] Starting component System
+[36mDEBUG[0m:    [15-04-2025 23:20:47] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [15-04-2025 23:20:47] Starting component SqliteDB
+[36mDEBUG[0m:    [15-04-2025 23:20:47] Starting component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [15-04-2025 23:20:47] Starting component Posthog
+[36mDEBUG[0m:    [15-04-2025 23:20:47] Starting component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 23:20:47] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [15-04-2025 23:20:47] Starting component LocalExecutor
+[36mDEBUG[0m:    [15-04-2025 23:20:47] Starting component SegmentAPI
+[36mDEBUG[0m:    [15-04-2025 23:20:47] Starting component SimpleAsyncRateLimitEnforcer
+[32mINFO[0m:     [15-04-2025 23:20:48] Started server process [[36m97072[0m]
+[32mINFO[0m:     [15-04-2025 23:20:48] Waiting for application startup.
+[32mINFO[0m:     [15-04-2025 23:20:48] Application startup complete.
+[32mINFO[0m:     [15-04-2025 23:20:48] Uvicorn running on [1mhttp://0.0.0.0:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [15-04-2025 23:22:03] Shutting down
+[32mINFO[0m:     [15-04-2025 23:22:03] Waiting for application shutdown.
+[36mDEBUG[0m:    [15-04-2025 23:22:03] Stopping component System
+[36mDEBUG[0m:    [15-04-2025 23:22:03] Stopping component SegmentAPI
+[36mDEBUG[0m:    [15-04-2025 23:22:03] Stopping component LocalExecutor
+[36mDEBUG[0m:    [15-04-2025 23:22:03] Stopping component LocalSegmentManager
+[36mDEBUG[0m:    [15-04-2025 23:22:03] Stopping component SimpleAsyncRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 23:22:03] Stopping component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 23:22:03] Stopping component Posthog
+[36mDEBUG[0m:    [15-04-2025 23:22:03] Stopping component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [15-04-2025 23:22:03] Stopping component SqliteDB
+[36mDEBUG[0m:    [15-04-2025 23:22:03] Stopping component OpenTelemetryClient
+[32mINFO[0m:     [15-04-2025 23:22:03] Application shutdown complete.
+[32mINFO[0m:     [15-04-2025 23:22:03] Finished server process [[36m97072[0m]
+[33mWARNING[0m:  [15-04-2025 23:22:05] chroma_server_nofile is set to 65535, but this is less than current soft limit of 1048576. chroma_server_nofile will not be set.
+[32mINFO[0m:     [15-04-2025 23:22:06] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [15-04-2025 23:22:06] Starting component System
+[36mDEBUG[0m:    [15-04-2025 23:22:06] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [15-04-2025 23:22:06] Starting component SqliteDB
+[36mDEBUG[0m:    [15-04-2025 23:22:06] Starting component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [15-04-2025 23:22:06] Starting component Posthog
+[36mDEBUG[0m:    [15-04-2025 23:22:06] Starting component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 23:22:06] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [15-04-2025 23:22:06] Starting component LocalExecutor
+[36mDEBUG[0m:    [15-04-2025 23:22:06] Starting component SegmentAPI
+[36mDEBUG[0m:    [15-04-2025 23:22:06] Starting component SimpleAsyncRateLimitEnforcer
+[32mINFO[0m:     [15-04-2025 23:22:06] Started server process [[36m98094[0m]
+[32mINFO[0m:     [15-04-2025 23:22:06] Waiting for application startup.
+[32mINFO[0m:     [15-04-2025 23:22:06] Application startup complete.
+[32mINFO[0m:     [15-04-2025 23:22:06] Uvicorn running on [1mhttp://0.0.0.0:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [15-04-2025 23:22:14] 127.0.0.1:44016 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 23:22:14] 127.0.0.1:44022 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 23:22:14] 127.0.0.1:44016 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[36mDEBUG[0m:    [15-04-2025 23:22:14] Starting component PersistentLocalHnswSegment
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 0
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 0
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 1
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 2
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 3
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 4
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 5
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 6
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 7
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 8
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 9
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 10
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 11
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 12
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 13
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 14
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 15
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 16
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 17
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 18
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 19
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 20
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 21
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 22
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 23
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 24
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 25
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 26
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 27
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 28
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 29
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 30
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 31
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 32
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 33
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 34
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 35
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 36
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 37
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 38
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 39
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 40
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 41
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 42
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 43
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 44
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 45
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 46
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 47
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 48
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 49
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 50
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 51
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 52
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 53
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 54
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 55
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 56
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 57
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 58
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 59
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 60
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 61
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 62
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 63
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 64
+[33mWARNING[0m:  [15-04-2025 23:22:14] Add of existing embedding ID: 65
+[32mINFO[0m:     [15-04-2025 23:22:14] 127.0.0.1:44022 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/query HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 23:22:41] 127.0.0.1:59010 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 23:22:41] 127.0.0.1:59012 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/query HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 23:25:33] 127.0.0.1:35910 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 23:25:34] 127.0.0.1:35922 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/query HTTP/1.1" 200
+[32mINFO[0m:     [15-04-2025 23:26:11] Shutting down
+[32mINFO[0m:     [15-04-2025 23:26:11] Waiting for application shutdown.
+[36mDEBUG[0m:    [15-04-2025 23:26:11] Stopping component System
+[36mDEBUG[0m:    [15-04-2025 23:26:11] Stopping component SegmentAPI
+[36mDEBUG[0m:    [15-04-2025 23:26:11] Stopping component LocalExecutor
+[36mDEBUG[0m:    [15-04-2025 23:26:11] Stopping component PersistentLocalHnswSegment
+[36mDEBUG[0m:    [15-04-2025 23:26:11] Stopping component LocalSegmentManager
+[36mDEBUG[0m:    [15-04-2025 23:26:11] Stopping component SimpleAsyncRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 23:26:11] Stopping component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [15-04-2025 23:26:11] Stopping component Posthog
+[36mDEBUG[0m:    [15-04-2025 23:26:11] Stopping component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [15-04-2025 23:26:11] Stopping component SqliteDB
+[36mDEBUG[0m:    [15-04-2025 23:26:11] Stopping component OpenTelemetryClient
+[32mINFO[0m:     [15-04-2025 23:26:11] Application shutdown complete.
+[32mINFO[0m:     [15-04-2025 23:26:11] Finished server process [[36m98094[0m]
+[33mWARNING[0m:  [16-04-2025 02:31:21] chroma_server_nofile is set to 65535, but this is less than current soft limit of 1048576. chroma_server_nofile will not be set.
+[32mINFO[0m:     [16-04-2025 02:31:21] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [16-04-2025 02:31:21] Starting component System
+[36mDEBUG[0m:    [16-04-2025 02:31:21] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [16-04-2025 02:31:21] Starting component SqliteDB
+[36mDEBUG[0m:    [16-04-2025 02:31:21] Starting component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [16-04-2025 02:31:21] Starting component Posthog
+[36mDEBUG[0m:    [16-04-2025 02:31:21] Starting component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [16-04-2025 02:31:21] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [16-04-2025 02:31:21] Starting component LocalExecutor
+[36mDEBUG[0m:    [16-04-2025 02:31:21] Starting component SegmentAPI
+[36mDEBUG[0m:    [16-04-2025 02:31:21] Starting component SimpleAsyncRateLimitEnforcer
+[32mINFO[0m:     [16-04-2025 02:31:21] Started server process [[36m7800[0m]
+[32mINFO[0m:     [16-04-2025 02:31:21] Waiting for application startup.
+[32mINFO[0m:     [16-04-2025 02:31:21] Application startup complete.
+[32mINFO[0m:     [16-04-2025 02:31:21] Uvicorn running on [1mhttp://0.0.0.0:8000[0m (Press CTRL+C to quit)

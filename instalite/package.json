@@ -29,8 +29,6 @@
         "@tensorflow/tfjs-node": "^4.22.0",
         "@types/node": "^20.11.5",
         "@types/offscreencanvas": "^2019.7.3",
-        "@typescript-eslint/eslint-plugin": "^5.62.0",
-        "@typescript-eslint/parser": "^5.0.0",
         "@vladmandic/build": "^0.9.3",
         "@vladmandic/face-api": "^1.7.13",
         "@vladmandic/pilogger": "^0.4.9",
@@ -64,7 +62,7 @@
         "rimraf": "^5.0.5",
         "seedrandom": "^3.0.5",
         "socket.io": "^4.8.1",
-    "split": "^1.0.1",
+        "split": "^1.0.1",
         "tslib": "^2.6.2",
         "typedoc": "^0.25.7",
         "typescript": "^4"
