@@ -1,520 +1,277 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=18971667&assignment_repo_type=AssignmentRepo)
-# Homework 4
+[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=18988697&assignment_repo_type=AssignmentRepo)
+# NETS 2120 Course Project
 
-In this homework, you will be building components of a basic social media application, preparing you for the final course project. You will be working with the same IMDb dataset as you have been using up until this point, but now you will be focusing on adding `users` and `posts` to the application.
+## Overview
 
-You will:
-1. Implement a notion of user credentials and logins, with encrypted passwords.
-1. Implement a variety of RESTful API routes related to common social media application operations. 
-2. Work with React components to interact with your routes and create a functional frontend. 
-1. Start deploying your data onto the cloud.
+The course project will involve building "InstaLite," an Instagram-like social media site with full support for images. This project is to be done in *teams* and will build upon components you built over the semester in your homeworks.
 
+*General Advice*: Read through this entire document and compile a list of (1) data resources you'll need to design, (2) backend endpoints, (3) frontend pages / widgets, (4) interfaces to additional components such as ChatGPT and Apache Spark. Try to establish "core" functionality and build outwards.
 
-## Setup
+*Instructors' note*: During interviews, companies often ask you to tell them about a technical project you worked on. If you invest enough time, this project can play that role; you can add it to your “portfolio” of system that you can show a potential employer!  (We do ask that you keep your repo private, however.)
 
-### Clone the Code
+## Milestones
 
-Once you accept the GitHub Classroom assignment, you will have a private repository with the
-name `homework-4-{myid}`. This repository contains the starter code for the assignment. **Change `{myid}` to your
-PennKey.**
+You will have a number of *checkins* and *deliverables*, as follows.  For more details, see [Logistics](#Logistics) below.
 
-Here is how you will check out the `homework-4` to your machine:
+1. **4/8**: Submit, via Gradescope, a 2-4 page document with a brief overview of the components of your InstaLite system, outlining who will *lead* each deliverable component of the project (see the next milestone).  Settle on who will lead **cross-cutting elements** including (a) database design, (b) integration testing, (c) the ranking backend job and its interaction with the Feed, (d) AWS hosting.  You should also decide on some implementation milestones (with deadlines) that will help you meet the demonstration deadlines below. 
+2. **4/15**: Submit, via Gradescope, implemented individual components for your team, with test cases:
+   - Chatbot
+   - Websocket chat
+   - Kafka stream read and post
+   - Image upload / match in vector database
+3. **4/16**: In the class period, at least one member of your team should give a **5 minute** demo of the main functionality of the 4 components. This may be to your mentor TA or to the whole class, depending on time availability.
+5. **4/23**: In the class period, at least one member of your team should give a **5 minute** demo of the platform components working under one login on AWS. This may be to your mentor TA or to the whole class, depending on time availability.
+6. **5/5**:  Project code-complete with all new functionality.  Demos will be scheduled throughout the final exam period.
 
-1. Navigate to the GitHub repository of _your_ homework-4-{myid} assignment.
-2. Click the green Code button and copy the SSH link.
-3. Open up your local terminal/command-line interface and `cd` to `~/nets2120`. (On
-   Windows: `cd %userprofile%\nets2120`).
-4. Clone the repository by running `git clone <ssh link> homework-4`. This should create a new
-   folder `homework-4` with the contents of the repository inside of your `nets2120` directory.
+Again, please also see [Logistics](#Logistics) below.
 
-### Launch Docker
+## Project Technology Stack
 
-1. Launch the Docker Desktop app and make sure your NETS 2120 container is started.
-1. Open VSCode, Attach to the Container, and use Open Folder to open your `homework-4` project.
+Your project will have a number of elements, building upon what you did with the homework. We expect the following:
 
-## Part 1: Backend User Data
+* **Backend** services in Node.js and/or Java, hosted on Amazon EC2
+* **Database** (accounts, social network, etc.) hosted in RDS and/or DynamoDB (many aspects will work better in RDS)
+* **Image search** based on embeddings similarity, in ChromaDB
+* Large objects stored in S3, as necessary
+* **Natural language search** using GPT or an alternative LLM
+* Social **news streaming** via Apache Kafka
+* Adsorption ranking of posts and individuals via Apache Spark
+* Proper handling of security and sessions
+* **Frontend** in React and Javascript
+* Code in GitHub
 
-For the first part, you will implement **user accounts**, **friends functionality**, and basic **posts**. 
+## User Signup and User Accounts Backend
 
-Node.js setup: as per prior assignments, you should be able to do:
+This component should generalize parts of your HW4.  New users should be able to sign up for an account. They should enter, at the very least, a login name, a password, a first and last name, an email address, an affiliation (such as Penn), and a birthday.
+
+* The password should be *salted* and encrypted following best practices.
+* Users should be able to *upload a profile photo* -- on mobile, perhaps even taking a selfie for that photo -- as a starting point.
+* Users should include a number of hashtags of interests.  The top-10 most popular hash tags (by occurrence) should be shown so they have a starting point.
+
+**Important new functionality**: The user should be able to link to a given *actor account* from IMDB by matching the *embedding* of their selfie with the *profile photos* of the 5 most similar actors.  They will be able to choose from those actors.
+
+We will provide you with a set of precomputed actor embeddings and profile photos in the form of a ChromaDB database. You should use this to match the **user's selfie or uploaded photo** to the actor's profile photos.  This will leverage the same image embeddings routines used in Homework 2 Milestone 1, except that you'll need to implement support for uploading images to S3 and creating their embeddings.
+
+## User Login Page
+
+The user should be able to log in with their user ID and password. (See Extra Credit for an option for resetting a forgotten password.)
+
+## The User Page / Main Content Feed
+
+When the user logs in, they should see an Instagram-style feed with status updates, new friendships, and profile updates (posts) made by friends. When Alice posts on Bob’s Feed, her post should appear on both Alice’s and Bob’s Feeds (and thus home pages).  Below is an example taken directly from Instagram.
+
+<img src="instagram-screenshot.png" alt="Screenshot" style="width:50%;">
+
+**User Posts**: Each user should be able to make posts, containing an optional image and optional text. **The post might include hashtags**. Although each field is optional, a post should at least have *some* content to be valid.
+
+**What Goes in the Feed**: Each user should see *posts* from their friends, themselves, or related to their hashtags of interest; as well as *highly ranked posts* including those from external social media (see below).  Posts can have text and images.
+
+**Commenting**: Users should be able to add a comment under any post they can see (that is, both their own posts and their friends’ posts). These comments should appear under the post they respond to, in a threaded fashion.
+
+The user page should include non-scrolling menu elements on the left (as in the screenshot) or top, for access to other capabilities such as the user profile and search (see below).  The main feed should paginate (default behavior) or support infinite scrolling by fetching more data on demand (see Extra Credit).
+
+### Feed and Ranking
+
+Beyond posts made directly by the user and friends (and comments about these) -- you should bring in posts with high ranking from non-friends.
+
+All posts are public, i.e. they will be considered for the feed based on the criteria below even when the post owner and the user aren't friends. These posts:
+
+1. Come from the user's friends
+2. Reference the user's selected hashtags of interests
+3. Come from others with high SocialRank
+4. Come from the course project **Bluesky Feed** and score highly.  Bluesky posts on movies will be made accessible to you through an Apache Kafka Topic.
+
+**Feed updates**: Your server, while running, should refresh the data necessary for computing the feed once an hour.  This will involve fetching any **"new news" from Kafka** and from **recent posts / activities**; and ranking the content.  If you precompute the data, it should be easy for the client to produce the page upon login.
+
+**User actions**:
+Users should be able to “like” posts, and should be able to comment on them.  If a post or comment includes **hashtags** a link between the hashtag and post should be established.
+
+**Asynchronous ranking of posts**: Every candidate post should be assigned (for each user) a weight. Weights will be computed with an implementation of the adsorption algorithm in Spark. (For a refresher on adsorption, you can refer to the recorded lectures or refer to [this studio-based recording](https://youtu.be/eP89azdCsFM).) **This should run periodically, once per hour as described above.** The Spark job will need to share state (the database) with your web client (note that this could be done directly, or e.g., by providing REST endpoints to the Spark job to write things).
+
+The Spark job should start by building a graph from the data underlying your social platform. The
+graph should have a node for each user, each movie, each hashtag, and each post. It should also have
+the following directed edges:
+
+1. $(u, h)$ and $(h, u)$, if user $u$ has selected hashtag $h$ as an interest
+2. $(h, p)$ and $(p, h)$, if post $p$ is associated with hashtag $h$
+3. $(u, p)$ and $(p, u)$, if user $u$ has “liked” post $p$
+4. $(u1, u2)$ and $(u2, u1)$ if users $u1$ and $u2$ are friends (we will generalize from directed followers to undirected friends here: either $u1$ follows $u2$, or $u2$ follows $u1$, is sufficient to consider the two friends.)
+
+The Spark jobs should assign weights to the edges.
+
+- For each hashtag node $h$, the weights on the $(h, a)$ edges adjacent should be equal and add up
+  to 1.
+- Similarly, the outgoing edges from a post $p$ should have equal weights that sum to 1.
+- For each user $u$:
+    - The weights on the $(u, h)$ edges should be equal and sum up to 0.3
+    - The weights on the $(u, p)$ edges should be equal and sum up to 0.4
+    - The weights on the $(u, u′)$ edges should be equal and sum up to 0.3
+
+Now run adsorption from the users to assign a user label + weight to each node (including the article nodes). Run to a maximum of 15 iterations or until convergence. Given the ranked graph as above, the social network recommender should take the set of potential articles (those from the same day, minus ones that have already been recommended), and normalize the adsorption-derived weights on these articles. Then it should randomly choose an article based on this weighted random distribution.
+
+**Interfacing the Spark job with the Web Application**: We recommend your group thinks carefully about how the different components (data storage, Spark job to recompute weights, search / recommendation) interface.  You likely will want to invoke the Spark task via Livy or the equivalent, with an easily configurable address for the Spark Coordinator Node. Most likely you’ll want to use some form of persistent storage (e.g. RDS) to share the graph and other state.
+
+### Federated Posts
+
+Your site should have a *unique ID* distinguishing it from all other NETS 2120 sites. This will be your team name or number (e.g. `g01`). Through the Kafka `FederatedPosts` channel, your site should both *read* and *send* posts that can be used by other projects' InstaLite sites. Posts should have a JSON component called `post_json`:
 
 ```
-nvm use 22.13.1
-npm install
-```
-
-If you get an error, try: `source install-nvm.sh` and then `source ~/.bashrc` and then repeat the above.
-
-### <ins>1a: Setting up new tables</ins>
-
-We will continue to build off your HW2/HW3 database.
-You should create two MySQL tables (populate the SQL commands in [create_tables.js](server/models/create_tables.js) to do this). An example query for creating the `friends` table is included for your reference. The schema for these tables should be the following: 
-
-- Table name: **users**
-  - user_id: int, can't be null, is an AUTO INCREMENT, and is a PRIMARY KEY.
-  - username: varchar of size 255
-  - hashed_password: varchar of size 255
-  - linked_nconst: varchar of size 255,  foreign key to the `nconst` field in `names`
-- Table name: posts
-  - post_id: int, can't be NULL, auto-incremented primary key 
-  - parent_post: int, foreign key reference to `post_id` in `posts` (this will be the ID of a post's parent post once we start implementing threads)
-  - title: varchar of size 255
-  - content: varchar of size 255
-  - author_id: int,  foreign key to `user_id` in `users`
-
-Then, run `npm run create_tables` in your terminal to run this file. You should be able to see the impact immediately through the VSCode Database Extension.
-
-#### If You Don't Have a Complete Database from HW2/3
-
-We recommend you re-run the loader code in HW2 `datasets` (`mvn exec:java@loader`).
-
-### <ins>1b: RESTful Backend API</ins>
-
-As is now our tradition, the `server` directory contains the backend code for our REST APIs.
-In [`routes.js`](server/routes/routes.js), you will be creating the backend service using Node.js.
-
-#### Configuration Setup
-To connect your backend service to an AWS RDS instance, you will need to (1) create a `.env` file with credentials, and (2) modify [config.json](config.json) to use the connection information for your RDS database.
-
-`.env` should have items from your AWS Academy Details first, then the database user ID and the password we've been using (refer to Ed Discussion), then an OpenAPI key (we will provide one on Ed Discussion):
-```
-AWS_ACCESS_KEY_ID=...
-AWS_SECRET_ACCESS_KEY=...
-AUTH_TOKEN=...
-DATABASE_SERVER=localhost
-DATABASE_NAME=imdb_basic
-DATABASE_USER=nets2120_hw2
-DATABASE_PASSWORD=
-OPENAI_API_KEY=
-USE_PERSISTENCE=TRUE
-```
-
-**Important: each time you open a new Terminal in your Docker container, you should `source .env` from the `homework-4` directory.  ChromaDB, npm, and other tools will rely on this.**
-
-
-You will likely want to leave `config.json` alone but it (also) specifies how to connect to MySQL.
-
-```json
 {
-  "database": {
-    "host": "localhost",
-    "port": "3306",
-    "database": "imdb_basic"
-  },
-  "serverPort": "8080"
+    username: '...',
+    source_site: '...',
+    post_uuid_within_site: '...',
+    post_text: '...',
+    content_type: '...'
 }
 ```
 
-You will rely on an SSH tunnel to connect to the RDS instance.
+as well as an optional component, `attach`, including a URL to a world-readable image (e.g., an S3 URL on a public page).  The `content_type` field in the JSON should be the HTTP content-type associated with the binary data at the URL.
 
-#### ChromaDB
+## Secondary Screens
 
-For the LLM portion of the assignment, you will want to use *ChromaDB* as your vector store, and have it look up IMDB movie reviews.  You should still have ChromaDB as part of your setup, but if not: run `source chroma_setup.sh`.
+There should be at least the following options in a sidebar or other menu:
 
-* We've pre-indexed the data and you can download from [here](https://penn-cis545-files.s3.amazonaws.com/chromadb.zip)
-* Copy it from your host machine into your shared `nets2120` directory
-* From a terminal *within Docker* (open using VSCode or `docker -it nets2120 bash`):
-  * Move into the `data` directory under your `homework-4` directory.
-  * From there, unzip so you see `data`, then `chromadb` as a subdirectory.
-  * Now, in the `homework-4` directory, run `source run_chroma.sh`.
-
-#### API Specifications
-The main program, [app.js](app.js), registers route handlers. You'll need to look at [register_routes.js](routes/register_routes.js) and [routes.js](routes/routes.js) to fill in the stubbed code for the following routes. (`Register_routes` is mostly complete except for one route registration, but `routes` generally has blank function bodies). In `routes.js`, use `db.send_sql()` (found in [rdbms.js](server/models/rdbms.js)) to send queries to your database, in the same way that `queryDatabase()` worked in Homework 2 MS2.  
-
-**BEWARE SQL INJECTION ATTACKS for any parameters taken from the client. For simplicity we won't be using prepared statements, so you should filter the allowed characters / strings.  Note we have provided a function to help with that, which disallows quotes and other characters that might result in SQL injection. **
-
-You should find a couple of useful functions in [route_helper.js](server/routes/route_helper.js), to do pattern matching
-of strings and to compare values with session information.
+1. Profile page
+2. Add/remove friends
+3. Chat mode
+4. Search (can be part of the home screen if you prefer)
 
-- `/register` accepts POST requests with the following **body** parameters: 
-  - `username`
-  - `password`
-  - `linked_id`
-  
-  To register a user, add the given information about the user into the `users` table. 
-  
-  Make sure that you *salt and hash* the raw password text (see our lecture on computer security) passed in through the body parameters and are only storing the `hash` in the database. We will be doing this using `bcrypt`, which you can find more information about [here](https://www.npmjs.com/package/bcrypt).
+### 1. Profile Page
 
-  For convenience we have modularized out your encryption function into [route_helper.js](server/routes/route_helper.js) -- you should fill in the body of `encryptPassword(raw_pass, callback)`.  You can call it as `helper.encryptPassword(...)` in `postRegister` to get your desired hash before inserting the user info into the table. 
+Users should be able to change their associated actor after the account has been created. As before, the list of the top-5 most-similar actors (by embedding) should be displayed to allow for a change (they should only be able to pick from these 5). Changes should result in an automatic status post (“Alice is now linked to Rebecca Ferguson”). Users should also be able to change their email ID and their password, without triggering a post.
 
-  When the registration is successful, return a status `200` with the following example response structure: `{username: 'rpeng'}`.
+They should be able to update their hashtags representing interests. Additional hashtags should be suggested to them.
 
-  - **Error handling:**
-    - Return status `400` with JSON `{error: 'One or more of the fields you entered was empty, please try again.'}` for invalid query parameters. These include when: 
-      - `username` is not provided.
-      - `password` is not provided.
-      - `linked_id` is not provided. 
-    - Return status `409` (Conflict) with JSON `{error: "An account with this username already exists, please try again."}` when the username already exists in the database. 
-    - Return status `500` with JSON `{error: 'Error querying database.'}` for any database query errors. 
-
-- `/login` accepts POST requests with the following **body** parameters:
-  - `username`
-  - `password`
- 
-  Use `bcrypt` to compare the password given in the login attempt with the hash stored in the `users` table for the user with the given `username`. When the login attempt is successful, return a status `200` with the following example response structure: `{username: 'rpeng'}`.
-
-  - **Error handling:**
-    - Return status `400` with JSON `{error: 'One or more of the fields you entered was empty, please try again.}` for invalid query parameters. These include when: 
-      - `username` is not provided.
-      - `password` is not provided.
-    - Return status `500` with JSON `{error: 'Error querying database'}` for any database query errors. 
-    - Return status `401` (Unauthorized) with JSON `{error: Username and/or password are invalid.'}`. 
-
-  - **Session management:**
-    - If the login attempt is successful, we would like to store the current logged in user's information in the browser's session object. 
-    - When a user is logged in, store the `user_id` of that user in the session object using `req.session.user_id`. 
-
-
-- `/logout` accepts GET requests and removes the current user from the `req.session` object (set `req.session.user` to `null`). 
-  - After successfully logging the user out, return a status 200 with `{message: "You were successfully logged out."}` in the response. 
-
-The following functions should all test whether the `req.session` information indicates the user is logged in -- if not they should return an error (see codes below).
-
-
-- `/:username/friends` accepts GET requests and returns an array of UNIQUE friends that the current user followss in the session. This should only be allowed if a user is logged in. 
-
-  You should select the `nconst` and `primaryName` of every person who is *followed* by the current session user (who should be the *follower*). (Hint: you may want to use multiple JOINs to link the `users`, `friends`, and `names` tables together).
-
-  When getting friends is successful, return a status `200` with a result that looks like this: 
-
-  ```
-  const response = {
-    results: [
-      {
-        followed: "nm0784407",
-        primaryName: "Mack Sennett"
-      }, 
-      {
-        followed: "nm1802226",
-        primaryName: "Joseph Maddern"
-      }
-    ]
-  }
-  ```
-
-  - **Error handling:**
-    - Return status `403` (Forbidden) with JSON `{error: 'Not logged in.'}` if there is no user logged in. 
-    - Return status `500` with JSON `{error: 'Error querying database'}` for any database query errors. 
-
-
-- `/:username/recommendations` accepts GET requests and returns an array of friend recommendations for the current user in the session. 
-
-  You should select the `recommendation` and `primaryName` of every person who is *recommended* by the current session user (who should be the *person*). 
-
-    When getting friends is successful, return a status `200` with a result that looks like this: 
-
-    ```
-    const response = {
-      results: [
-        {
-          recommendation: "nm0784407",
-          primaryName: "Mack Sennett"
-        }, 
-        {
-          recommendation: "nm1802226",
-          primaryName: "Joseph Maddern"
-        }
-      ]
-    }
-    ```
-
-  - **Error handling:**
-    - Return status `403` (Forbidden) with JSON `{error: 'Not logged in.'}` if there is no user logged in. 
-    - Return status `500` with JSON `{error: 'Error querying database'}` for any database query errors. 
-
-
-- `/:username/createPost` accepts POST requests with the following **body** parameters: 
-  - `title`
-  - `content`
-  - `parent_id`
-
-  Only allow this route if a user is logged in. The ID of the current session user should be the `author_id`.   Screen the title and content to only be alphanumeric characters, spaces, periods, question marks, commas, and underscores (e.g., no quotes, semicolons, etc.) to protect against SQL injection.
-
-  Upon successful post creation, return a **status 201** with the response `{message: "Post created."}`.
-
-  - **Error handling:**
-    - Return status `403` (Forbidden) with JSON `{error: 'Not logged in.'}` if there is no user logged in. 
-    - Return status `400` with JSON `{error: 'One or more of the fields you entered was empty, please try again.'}` if any of the provided body params are empty. 
-    - Return status `500` with JSON `{error: 'Error querying database.'}` for any database query errors. 
-
-- `/:username/feed` accepts GET requests
-  - Write a query that returns an array of posts that should be in the current session user's feed. For each post, `SELECT` the post id, author's username, parent post id, title, and content 
-  - When getting the feed is successful, return a status `200` with a result that looks like this: 
-  ``` 
-  const response = {
-    results: [
-      {
-        username: 
-        parent_post: 
-        title: 
-        content:
-      },
-      {
-        username: 
-        parent_post: 
-        title: 
-        content:
-      }
-    ] 
-  }
-  ```
-  - **Error handling:**
-    - Return status `403` (Forbidden) with JSON `{error: 'Not logged in.'}` if there is no user logged in. 
-    - Return status `500` with JSON `{error: 'Error querying database.'}` for any database query errors. 
-
-- `/:username/movies` accepts POST requests
-   - Register `getMovie` in `register_routes.js`
-   - Define a PromptTemplate for the LLM that tells it to answer the question given a context and a question.
-   - Create a ChatOpenAI() agent for the `llm` variable. Pick gpt-3.5-turbo or one of its variations.
-   - Check out the [Langchain docs](https://js.langchain.com/docs/get_started/introduction) if you have any questions about the code given to you. 
-
-#### Running the Server: 
-To run the server, you will need to install the required packages using `npm install` and then run the server using `npm run start` from inside the `homework-4` directory and from the Docker terminal. The server will be running on `http://localhost:8080`.
-
-### <ins>Part 3: Frontend Design</ins>
-Starter code is provided for you for the pages and components that we would like to see in the frontend. Please go through the following tasks and complete the TODOs mentioned in the code. The frontend is in `frontend` and **has its own `package.json`** requiring you to do `npm install` and `npm run dev` from that subdirectory.
-
-#### Task 1: Sign Up Page
-For this task, you will be working in [`Signup.tsx`](frontend/src/pages/Signup.tsx). 
-- Use `useState` to store the four user inputs on this page: `username`, `password`, `confirmPassword`, `linked_nconst`
-- Then, complete the `handleSubmit` function, which should make a backend call to the `/register` route to register a user with the information that is inputted to the form.
-- If the registration is successful, use `navigate()` to redirect the user to the `/home` page. 
-- If registration is unsuccessful, use `alert()` to send an alert to the user with the message "Registration failed." 
-
-#### Task 2: Login Page
-Navigate to [`Login.tsx`](frontend/src/pages/Login.tsx).
-- Complete the `handleLogin` function, which should make a backend call to the `/login` route to check user credentials. 
-- If the login attempt is successful, use `navigate()` to redirect the user to the `/home` page. 
-- If login attempt is unsuccessful, use `alert()` to send an alert to the user with the message "Log in failed." 
-
-#### Task 3: Friends Page 
-Navigate to [`Friends.tsx`](frontend/src/pages/Friends.tsx). Here, you will find three TODOs. 
-- Use `useEffect()` to make backend calls to `/:username/friends` and `/:username/recommendations` to get the user's friends and recommendations. 
-- Use `.map()` in  to map each friend to a `FriendComponent` and fill in the necessary information about each friend in the component. 
-- Use `.map()` again to map each recommendation to a `FriendComponent` as well with the correct information. 
-
-#### Task 4: Home Page
-Navigate to [`Home.tsx`](frontend/src/pages/Home.tsx). This page is very similar to the Friends page, except now we have posts. Again, there are two TODOs on this page. 
-- Use `useEffect()` to make a backend call to `/feed` to get all the posts that should be in the current user's feed. 
-- Use `.map()` to map each post to a `PostComponent` (which you can find in `./components/PostComponent.tsx`), and fill in the necessary details for each post in the component.
-
-#### Task 5: Chat Interface
-Navigate to [`ChatInterface.tsx`](frontend/src/pages/ChatInterface.tsx).
-- Complete the `sendMessage()` function to call the backend's `:username/movies` endpoint, process the response, and call `setMessages` with that response.
-
-#### Running the frontend
-To run the frontend, you will need to install the required packages using `npm install` and then run the app using `npm run dev --host` from inside the `frontend` directory and from the Docker terminal. The frontend will be running on `http://localhost:4567`.
-
-## Porting to Amazon
-
-Once your homework is working successfully, you should validate it on AWS.  This involves two steps:
-
-1. Port the database to Amazon RDS
-1. Pull the code to EC2
-
-Moreover, we need to make sure the EC2 node, RDS, and (for your project) EMR can all talk -- requiring them to be on the same **Virtual Private Cloud**.
-
-### Connecting to AWS Learning Lab:
-
-As before:
-1. Open your project in VSCode and Attach to the Container. If necessary Open the Folder for `homework-4`.
-1. Launch AWS Learner Lab and click on Start Lab.
-1. In VSCode, create a new file called `credentials`. Copy and paste the Details (AWS key, secret key, token and the `[default]` header) into that file.
-1. From the Terminal, `cp credentials ~/.aws`
-
-**Note**: As always Each session lasts for 4 hours max, and credentials must be re-entered each session in Learner's Lab.
-
-### Setting up MySQL Access for EC2 (and EMR)
-
-Next you will create an instance in Amazon RDS, which you will populate with the contents of your local MySQL database.
-
-**Creating a Database Dump**. To port our database to RDS, we will first run:
-
-```
-service mysql start
-mysqldump -u root imdb_basic > db.sql
-service mysql stop
-```
-**Launching an RDS Instance.**
-
-At the top of the AWS Console, type `RDS` into the search bar, and click on **Aurora and RDS**.
-
-- Click on **Create Database**.
-- Choose **"Standard create"**.
-- Select **MySQL** (**MariaDB** should also work).
-- Select **Free tier** as the **Template**.
-- For **Availability and Durability**, make sure **Single-AZ DB instance deployment** is set.
-- Call the instance `imdb-basic` (note the hyphen instead of the underscore, since RDS doesn't allow underscores).
-- In Instance Configuration, select **Burstable classes**. Choose `db.t4g.medium`.  The 'g' indicates a Gravitron (ARM) processor that can get extra resources in bursts ('t' series).
-- In **Connectivity**, make sure the **Default VPC** is set.
-- Under **Existing VPC Security Groups** select **ElasticMapReduce-master** and **ElasticMapReduce-slave**.  This will ultimately allow you to access your database from EMR and EC2.
-
-Once the database is created, **View Connection Details**.  Copy the Endpoint address, which will look something like: `imdb-basic.c6mkpyqhzfar.us-east-1.rds.amazonaws.com`.  **This name should be the same each time you restart the lab.**
-
-
-### EC2 Micro Instance Setup [Every Time You Launch the Learner Lab]
-
-In the *AWS Console*, go to **EC2**, and from the **Dashboard** click on **Launch Instance**.
-
-1. Name the instance `Tunnel`.
-1. Pick *Ubuntu* from the Application and OS Images Quick Start and select Ubuntu Server 22.04 LTS.  Confirm changes.
-1. Scroll down to **Instance Type** and pick **t2.micro**.
-1. Create a new keypair, called `nets_2120_remote_keypair.pem` and download it.
-1. Go back to the EC2 instance tab, hit the refresh icon next to "Create a new keypair" and select your new keypair.
-1. Under **Network settings**, Firewall (security groups), **Select existing group** and check all of **default** and **ElasticMapReduce-master** and **ElasticMapReduce-slave**.
-1. **Allow ssh traffic** from anywhere.
-1. Configure storage to 16GB.
-
-Then: launch your instance!  Click through on the instance link in the green bar.  Click through on the underlined instance ID for "Tunnel".  Copy / jot down the **Public IPv4 DNS**.
-
-#### Keypair Setup for EC2
+### 2. Add/Remove Friends
 
-On your host OS, copy your downloaded `nets_2120_remote_keypair.pem` to your `nets2120` base directory.  Then, in the VSCode Docker container Terminal:
+As noted above: by default, we will generalize from directed "follows" relationships to undirected "friend" relationships, for simplicity.
 
-```
-chmod 400 ~/nets2120/nets_2120_remote_keypair.pem
-cp ~/nets2120/nets_2120_remote_keypair.pem ~/.ssh
-```
+**Add/Remove Friends**: Users should be able to add and remove friends, and they should see a list of their current friends. The list of friends should indicate which friends, if any, are **currently logged into the current system**.
 
-#### EC2 Node Installation / Setup
+**(EC only) Friend Requests**: If a user sends a friend request to another user, the other user should receive a notification of some kind that enables him or her to accept or reject the request. If the request is accepted, the two users should become friends. If the request is rejected, the two users should not become friends.
 
-You will probably want ChromaDB on this instance.  You can `ssh -i ~/.ssh/nets2120_remote_keypair.pem ubuntu@`*remoteMachine*.
+### 3. Chat Mode
 
-Then:
-```
-sudo apt update
-sudo apt install -y python3 python3-pip unzip
-wget https://penn-cis545-files.s3.amazonaws.com/chromadb.zip
-unzip chromadb.zip
-sudo pip3 install chromadb
-sudo nano /etc/systemd/system/chromadb.service
-```
+There should be a way for users to chat with each other if they are friends. You can implement this functionality with basic axios requests using polling; for extra credit, consider using WebSockets with socket.io. Read more about the different implementation choices [here](https://medium.com/geekculture/ajax-polling-vs-long-polling-vs-websockets-vs-server-sent-events-e0d65033c9ba).  We discussed WebSocket in our client-server lectures, and you can find more detail in the video from a past NETS 2120 TA [on YouTube](https://youtu.be/VASE1g2mDL8).
 
-From `nano`, paste in the following:
+**Chat invites**: When a user’s friend is currently online, the user should be able to invite the friend to a chat session, and the friend should receive a notification of some kind that enables him or her to join the chat. If the friend accepts the invitation, a chat session should be created between the two users. If the friend rejects the invitation, no chat session should be created.
 
-```
-[Unit]
-Description=ChromaDB Service
-After=network.target
+**Persistence**: The contents of a chat session should be persistent: that is, if two users have chatted before and a new chat session between the same pair of users is established later, the new session should already contain the messages from the previous chat.
 
-[Service]
-User=ubuntu
-WorkingDirectory=/home/ubuntu/chromadb
-ExecStart=/usr/local/bin/chroma run --path /home/ubuntu/chromadb
-Restart=on-failure
+**Leaving chat**: Any member of a chat session should be able to leave the chat at any time. The chat should continue to work as long as it contains at least one member. When the last member leaves a chat session, the chat session should be deleted.
 
-[Install]
-WantedBy=multi-user.target
-```
+**Group chat**: There should also be a way to establish a group chat by inviting additional members to an ongoing chat. When a new member joins a chat, they are able to see previous chat history starting from the creation of the group chat. Each group chat created is a unique and independent chat session, even when the same users are involved (e.g., X, Y, and Z created Chat 1; X, Y, and W created Chat 2; if Z and W leave their chats, X and Y should now have two independent group chats). However, if a new invite results in a chat session involving the same user group as an existing chat session, the invite should not be allowed. You also may not invite an existing member to a chat session.
 
-Hit Ctrl-X and save.  Now run:
-```
-sudo systemctl daemon-reload
-sudo systemctl enable chromadb.service
-sudo systemctl start chromadb.service
-```
+**Ordering**: The messages in a chat (or group chat) session should be ordered consistently: that is, all members of the chat should see the messages in the same order. One way to ensure this is to associate each chat message with a timestamp, and to sort the messages in the chat by their timestamps.
 
-Run `sudo systemctl status chromadb.service` and you should see something like:
-```
-● chromadb.service - ChromaDB Service
-     Loaded: loaded (/etc/systemd/system/chromadb.service; enabled; vendor preset: enabled)
-     Active: active (running) since Sun 2025-03-23 18:27:57 UTC; 2s ago
-   Main PID: 3693 (chroma)
-      Tasks: 7 (limit: 1129)
-     Memory: 97.9M
-        CPU: 1.517s
-     CGroup: /system.slice/chromadb.service
-             └─3693 /usr/bin/python3 /usr/local/bin/chroma run --path /home/ubuntu/chromadb
-```
+### 4. Natural Language Search (Chatbot)
 
-#### Link RDS and EC2 Nano Instance
+Uses should be able to search (1) for people, and (2) for posts. These should use *retrieval-augmented generation* over the indexed content of actors, movie reviews, and posts; and should use a Large Language Model to find the best matches.  Retrieval augmented generation, here, simply means you will fetch content from the database that closely matches the user question, and you generate an LLM prompt that answers the question given this context. This could be:
 
-From your browser, go into the AWS Console's EC2 Dashboard. Click on the details of your `tunnel` server. Under the **Networking** menu, click **Connect RDS database**. Click on the **Instance** button, then select your RDS database (imdb-basic) from the drop-down. Hit **Connect**.
+* Having the LLM generate queries over your database (**except** private data!!!), see https://python.langchain.com/docs/tutorials/sql_qa/
+* Fetching data yourself and populating the vector database (ChromaDB) and using that to match questions
 
+**EC**: ensure the search results return links so users can add friend / follow / interest based on the returned results.
 
-#### Setting up the Tunnel
+### 5. Recommend Who and What to Follow
 
-Once things are configured as per above, anything you run on EC2 should be able to connect to your database instance, by the name of the RDS server, e.g., `imdb-basic.czkkqa8wuy3r.us-east-1.rds.amazonaws.com`.  Anything you run on EC2 should be able to connect to ChromaDB at `localhost:8000`.  However, you'll probably *also* want these to be connectable via your laptop / Docker container.
+Based on the link structure of the graph as well as the activity and hashtag structure of the streaming posts, your system should on a daily basis recompute a list of recommendations for "who to follow".
 
-Collect the two hostnames from above:
-1. The name of your RDS server, e.g., `imdb-basic.czkkqa8wuy3r.us-east-1.rds.amazonaws.com`
-2. The name of your EC2 tunnel server, e.g., `ec2-3-86-71-131.compute-1.amazonaws.com`
+### Security and Scalability
 
-### Tunneling to MySQL on RDS
+You should ensure that your design is secure: for instance, users should not be able to impersonate other users (without knowing their password), and they should not be able to modify or delete content that was created by other users. 
 
-Before you do this command, make sure MySQL is no longer running in your container. Run `service mysql stop`.
+Your design should also be scalable: if a million users signed up for your system tomorrow, your system should still work and provide good performance (although of course you will have to add some extra resources, e.g., additional EC2 instances). Keep in mind that many of the cloud services we have discussed, such as DynamoDB and Spark/MapReduce, are naturally scalable.
 
-Now edit this command, setting the `dbserver` and `tunnelserver` (it should be a single line):
+### Opportunities for Extra Credit
 
-```
-ssh -i ~/.ssh/nets_2120_remote_keypair.pem -4 -L 3306:dbserver:3306 ubuntu@tunnelserver
-```
+We will give a liberal amount of extra credit for creativity in the project. Below are some suggestions for extra-credit items:
 
-As an example, here is a version that worked for us:
+* (+2) LinkedIn-style friend requests with confirmation (i.e., users can accept or deny friend requests); 
+* (+2) A "forgot password" option that sends to the user's email address a password reset token and a link to the password reset screen;
+* (+2) Privacy controls (e.g., limiting who can see a particular post);
+* (+2) Infinite scrolling;
+* (+5) Groups (i.e. ones similar to Facebook communities);
+* (+5) Targeted advertising, based on users’ interests or on words in their posts; 
+* (+3) Site-wide "what’s trending" feature;
+* (+3) WebSockets for chat;
+* (+5) The LLM search always returns valid links to items for search results.
 
-```
-ssh -i ~/.ssh/tunnel.pem -4 -L 3306:database-2.czkkqa8wuy3r.us-east-1.rds.amazonaws.com:3306 ubuntu@ec2-3-86-71-131.compute-1.amazonaws.com
-```
+However, these are just examples -- feel free to consider other features as well, e.g., based on functionality that the current Facebook has, or even novel features that you define yourself. If you are considering a particular feature and are not sure whether it would be counted as extra credit, feel free to post a question on Ed Discussion. Extra credit will be awarded based on the complexity of a feature, not just based on its presence; for instance, profile pictures are easier than groups and thus would be worth less, and adding a simple input field where users can declare group memberships would yield considerably less extra credit than a full implementation with separate pages for groups where members can post messages, etc.
 
-**First-Time You Connect to the New Tunnel**. The first time you create the tunnel server, may need to answer `yes` to whether you trust the server.  You'll be logged into an Amazon EC2 node at this point.
+For this iteration of the course, we do not set a ceiling on the amount of extra credit that can be earned. You may receive over 100% on the project if you implement a large number of extra-credit features.
 
-Until `ssh` exits, you'll have a "tunnel" set up so requests in your container for `localhost` port `3306` get redirected to the tunnel server; then it makes requests to the database server on your behalf.
+## Project Report
 
-Leave this terminal open until you are done. Create another VSCode container Terminal to do work.
+At the end of the project, your team must include a short final report, as a PDF file of approximately five pages (excluding images) within your GitHub repository. This report, in the final `final-report.pdf`, will be **part of your project score**.  Grading will be based both on clarity of writing and on technical content. The report should contain, at least:
 
-### Connecting to RDS and Loading the Database
+* A short overview of the system you built;
+* A technical description of the components you built;
+* A discussion of nontrivial design decisions;
+* A discussion of changes you made along the way, and lessons you learned;
+* A brief description of the extra-credit features, if any;
+* A series of screenshots of your system in action (one for each main feature/page).
 
-Now go to the AWS Secrets Manager.  Under Secrets, find an entry starting with `rds!db` -- this is where your admin user for your RDS database is.
+Please try to choose the right level of detail (not too nitty-gritty, not too high-level), and please avoid repeating points that are already in this handout. For instance, don’t write that your solution has a news feed (this was required!); instead, write how you designed the DynamoDB table that the newsfeed uses, and why you did it that way.
 
-Under Secret value, click Retrieve secret value.  You should see a username of `admin` and a password -- copy the latter.
+## Logistics
 
-In VSCode's Database Extension, at the very top of the pane, hit the + to add another database. Name it RDS, select MariaDB, leave the Host at localhost and set the port to 3306. Set the username to `admin` and the password to be your copied password. Leave Database blank, save, and Connect.
+### Team Registration
 
-Now under "RDS", hit the [+] and then expand the line to:
+You should already have formed teams of 4 students. You can form your own team, or you can use the discussion group to find teammates. Once you have formed a team, please have one member submit to the Google Form posted on Ed with your team information. If you don't form a team by Friday, April 4, we will assign you to a team via random matching.
 
-```
-CREATE DATABASE imdb_basic
-    DEFAULT CHARACTER SET = 'utf8mb4'
-```
+### TA Shepherding Process
 
-```
-CREATE USER nets2120_hw2 identified by 'XXXX';
-grant all privileges on imdb_basic.* to nets2120_hw2;
-```
+Once your team has registered, it will be assigned a TA as a mentor.  Your mentor TA will be available for advice, particularly on integration and prioritization.  You should plan to schedule a couple of consultations with your team's mentor TA during their office hours at least once every 2 weeks.
 
-where `XXXX` is the password we have been using for MySQL.
+As noted above, your project plan submission should include some milestones with an eye towards in-class demos as well as the final demonstration.
 
-Finally, go to your Terminal (in VSCode, Docker coontainer)( and run: `mysql -h 127.0.0.1 -P 3306 -u admin -p imdb_basic < db.sql`.  Enter the admin password from RDS.
+* Each milestone or objective should be associated with one specific team member, who will be responsible for reaching it. It is okay for team members to help each other, but there has to be a single “lead” who will assume responsibility.
 
-This should copy the data to RDS.  At this point you don't need the tunnel, etc. unless you want to connect to the datbase from VSCode.  From now on you'll be accessing the database from your EC2 server.
+* By the last day of class, you should have at least 80% of the basic/required features; it should be clear that the required features can be completed by May 5th. The milestones do not need to cover extra credit.
 
-### Connecting to ChromaDB on EC2
+* The work should be spread roughly uniformly across the project (there should be no weeks that are substantially busier, or less busy, than others) and it should be split roughly equally between the team members.
 
-We can do a similar thing to access ChromaDB running on Amazon: open another Terminal in your VSCode attached to the container.  Run:
+* The milestones should be concrete tasks that can be clearly demo-ed or measured. Attempt to reduce dependencies between team members as much as possible (e.g., if one team member is blocked, the others should still be able to make progress).
 
-```
-ssh -i ~/.ssh/nets_2120_remote_keypair.pem -4 -L 8000:localhost:8000 ubuntu@tunnelserver
-```
+Your mentor will give you feedback on your materials, and will answer any questions. After the in-class checkins your mentor may email you suggestions.
 
-where `tunnelserver` is again the remote server.
+### Project Demos
 
-### Re-Running Your Code with Cloud Storage
+Your team must do a short demo (about 15 minutes) during the finals period. A number of time slots on different days will be posted to Ed Discussion near the end of the semester. We cannot reserve slots or create additional slots, so, if you or some of your team members have constraints (holiday travel, final exams, etc.), please discuss this well in advance and pick a suitable slot. Once your team has reserved a slot, the only way to change the slot is to find another team that agrees to swap slots with you. Slots are first-come, first-served. The signup opening time will be announced a few days in advance via Ed.
 
-Verify that your backend (and frontend!) works with both ChromaDB and MySQL executing remotely.
+All team members must be present in-person on campus for the demo by default. If you have any emergencies or unavoidable conflicts, please let us know as soon as possible by emailing the course staff (yuyingf@seas.upenn.edu). We will allow you to participate remotely in such cases, or exempt you from the demo if necessary. All absences or remote participation without advance notice will result in zero credit for the individual.
 
-Once this works, run from your Docker Terminal from your `homework-4` directory:
+### Team Contribution Form
 
-```
-echo ubuntu@tunnelserver > remote-site.txt
-git add remote-site.txt
-```
+Normally, each member of the team will receive the same score for the project report and demo, but we may deviate from this if it is clear that some team members have made substantially more progress than others. We will send out a Google Form after the report due date to collect feedback from everyone on the team about their estimates on the contribution of each team member. This will be used to adjust the final project score for each team member if needed.
 
-and push and commit to the repository.
+### AWS and OpenAI Accounts
 
-## What to Submit
+We will coordinate with each team to create a new AWS Academy account, using an email account that has not been used with the course before.  This account will have a $50 credit. Team members may share access to AWS resources on this account (e.g. DynamoDB tables). It is your responsibility to ensure that you keep your credentials safe and accessible to everyone in your team. Multiple people are allowed to connect to the same Lab session at the same time.
 
-Remember to submit to Gradescope:
-* Updated backend with endpoints enabled
-* Updated frontend with state management
-* Feedback in `feedback.yaml`
-* New file `remote-site.txt`
+Each team is responsible for the security of its AWS account(s). It is important to make sure that all team members understand how the AWS firewall works, and what a security rule is. In particular, DO NOT just open all ports to anyone on the whole planet (0.0.0.0/0) so hackers can go after your machines.
+
+We will have a shared OpenAI API key.  Our expectation is that you will only use a limited number of prompts (<100 requests) so this will be adequate for testing and for the course.  If you need more credits, your team can use your own private key under your own billing.
+
+### GitHub Classroom
+
+This assignment is released as a Group Assignment on GitHub Classroom. One member of your team should create a new repository from the assignment link and ask everyone else to join the same repo after accepting the assignment. You should use this repository to store all of your code and documentation for the project. You should also use this repository to submit your final report.
+
+### Submission Checklist
+
+* Your code contains a reasonable amount of useful documentation.
+
+* You have checked your final code into the Git repository.
+
+* You have removed all AWS credentials from the code you are submitting.
+
+* Your repository contains all the files needed to compile and run your solution (including all .js/.ejs files, and all Spark code); as well as README file that describes 1) the team number and team name, 2) the full names and SEAS login names of all team members, 3) a description of features implemented, 4) any extra credit claimed, 5) a list of source files included, 6) a declaration that all the code you are submitting was written by you, and 7) instructions for building an running your project. The instructions must be sufficiently detailed for us to set up and run your application.
+
+* Please avoid checking your `target` folder into GitHub. Please do not include large data files (these can be hosted on S3), or your `node_modules`. If you used third-party libraries and are not including them in your submission, please state in the README file what libraries, and include them in the appropriate `pom.xml` or `package.json` files. We have provided a starter `.gitignore`, but you may need to update it as needed.
+
+* You are submitting your final report as a PDF file of no more than five pages (including appendices, screenshots, images, and any references).  **This should be called `final-report.pdf` and be in the root of your GitHub project**.
+
+* You submitted your GitHub repo with your final report via Gradescope, before the deadline on the first page of this handout. Late hours cannot be used for the project.
+
+Good luck and have fun!
