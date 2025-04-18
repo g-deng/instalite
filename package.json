@@ -8,6 +8,7 @@
         "index": "node --experimental-vm-modules server/index_data.js",
         "start": "node --experimental-vm-modules server/app.js",
         "create_tables": "node server/models/create_tables.js",
+        "delete_tables": "node server/models/delete_tables.js",
         "test": "node --experimental-vm-modules node_modules/.bin/jest --detectOpenHandles --forceExit --outputFile=test_results.json --json",
         "kafka": "node server/kafka/consumer.js"
     },
