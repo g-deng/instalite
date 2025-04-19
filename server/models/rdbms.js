@@ -75,7 +75,6 @@ class RelationalDB {
      * @returns promise
      */
     async send_sql(sql, params = []) {
-        // console.log(sql, params);
         return this.conn.query(sql, params);
     }
 
