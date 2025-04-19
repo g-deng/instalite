@@ -130,19 +130,27 @@ const registerKafkaUser = async (name) => {
 }
 
 const addKafkaPostToDB = async (post) => {
-    const title = `from ${post.username} on ${post.source_site}`;
-    const content = post.content;
+    const text_content = post.text_content;
+    const hashtags = post.hashtags || null;
     const source = post.topic;
+    const image_url = post.image_url || null;
 
-    if (!title || !content || title.trim().length == 0 || content.trim().length == 0) {
+    if (source == 'local') {
+        console.log('Post is from local source, not adding to DB');
+        console.log({title, username, content, source_site, source})
+        return;
+    }
+
+    if (!text_content || text_content.trim().length == 0) {
         return;
     } else {
         try {
-            const author_id = await registerKafkaUser(source);
+            const user_id = await registerKafkaUser(source);
             const query = `
-                INSERT INTO posts (parent_post, title, content, author_id) VALUES (?, ?, ?, ?)
+                INSERT INTO posts (user_id, image_url, text_content, hashtags, source) 
+                VALUES (?, ?, ?, ?)
             `;
-            const params = [null, title, content, author_id];
+            const params = [user_id, image_url, text_content, hashtags, source];
             const result = await queryDatabase(query, params);
             const post_id = result[0].insertId;
             console.log(`Kafka post added to local DB with ID: ${post_id}`);

@@ -49,18 +49,17 @@ async function getKafkaDemo(req, res) {
             content: row.content
         }));
         res.status(200).send({results: fixed_result});
-    } catch (error) {
+    } catch {
         res.status(500).send({error: 'Error querying database'});
     }
 }
 
 // POST /createPost
 async function createPost(req, res) {
-    // TODO: add post to database
-    var title = req.body.title;
-    var content = req.body.content;
-    var parent_id = req.body.parent_id;
-    if (title.trim().length == 0 || content.trim().length == 0) {
+    var image_url = req.body.image_url;
+    var text_content = req.body.text_content;
+    var hashtags = req.body.hashtags;
+    if (title.trim().length == 0 || text_content.trim().length == 0) {
         res.status(400).send({error: 'One or more of the fields you entered was empty, please try again.'});
     } else if (!helper.isLoggedIn(req, req.params.username)) {
         console.log(req.session);
@@ -68,9 +67,10 @@ async function createPost(req, res) {
     } else {
         try {
             const query = `
-            INSERT INTO posts (parent_post, title, content, author_id) VALUES (?, ?, ?, ?)
+                INSERT INTO posts (user_id, image_url, text_content, hashtags) 
+                VALUES (?, ?, ?, ?)
             `;
-            const params = [parent_id, title, content, req.session.user_id];
+            const params = [req.session.user_id, image_url, text_content, hashtags];
             const result = await queryDatabase(query, params);
 
             console.log(result);
@@ -90,8 +90,57 @@ async function createPost(req, res) {
             console.log('sent to Kafka');
             console.log(kafkaPost);
             res.status(201).send({message: 'Post created.'});  
-        } catch (error) {
+        } catch {
             res.status(500).send({error: 'Error querying database'});
+        }
+    }
+}
+
+// POST /createComment
+async function createComment(req, res) {
+    var post_id = req.body.post_id;
+    var text_content = req.body.text_content;
+
+    if (!post_id || !text_content || text_content.trim().length == 0 || post_id.trim().length == 0) {
+        res.status(400).send({error: 'One or more of the fields you entered was empty, please try again.'});
+    } else if (!helper.isLoggedIn(req, req.params.username)) {
+        console.log(req.session);
+        res.status(403).send({error: 'Not logged in.'});
+    } else {
+        try {
+            const query = `
+                INSERT INTO comments (post_id, user_id, text_content) 
+                VALUES (?, ?, ?)
+            `;
+            const params = [post_id, req.session.user_id, text_content];
+            const result = await queryDatabase(query, params);
+            console.log(result);
+            res.status(201).send({message: 'Comment created.'});  
+        } catch {
+            res.status(500).send({error: 'Error querying database'});
+        }
+    }
+
+}
+
+// POST /createLike
+async function createLike(req, res) {
+    if (!helper.isLoggedIn(req, req.params.username)) {
+        return res.status(403).send({error: 'Not logged in.'});
+    } else if (!req?.body?.post_id) {
+        return res.status(400).send({error: 'Post ID is required.'});
+    } else {
+        try {
+            const query = `
+                INSERT INTO likes (user_id, post_id) 
+                VALUES (?, ?)
+            `;
+            const params = [req.session.user_id, req.body.post_id];
+            const result = await queryDatabase(query, params);
+            console.log(result);
+            res.status(201).send({message: 'Like created.'});  
+        } catch {
+            return res.status(500).send({error: 'Error querying database'});
         }
     }
 }
@@ -99,7 +148,7 @@ async function createPost(req, res) {
 // GET /feed
 async function getFeed(req, res) {
     // TODO: query for posts from self or followed
-    if (!helper.isLoggedIn(req, req.session.user_id)) {
+    if (!helper.isLoggedIn(req, req.params.username)) {
         res.status(403).send({error: 'Not logged in.'});
     } else {
         try {
@@ -130,7 +179,7 @@ async function getFeed(req, res) {
                 content: row.content
             }));
             res.status(200).send({results: fixed_result});
-        } catch (error) {
+        } catch {
             res.status(500).send({error: 'Error querying database'});
         }
     }
@@ -138,6 +187,8 @@ async function getFeed(req, res) {
 
 export {
     createPost,
+    createComment,
+    createLike,
     getFeed,
     getKafkaDemo
 };
