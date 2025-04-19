@@ -153,34 +153,35 @@ async function getFeed(req, res) {
     } else {
         try {
             console.log('getting feed');
-            const query1 = `
-            SELECT posts.post_id, users.username, posts.parent_post, posts.title, posts.content 
-            FROM posts
-            JOIN users ON posts.author_id = users.user_id
-            WHERE users.user_id = ?
+            const query = `
+                SELECT users.username, posts.image_url, posts.text_content, posts.hashtags
+                FROM post_weights
+                    JOIN posts 
+                    ON post_weights.post_id = posts.post_id
+                    JOIN users
+                    ON posts.user_id = users.user_id
+                WHERE post_weights.user_id = ?
+                ORDER BY post_weights.weight DESC
+                LIMIT 1000
             `;
-            const params1 = [req.session.user_id];
-            const result1 = await queryDatabase(query1, params1);
 
-            const query2 = `
-            SELECT posts.post_id, u2.username, posts.parent_post, posts.title, posts.content FROM followers
-            JOIN users AS u1 ON u1.linked_nconst = followers.follower
-            JOIN users AS u2 on u2.linked_nconst = followers.followed
-            JOIN posts ON posts.author_id = u2.user_id
-            WHERE u1.user_id = ?
-            `;
-            const params2 = [req.session.user_id];
-            const result2 = await queryDatabase(query2, params2);
-            const result = [...result1[0], ...result2[0]];
-            const fixed_result = result.map(row => ({
+            const params = [req.session.user_id];
+            const result = await queryDatabase(query, params);
+            console.log(result);
+            // TODO: decide on what to do with empty queries
+            if (result[0].length == 0) {
+                res.status(200).send({results: []});
+                return;
+            }
+            const parsed_result = result[0].map(row => ({
                 username: row.username,
-                parent_post: row.parent_post,
-                title: row.title,
-                content: row.content
+                image_url: row.image_url,
+                text_content: row.text_content,
+                hashtags: row.hashtags
             }));
-            res.status(200).send({results: fixed_result});
+            return res.status(200).send({results: parsed_result});
         } catch {
-            res.status(500).send({error: 'Error querying database'});
+            return res.status(500).send({error: 'Error querying database'});
         }
     }
 }
