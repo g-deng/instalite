@@ -136,62 +136,6 @@ function postLogout(req, res) {
 };
 
 
-// GET /friends
-async function getFriends(req, res) {    
-    console.log('Getting friends for ' + req.session.user_id);
-    // TODO from friends table
-    try {
-        if(!helper.isLoggedIn(req, req.session.user_id)) {
-            res.status(403).send({error: 'Not logged in.'});
-        } else {
-            const query = `
-            SELECT n2.nconst, n2.primaryName FROM followers 
-            JOIN names AS n1 ON n1.nconst = followers.follower
-            JOIN names AS n2 ON n2.nconst = followers.followed
-            JOIN users ON users.linked_nconst = n1.nconst
-            WHERE users.user_id = ?
-            `;
-            const params = [req.session.user_id];
-            const result = await queryDatabase(query, params);
-            const fixed_result = result[0].map(row => ({
-                followed: row.nconst,
-                primaryName: row.primaryName
-            }));
-            res.status(200).send({results: fixed_result});
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500).send({error: 'Error querying database'});
-    }
-}
-
-// GET /recommendations
-async function getFriendRecs(req, res) {
-    // TODO from recommendations table
-    try {
-        if(!helper.isLoggedIn(req, req.session.user_id)) {
-            res.status(403).send({error: 'Not logged in.'});
-        } else {
-            const query = `
-            SELECT n1.nconst, n1.primaryName FROM recommendations
-            JOIN names AS n1 ON recommendations.recommendation = n1.nconst
-            JOIN names AS n2 ON recommendations.person = n2.nconst
-            JOIN users ON users.linked_nconst = n2.nconst
-            WHERE users.user_id = ?
-            `;
-            const params = [req.session.user_id];
-            const result = await queryDatabase(query, params);
-            const fixed_result = result[0].map(row => ({
-                followed: row.nconst,
-                primaryName: row.primaryName
-            }));
-            res.status(200).send({results: fixed_result});
-        }
-    } catch (error) {
-        res.status(500).send({error: 'Error querying database'});
-    }
-}
-
 async function getMovie(req, res) {
     console.log('Getting movie database');
     const vs = await getVectorStore();
@@ -265,8 +209,6 @@ export {
     postLogin,
     postRegister,
     postLogout,
-    getFriends,
-    getFriendRecs,
     getMovie,
     uploadImage,
 };

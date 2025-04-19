@@ -91,10 +91,21 @@ async function create_tables() {
     // FRIENDS
     await dbaccess.create_tables(`
         CREATE TABLE IF NOT EXISTS friends (
-            followed VARCHAR(255),
-            follower VARCHAR(255),
-            FOREIGN KEY (follower) REFERENCES names(nconst),
-            FOREIGN KEY (followed) REFERENCES names(nconst)
+            followed INT,
+            follower INT,
+            FOREIGN KEY (follower) REFERENCES users(user_id),
+            FOREIGN KEY (followed) REFERENCES users(user_id)
+        );
+    `);
+
+    // RECOMMENDATIONS (for friends)
+    await dbaccess.create_tables(`
+        CREATE TABLE IF NOT EXISTS friend_recs (
+            user INT,
+            recommendation INT,
+            strength int,
+            FOREIGN KEY (user) REFERENCES users(user_id),
+            FOREIGN KEY (recommendation) REFERENCES users(user_id)
         );
     `);
 

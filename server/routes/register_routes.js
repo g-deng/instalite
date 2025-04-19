@@ -1,4 +1,5 @@
-import { getHelloWorld, postLogin, postRegister, getFriends, getFriendRecs, getMovie, uploadImage } from './routes.js';
+import { getHelloWorld, postLogin, postRegister, getMovie, uploadImage } from './routes.js';
+import { getFriends, getFriendRecs, addFriend, removeFriend } from './friend_routes.js';
 import { createPost, getFeed, getKafkaDemo } from './feed_routes.js';
 import {get_embedding, get_topk} from './embedding_routes.js';
 import multer from 'multer';
@@ -13,6 +14,8 @@ function register_routes(app) {
     app.post('/register', postRegister); 
     app.get('/:username/friends', getFriends);
     app.get('/:username/recommendations', getFriendRecs);
+    app.post('/:username/addFriend', addFriend);
+    app.post('/:username/removeFriend', removeFriend);
     app.post('/:username/createPost', createPost); 
     app.get('/:username/feed', getFeed); 
     app.post('/:username/movies', getMovie);

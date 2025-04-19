@@ -23,6 +23,8 @@ export default function Friends() {
     // CUT HERE
     const [friends, setFriends] = useState([]); 
     const [recs, setRecs] = useState([]); 
+    const [newFriend, setNewFriend] = useState('');
+    const [removeFriend, setRemoveFriend] = useState('');
     // END CUT
 
     const feed = () => {
@@ -34,28 +36,58 @@ export default function Friends() {
     const chatMode = () => {
         navigate("/"+ username+"/chatMode");
     };
-    useEffect(() => {
-        const fetchData = async () => {
-            // CUT HERE
-            console.log('fetching data');
-            try {
-                const friendRes = await axios.get(`${rootURL}/${username}/friends`, { withCredentials: true });
-                const recRes = await axios.get(`${rootURL}/${username}/recommendations`, { withCredentials: true });
-                
-                setFriends(friendRes.data.results);
-                setRecs(recRes.data.results);
-                console.log(recRes.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                navigate("/");
-            }
-            // END CUT
-        };
-
-        fetchData();
-        
-    }, []);
+    const fetchData = async () => {
+        console.log('fetching data');
+        try {
+          const friendRes = await axios.get(`${rootURL}/${username}/friends`, { withCredentials: true });
+          const recRes = await axios.get(`${rootURL}/${username}/recommendations`, { withCredentials: true });
+          
+          setFriends(friendRes.data.results);
+          setRecs(recRes.data.results);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          navigate("/");
+        }
+      };
     
+      useEffect(() => {
+        fetchData();
+      }, []);
+    
+
+    const handleAddFriend = async () => {
+        if (newFriend.trim() === "") {
+          alert("Please enter a friend username.");
+          return;
+        }
+        try {
+          // POST request to add the friend
+          await axios.post(`${rootURL}/${username}/addFriend`, { friendUsername: newFriend }, { withCredentials: true });
+          alert("Friend added successfully!");
+          setNewFriend("");  
+          fetchData();         
+        } catch (error) {
+          console.error("Error adding friend:", error);
+          alert("Error adding friend. Please try again.");
+        }
+      };
+
+    const handleRemoveFriend = async () => {
+    if (removeFriend.trim() === "") {
+        alert("Please enter a friend username.");
+        return;
+    }
+    try {
+        await axios.post(`${rootURL}/${username}/removeFriend`, { friendUsername: removeFriend }, { withCredentials: true });
+        alert("Friend removed successfully!");
+        setRemoveFriend("");  // Clear the input field.
+        fetchData();         // Refresh the friend list.
+    } catch (error) {
+        console.error("Error removing friend:", error);
+        alert("Error removing friend. Please try again.");
+    }
+    };
+
 
   return (
     <div>
@@ -76,7 +108,7 @@ export default function Friends() {
                 <div className='space-y-2'>
                     {
                         // CUT HERE
-                        friends.map(f => <FriendComponent name={f['primaryName']} add={false} remove={true} key={f['followed']}/>)
+                        friends.map(f => <FriendComponent name={f['username']} add={false} remove={true} key={f['followed']}/>)
                         // END CUT
                     }
                 </div>
@@ -86,10 +118,45 @@ export default function Friends() {
                 <div className='space-y-2'>
                     {
                         // CUT HERE
-                        recs.map(r => <FriendComponent name={r['primaryName']} add={true} remove={false} key={r['recommendation']}/>)
+                        recs.map(r => <FriendComponent name={r['username']} add={true} remove={false} key={r['recommendation']}/>)
                         // END CUT
                     }
                 </div>
+            </div>
+            {/* adding friend */}
+            <div className='mb-4'>
+            <h2 className='text-2xl font-bold'>Add a Friend</h2>
+            <input
+                type="text"
+                placeholder="Enter Friend Username"
+                value={newFriend}
+                onChange={(e) => setNewFriend(e.target.value)}
+                className='border p-2 rounded mr-2'
+            />
+            <button 
+                onClick={handleAddFriend} 
+                className='px-3 py-2 bg-blue-500 text-white rounded'
+            >
+                Add Friend
+            </button>
+            </div>
+
+            {/* remove friend */}
+            <div className='mb-4'>
+            <h2 className='text-2xl font-bold'>Remove a Friend</h2>
+            <input
+                type="text"
+                placeholder="Enter Friend Username"
+                value={removeFriend}
+                onChange={(e) => setRemoveFriend(e.target.value)}
+                className='border p-2 rounded mr-2'
+            />
+            <button 
+                onClick={handleRemoveFriend} 
+                className='px-3 py-2 bg-blue-500 text-white rounded'
+            >
+                Add Friend
+            </button>
             </div>
         </div>
     </div>
