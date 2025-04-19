@@ -46,9 +46,9 @@ async function delete_tables() {
     return null;
 }
 
-console.log('Deleting tables: users, posts, comments, post_weights, likes, chat_rooms, chat_members, chat_messages, chat_invites, online_users');
 
 async function do_the_delete() {
+    console.log('Deleting tables: users, posts, comments, post_weights, likes, chat_rooms, chat_members, chat_messages, chat_invites, online_users');
     await dbaccess.connect();
     await delete_tables();
     console.log('Tables deleted');
