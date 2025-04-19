@@ -46,9 +46,9 @@ async function create_tables() {
             post_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
             user_id int NOT NULL,
             image_url VARCHAR(255),
-            text_content TEXT,
+            text_content TEXT NOT NULL,
             hashtags VARCHAR(255),
-            source VARCHAR(255),
+            source VARCHAR(255) DEFAULT 'local',
             FOREIGN KEY (user_id) REFERENCES users(user_id)
         );
     `);
