@@ -48,9 +48,9 @@ async function getKafkaDemo(req, res) {
             title: row.title,
             content: row.content
         }));
-        res.status(200).send({results: fixed_result});
+        return res.status(200).send({results: fixed_result});
     } catch {
-        res.status(500).send({error: 'Error querying database'});
+        return res.status(500).send({error: 'Error querying database'});
     }
 }
 
@@ -59,11 +59,11 @@ async function createPost(req, res) {
     var image_url = req.body.image_url;
     var text_content = req.body.text_content;
     var hashtags = req.body.hashtags;
-    if (title.trim().length == 0 || text_content.trim().length == 0) {
-        res.status(400).send({error: 'One or more of the fields you entered was empty, please try again.'});
-    } else if (!helper.isLoggedIn(req, req.params.username)) {
+    if (!helper.isLoggedIn(req, req.params.username)) {
         console.log(req.session);
-        res.status(403).send({error: 'Not logged in.'});
+        return res.status(403).send({error: 'Not logged in.'});
+    } else if (!text_content || text_content.trim().length == 0 || !helper.isOK(text_content)) {
+        return res.status(400).send({error: 'One or more of the fields you entered was empty, please try again.'});
     } else {
         try {
             const query = `
@@ -76,10 +76,12 @@ async function createPost(req, res) {
             console.log(result);
             const post_id = result[0].insertId;
             console.log(`Post created with ID: ${post_id}`);
+
+            // TODO: attachments
             const kafkaPost = {
                 post_json: {
                     username: req.session.username,
-                    post_text: content,
+                    post_text: text_content,
                     post_uuid_within_site: post_id,
                     content_type: 'text/html',
                     source_site: 'instalite-wahoo',
@@ -89,9 +91,9 @@ async function createPost(req, res) {
             await sendPostToKafka(kafkaPost);
             console.log('sent to Kafka');
             console.log(kafkaPost);
-            res.status(201).send({message: 'Post created.'});  
+            return res.status(201).send({message: 'Post created.'});  
         } catch {
-            res.status(500).send({error: 'Error querying database'});
+            return res.status(500).send({error: 'Error querying database'});
         }
     }
 }
@@ -102,10 +104,10 @@ async function createComment(req, res) {
     var text_content = req.body.text_content;
 
     if (!post_id || !text_content || text_content.trim().length == 0 || post_id.trim().length == 0) {
-        res.status(400).send({error: 'One or more of the fields you entered was empty, please try again.'});
+        return res.status(400).send({error: 'One or more of the fields you entered was empty, please try again.'});
     } else if (!helper.isLoggedIn(req, req.params.username)) {
         console.log(req.session);
-        res.status(403).send({error: 'Not logged in.'});
+        return res.status(403).send({error: 'Not logged in.'});
     } else {
         try {
             const query = `
@@ -115,9 +117,9 @@ async function createComment(req, res) {
             const params = [post_id, req.session.user_id, text_content];
             const result = await queryDatabase(query, params);
             console.log(result);
-            res.status(201).send({message: 'Comment created.'});  
+            return res.status(201).send({message: 'Comment created.'});  
         } catch {
-            res.status(500).send({error: 'Error querying database'});
+            return res.status(500).send({error: 'Error querying database'});
         }
     }
 
@@ -138,7 +140,7 @@ async function createLike(req, res) {
             const params = [req.session.user_id, req.body.post_id];
             const result = await queryDatabase(query, params);
             console.log(result);
-            res.status(201).send({message: 'Like created.'});  
+            return res.status(201).send({message: 'Like created.'});  
         } catch {
             return res.status(500).send({error: 'Error querying database'});
         }
@@ -149,7 +151,7 @@ async function createLike(req, res) {
 async function getFeed(req, res) {
     // TODO: query for posts from self or followed
     if (!helper.isLoggedIn(req, req.params.username)) {
-        res.status(403).send({error: 'Not logged in.'});
+        return res.status(403).send({error: 'Not logged in.'});
     } else {
         try {
             console.log('getting feed');
@@ -170,7 +172,7 @@ async function getFeed(req, res) {
             console.log(result);
             // TODO: decide on what to do with empty queries
             if (result[0].length == 0) {
-                res.status(200).send({results: []});
+                return res.status(200).send({results: []});
                 return;
             }
             const parsed_result = result[0].map(row => ({
