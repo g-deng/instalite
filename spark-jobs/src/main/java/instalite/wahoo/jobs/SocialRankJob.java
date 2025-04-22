@@ -16,6 +16,8 @@ import org.apache.livy.LivyClient;
 import org.apache.livy.LivyClientBuilder;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 
 import instalite.wahoo.config.Config;
 import instalite.wahoo.jobs.utils.SerializablePair;
@@ -57,16 +59,43 @@ public class SocialRankJob extends SparkJob<List<SerializablePair<String, Double
 	protected JavaPairRDD<String, String> getSocialNetwork(String filePath) {
 		logger.debug("lemon getSocialNetwork started");
 		JavaRDD<String> file = context.textFile(filePath, Config.PARTITIONS);
-		// TODO Your code from ComputeRanks here
-		// logger.info("File: " + file.collect().toString());
 		JavaPairRDD<String, String> network = file.mapToPair(row -> {
 			String[] vals = row.split(" ");
 			return new Tuple2<>(vals[1], vals[0]);
 		}).distinct();
-		// logger.debug("Final PairRDD: " + network.collect().toString());
 		logger.debug("lemon getSocialNetwork completed");
 		return network;
 	}
+
+	/**
+ * Fetch the social network from MySQL via JDBC, and create a (followed, follower) edge graph
+ * 
+ * @return JavaPairRDD: (followed: String, follower: String)
+ */
+protected JavaPairRDD<String, String> getSocialNetworkFromMySQL() {
+    logger.debug("getSocialNetworkFromMySQL started");
+
+    Dataset<Row> df = spark.read()
+        .format("jdbc")
+        .option("url", Config.DATABASE_CONNECTION)
+        .option("driver", "com.mysql.cj.jdbc.Driver")
+        .option("dbtable", "friends")
+        .option("user", Config.DATABASE_USERNAME)
+        .option("password", Config.DATABASE_PASSWORD)
+        .load();
+
+    // Assuming table schema: followed, follower
+    JavaRDD<Row> rowRDD = df.select("followed", "follower").javaRDD();
+
+    JavaPairRDD<String, String> network = rowRDD.mapToPair(row -> {
+        String followed = Integer.toString(row.getInt(0));
+        String follower = Integer.toString(row.getInt(1));
+        return new Tuple2<>(followed, follower);
+    }).distinct();
+
+    logger.debug("getSocialNetworkFromMySQL completed");
+    return network;
+}
 
 	/**
 	 * Retrieves the sinks from the given network.
@@ -99,7 +128,7 @@ public class SocialRankJob extends SparkJob<List<SerializablePair<String, Double
 		logger.info("Running");
 
 		// Load the social network, aka. the edges (followed, follower)
-		JavaPairRDD<String, String> edgeRDD = getSocialNetwork(Config.SOCIAL_NET_PATH);
+		JavaPairRDD<String, String> edgeRDD = getSocialNetworkFromMySQL();
 
 		// Find the sinks in edgeRDD as an RDD
 		JavaRDD<String> sinks = getSinks(edgeRDD);

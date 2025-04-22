@@ -242,7 +242,7 @@
                             <goal>java</goal>
                         </goals>
                         <configuration>
-                            <mainClass>edu.upenn.cis.nets2120.jobs.ComputeRanksLocal</mainClass>
+                            <mainClass>instalite.wahoo.jobs.ComputeRanksLocal</mainClass>
                             <arguments>
                             </arguments>
                         </configuration>
@@ -253,7 +253,7 @@
                             <goal>java</goal>
                         </goals>
                         <configuration>
-                            <mainClass>edu.upenn.cis.nets2120.jobs.ComputeRanksLivy</mainClass>
+                            <mainClass>instalite.wahoo.jobs.ComputeRanksLivy</mainClass>
                             <arguments>
                             </arguments>
                         </configuration>

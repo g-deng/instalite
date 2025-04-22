@@ -2,7 +2,6 @@ package instalite.wahoo.jobs;
 
 import instalite.wahoo.config.Config;
 import instalite.wahoo.config.ConfigSingleton;
-import instalite.wahoo.jobs.SocialRankJob;
 import instalite.wahoo.jobs.utils.SerializablePair;
 
 import instalite.wahoo.jobs.utils.FlexibleLogger;
@@ -11,9 +10,11 @@ import instalite.wahoo.spark.SparkJob;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-import java.util.*;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Connection;
+import java.util.List;
 
 import javax.security.auth.login.ConfigurationSpi;
 
@@ -53,14 +54,34 @@ public class ComputeRanksLocal {
 
         List<SerializablePair<String, Double>> topK = job.mainLogic();
         logger.info("*** Finished social network ranking! ***");
+        
+        try (
+            Connection conn = DriverManager.getConnection(
+                Config.DATABASE_CONNECTION, Config.DATABASE_USERNAME, Config.DATABASE_PASSWORD
+            );
+            Statement clearStmt = conn.createStatement();
+            PreparedStatement insertStmt = conn.prepareStatement(
+                "REPLACE INTO social_rank (user_id, social_rank) VALUES (?, ?)"
+            )
+        ) {
+            // Clear the table
+            clearStmt.executeUpdate("DELETE FROM social_rank");
 
-        try (PrintStream out = new PrintStream(new FileOutputStream("socialrank-local.csv"))) {
+            // Insert new ranks
             for (SerializablePair<String, Double> item : topK) {
-                out.println(item.getLeft() + "," + item.getRight());
-                logger.info(item.getLeft() + " " + item.getRight());
+                int userId = Integer.parseInt(item.getLeft());
+                double rank = item.getRight();
+
+                insertStmt.setInt(1, userId);
+                insertStmt.setDouble(2, rank);
+                insertStmt.addBatch();
             }
+
+            insertStmt.executeBatch();
+            logger.info("Refreshed social_rank table with new entries.");
+
         } catch (Exception e) {
-            logger.error("Error writing to file: " + e.getMessage());
+            logger.error("Error writing to social_rank: " + e.getMessage(), e);
         }
     }
 
