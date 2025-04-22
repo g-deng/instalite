@@ -9,7 +9,8 @@
         "start": "node --experimental-vm-modules server/app.js",
         "create_tables": "node server/models/create_tables.js",
         "delete_tables": "node server/models/delete_tables.js",
-        "populate_tables": "node server/models/populate_tables.js",
+        "populate_tables": "node server/models/populate_tables.js", 
+        "refresh_tables": "npm run delete_tables && npm run create_tables && npm run populate_tables",
         "test": "node --experimental-vm-modules node_modules/.bin/jest --detectOpenHandles --forceExit --outputFile=test_results.json --json",
         "kafka": "node server/kafka/consumer.js"
     },

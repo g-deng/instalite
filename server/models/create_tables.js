@@ -69,7 +69,7 @@ async function create_tables() {
     await dbaccess.create_tables(`
         CREATE TABLE IF NOT EXISTS social_rank (
             user_id int NOT NULL PRIMARY KEY,
-            social_rank int,
+            social_rank double,
             FOREIGN KEY (user_id) REFERENCES users(user_id)
         );
     `);

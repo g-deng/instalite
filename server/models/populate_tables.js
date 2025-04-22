@@ -67,6 +67,31 @@ async function populate_tables() {
     const acd_id = await addUser('arthurconandoyle', 'author,novel', 'nm0236279');
     const ms_id = await addUser('maryshelley', 'author,spooky', 'nm0791217');
 
+
+    // POPULATING FRIENDS
+    const addFriend = async (user1_id, user2_id) => {
+        await dbaccess.send_sql(`
+            INSERT IGNORE INTO friends (followed, follower) 
+            VALUES (?, ?)`, 
+            [user1_id, user2_id]
+        );
+        await dbaccess.send_sql(`
+            INSERT IGNORE INTO friends (followed, follower)
+            VALUES (?, ?)`,
+            [user2_id, user1_id]
+        );
+    }
+    await addFriend(cd_id, ws_id);
+    await addFriend(cd_id, al_id);
+    await addFriend(cd_id, cb_id);
+    await addFriend(cd_id, eap_id);
+    await addFriend(eap_id, mt_id);
+    await addFriend(eap_id, ms_id);
+    await addFriend(ws_id, al_id);
+    await addFriend(ws_id, cb_id);
+    await addFriend(hbs_id, cb_id);
+    await addFriend(hbs_id, ms_id);
+
     // POPULATING POSTS
     const addPost = async (user_id, image_url, text_content, hashtags) => {
         const result = await dbaccess.send_sql(`
