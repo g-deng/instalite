@@ -38,6 +38,9 @@ async function delete_tables() {
     await dbaccess.send_sql('DROP TABLE IF EXISTS chat_rooms;');
     await dbaccess.send_sql('DROP TABLE IF EXISTS comments;');
     await dbaccess.send_sql('DROP TABLE IF EXISTS likes;');
+    await dbaccess.send_sql('DROP TABLE IF EXISTS friends;');
+    await dbaccess.send_sql('DROP TABLE IF EXISTS friend_recs;');
+    await dbaccess.send_sql('DROP TABLE IF EXISTS social_rank;');
     await dbaccess.send_sql('DROP TABLE IF EXISTS post_weights;');
     await dbaccess.send_sql('DROP TABLE IF EXISTS posts;');
     await dbaccess.send_sql('DROP TABLE IF EXISTS users;');
@@ -48,7 +51,7 @@ async function delete_tables() {
 
 
 async function do_the_delete() {
-    console.log('Deleting tables: users, posts, comments, post_weights, likes, chat_rooms, chat_members, chat_messages, chat_invites, online_users');
+    console.log('Deleting tables: users, posts, comments, post_weights, friends, friend_recs, social_rank, likes, chat_rooms, chat_members, chat_messages, chat_invites, online_users');
     await dbaccess.connect();
     await delete_tables();
     console.log('Tables deleted');
