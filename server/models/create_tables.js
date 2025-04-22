@@ -65,6 +65,15 @@ async function create_tables() {
         );
     `);
 
+    // SOCIAL_RANK
+    await dbaccess.create_tables(`
+        CREATE TABLE IF NOT EXISTS social_rank (
+            user_id int NOT NULL PRIMARY KEY,
+            rank int,
+            FOREIGN KEY (user_id) REFERENCES users(user_id)
+        );
+    `);
+
     // POST_WEIGHTS
     await dbaccess.create_tables(`
         CREATE TABLE IF NOT EXISTS post_weights (
