@@ -42,7 +42,7 @@ public class ComputeRanksLivy {
      * Call Livy while requesting only 10 rows, with various config options as parameters
      */
     public static List<SerializablePair<String, Double>> callLivy(String livy, FlexibleLogger logger, Config config, double d_max, int i_max, boolean debug, boolean useBacklinks) throws IOException, URISyntaxException, InterruptedException, ExecutionException {
-        SocialRankJob job = new SocialRankJob(d_max, i_max, 10, useBacklinks, false, debug, logger, config);
+        SocialRankJob job = new SocialRankJob(d_max, i_max, useBacklinks, false, debug, logger, config);
 
         return SparkJob.runJob(livy, job);
     }

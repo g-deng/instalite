@@ -6,10 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.SparkSession.Builder;
 
 import instalite.wahoo.config.Config;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 
 public class SparkConnector {
     /**
@@ -45,7 +43,7 @@ public class SparkConnector {
                 logger.info("Credentials were provided, using S3");
                 SparkSession.Builder sparkBuilder = SparkSession
                     .builder()
-                    .appName("Homework3")
+                    .appName("Instalite Wahoo Ranker")
                     .master((host == null) ? config.LOCAL_SPARK : host)
                     .config("spark.hadoop.fs.s3a.access.key", config.ACCESS_KEY_ID)
                     .config("spark.hadoop.fs.s3a.secret.key", config.SECRET_ACCESS_KEY);
@@ -59,7 +57,7 @@ public class SparkConnector {
                 logger.info("Credentials were not provided in .env: using AWS profile credentials");
                 spark = SparkSession
                         .builder()
-                        .appName("Homework3")
+                        .appName("Instalite Wahoo Ranker")
                         .master((host == null) ? config.LOCAL_SPARK : host)
                         .config("spark.hadoop.fs.s3a.aws.credentials.provider", "com.amazonaws.auth.profile.ProfileCredentialsProvider")
                         .config("spark.hadoop.fs.s3a.aws.credentials.profile.name", "default")

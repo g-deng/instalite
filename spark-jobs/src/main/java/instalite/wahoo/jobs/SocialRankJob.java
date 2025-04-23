@@ -1,23 +1,16 @@
 package instalite.wahoo.jobs;
 
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-
-import java.util.stream.Collectors;
 
 import instalite.wahoo.jobs.utils.FlexibleLogger;
-import org.apache.livy.Job;
 import org.apache.livy.JobContext;
-import org.apache.livy.LivyClient;
-import org.apache.livy.LivyClientBuilder;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
 
 import instalite.wahoo.config.Config;
 import instalite.wahoo.jobs.utils.SerializablePair;
@@ -37,16 +30,11 @@ public class SocialRankJob extends SparkJob<List<SerializablePair<String, Double
 	double d_max; // largest change in a node's rank from iteration i to iteration i+1
 	int i_max; // max number of iterations
 
-	private String source;
-
-	int max_answers = Config.FIRST_N_ROWS;
-
-	public SocialRankJob(double d_max, int i_max, int answers, boolean useBacklinks, boolean isLocal, boolean debug, FlexibleLogger logger, Config config) {
-		super(logger, config, isLocal, debug);
+	public SocialRankJob(double d_max, int i_max, SparkSession spark, boolean useBacklinks, boolean isLocal, boolean debug, FlexibleLogger logger, Config config) {
+		super(logger, config, spark, isLocal, debug);
 		this.useBacklinks = useBacklinks;
 		this.d_max = d_max;
 		this.i_max = i_max;
-		this.max_answers = answers;
 	}
 
 	/**
@@ -104,14 +92,12 @@ protected JavaPairRDD<String, String> getSocialNetworkFromMySQL() {
 	 * @return a JavaRDD containing the nodes with no outgoing edges (sinks)
 	 */
 	protected JavaRDD<String> getSinks(JavaPairRDD<String, String> network) {
-        // TODO: find nodes that are destinations but not sources, i.e., they are sinks
+        // find nodes that are destinations but not sources, i.e., they are sinks
 		// (followed, follower)
 		logger.debug("lemon getting sinks");
 		JavaRDD<String> followeds = network.keys().distinct();
 		JavaRDD<String> followers = network.values().distinct();
-		JavaRDD<String> sinks = followeds.subtract(followers);
-		// logger.debug("Sinks: " + sinks.collect().toString());
-        return sinks;
+		return followeds.subtract(followers);
 	}
 
 	/**
@@ -134,7 +120,6 @@ protected JavaPairRDD<String, String> getSocialNetworkFromMySQL() {
 		JavaRDD<String> sinks = getSinks(edgeRDD);
 		logger.info("There are " + sinks.count() + " sinks");
 
-		// TODO: main processing logic here. Also check if useBacklinks is set.
 		JavaPairRDD<String, Double> nodeRDD = edgeRDD.keys().union(edgeRDD.values()).distinct().mapToPair((s) -> new Tuple2<>(s, 0.0));
 		long nodes = nodeRDD.count();
 		long edges = edgeRDD.distinct().count();
@@ -182,7 +167,7 @@ protected JavaPairRDD<String, String> getSocialNetworkFromMySQL() {
 			 .mapToPair((pair) -> new Tuple2<>(pair._1, Math.abs(pair._2._1 - pair._2._2)));
 
 			socialRankRDD = nextSocialRankRDD;
-			d = differencesRDD.values().reduce((a,b) -> Math.max(a, b));
+			d = differencesRDD.values().reduce(Math::max);
 			if (debug) {
 				logger.debug("*** Social network ranking ***");
 				for (Tuple2<String, Double> pair : socialRankRDD.collect()) {
@@ -193,8 +178,6 @@ protected JavaPairRDD<String, String> getSocialNetworkFromMySQL() {
 		}
 
 		logger.info("socialRank interative calculations complete.");
-		// logger.debug(socialRankRDD.collect().toString());
-
 
 		List<Tuple2<String, Double>> top10 = socialRankRDD.mapToPair(x->x.swap()).sortByKey(false).mapToPair(x->x.swap()).take(10);
 		List<SerializablePair<String, Double>> out = new LinkedList<>();

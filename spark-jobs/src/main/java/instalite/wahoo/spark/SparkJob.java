@@ -4,20 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.livy.Job;
 import org.apache.livy.JobContext;
 import org.apache.livy.LivyClient;
 import org.apache.livy.LivyClientBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
 
 import instalite.wahoo.config.Config;
-import instalite.wahoo.spark.SparkConnector;
 import instalite.wahoo.jobs.utils.FlexibleLogger;
 
 /**
@@ -42,9 +38,11 @@ public abstract class SparkJob<T> implements Job<T> {
     protected boolean isLocal = true;
     boolean run_with_debug = false;
 
-    public SparkJob(FlexibleLogger logger, Config config, boolean isLocal, boolean debug) {
+    public SparkJob(FlexibleLogger logger, Config config, SparkSession spark, boolean isLocal, boolean debug) {
         System.setProperty("file.encoding", "UTF-8");
         this.isLocal = isLocal;
+        this.spark = spark;
+
         this.config = config;
         this.run_with_debug = debug;
 
@@ -90,10 +88,11 @@ public abstract class SparkJob<T> implements Job<T> {
     public T mainLogic() {
         if (!isLocal)
             throw new RuntimeException("mainLogic() should not be called on a Livy Job");
-
+    
         try {
-            initialize();
-
+            if (spark == null)
+                initialize();
+    
             return run(run_with_debug);
         } catch (final IOException ie) {
             logger.error("I/O error: ");
@@ -102,10 +101,13 @@ public abstract class SparkJob<T> implements Job<T> {
         } catch (final Exception e) {
             e.printStackTrace();
             return null;
-        } finally {
-            shutdown();
         }
+        // finally {
+        //     if (spark != null && isLocal)
+        //         shutdown();
+        // }
     }
+    
 
     @Override
     public T call(JobContext arg0) throws Exception {
