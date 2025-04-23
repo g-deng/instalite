@@ -21,8 +21,8 @@ function register_routes(app) {
     // FEED 
     app.post('/:username/createPost', createPost); 
     app.get('/:username/feed', getFeed); 
-    app.post('/:username/createLike', createLike);
-    app.post('/:username/createComment', createComment);
+    app.post('/:username/like', createLike);
+    app.post('/:username/comment', createComment);
 
     // SPARK
     app.post('/api/computeRanks', postComputeRanks);

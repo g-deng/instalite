@@ -37,7 +37,38 @@ export default function Home() {
       }
       // END CUT
     };
-  
+
+  const onLike = async (postId: number) => {
+      try {
+        const response = await axios.post(`${rootURL}/${username}/like`, { post_id: postId }, { withCredentials: true });
+        if (response.status === 200) {
+          console.log('Post liked successfully');
+          fetchData(); // Refresh the posts after liking
+        } else {
+          console.error('Error liking post:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error liking post:', error);
+      }
+    };
+
+  const onComment = async (postId: number, comment: string) => {
+      try {
+        console.log('Comment:', comment);
+        console.log('Post ID:', postId);
+        const response = await axios.post(`${rootURL}/${username}/comment`, { post_id: postId, text_content: comment }, { withCredentials: true });
+        if (response.status === 200) {
+          console.log('Comment added successfully');
+          fetchData(); // Refresh the posts after commenting
+        } else {
+          console.error('Error adding comment:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error adding comment:', error);
+      }
+    };
+
+
     useEffect(() => {
       fetchData();
     }, []);
@@ -62,7 +93,9 @@ export default function Home() {
           <CreatePostComponent updatePosts={fetchData} />
           {
             // CUT HERE
-            posts.map(p => <PostComponent title={p['title']} user={p['username']} description={p['content']} key={p['post_id']}/>)
+            posts.map(p => <PostComponent onLike={() => onLike(Number(p['post_id']))} user={p['username']} text={p['text_content']} 
+            hashtags={p['hashtags']} likes={p['likes']} comments={p['comments']} key={p['post_id']} weight={[p['weight']]}
+            onComment={(comment)=>onComment(Number(p['post_id']), comment)}/>)
             // END CUT
           }
         </div>

@@ -156,13 +156,30 @@ async function getFeed(req, res) {
         try {
             console.log('getting feed');
             const query = `
-                SELECT users.username, posts.image_url, posts.text_content, posts.hashtags
+                WITH post_comments AS (
+                    SELECT posts.post_id, GROUP_CONCAT(CONCAT(c_users.username, ':', comments.text_content) SEPARATOR ',') AS comments
+                    FROM posts
+                    LEFT JOIN comments
+                    ON posts.post_id = comments.post_id
+                    LEFT JOIN users AS c_users
+                    ON comments.user_id = c_users.user_id
+                    GROUP BY posts.post_id
+                )
+                SELECT users.username, posts.image_url, posts.text_content, posts.hashtags,
+                    COUNT(likes.user_id) AS likes, 
+                    MAX(post_comments.comments) AS comments,
+                    post_weights.weight
                 FROM post_weights
                     JOIN posts 
                     ON post_weights.post_id = posts.post_id
                     JOIN users
                     ON posts.user_id = users.user_id
-                WHERE post_weights.user_id = ?
+                    LEFT JOIN likes
+                    ON posts.post_id = likes.post_id
+                    LEFT JOIN post_comments
+                    ON posts.post_id = post_comments.post_id
+                WHERE post_weights.user_id = 1
+                GROUP BY posts.post_id
                 ORDER BY post_weights.weight DESC
                 LIMIT 1000
             `;
@@ -179,7 +196,14 @@ async function getFeed(req, res) {
                 username: row.username,
                 image_url: row.image_url,
                 text_content: row.text_content,
-                hashtags: row.hashtags
+                hashtags: row.hashtags,
+                likes: row.likes,
+                comments: row.comments ? row.comments.split(',').map(comment => {
+                    const [username, text_content] = comment.split(':');
+                    return {username, text_content};
+                }) : [],
+                weight: row.weight,
+                post_id: row.post_id
             }));
             return res.status(200).send({results: parsed_result});
         } catch {
