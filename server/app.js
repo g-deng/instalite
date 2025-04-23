@@ -261,6 +261,22 @@ app.use(session({
   secret: 'nets2120_insecure', saveUninitialized: true, cookie: { httpOnly: false }, resave: true
 }));
 
+import cron from 'node-cron';
+import { runComputeRanks } from './algorithms/run_compute_ranks.js'; // adjust path as needed
+
+// Schedule the job to run at the top of every hour
+// okay it's actually every 5 min for now lol
+cron.schedule('*/5 * * * *', async () => {
+  console.log('[CRON] Running ComputeRanksLocal...');
+
+  try {
+    const output = await runComputeRanks();
+    console.log('[CRON] Job finished:', output);
+  } catch (err) {
+    console.error('[CRON] Job failed:', err);
+  }
+});
+
 
 register_routes(app);
 

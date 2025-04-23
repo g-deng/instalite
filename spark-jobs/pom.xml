@@ -151,27 +151,6 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.8.1</version>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>shade</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <finalName>framework</finalName>
-                        <transformers>
-                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                            <mainClass>instalite.wahoo.jobs.ComputeRanksLocal</mainClass>
-                        </transformer>
-                        </transformers>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
                     <version>1.0.0</version>
@@ -265,18 +244,38 @@
                     </execution>
                 </executions>
             </plugin>
-<plugin> 
-                <groupId>org.apache.maven.plugins</groupId> 
-                <artifactId>maven-surefire-plugin</artifactId> 
-                <version>2.22.2</version> 
-                <configuration> 
-                    <testFailureIgnore>true</testFailureIgnore> 
-                    <includes> 
-                        <include>**/*Test.java</include> 
-                    </includes> 
-                    <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory> 
-                </configuration> 
-            </plugin>
+                <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <finalName>framework</finalName>
+                    <filters>
+                    <filter>
+                        <artifact>*:*</artifact>
+                        <excludes>
+                        <exclude>META-INF/*.SF</exclude>
+                        <exclude>META-INF/*.DSA</exclude>
+                        <exclude>META-INF/*.RSA</exclude>
+                        </excludes>
+                    </filter>
+                    </filters>
+                    <transformers>
+                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                        <mainClass>instalite.wahoo.jobs.ComputeRanksLocal</mainClass>
+                    </transformer>
+                    </transformers>
+                </configuration>
+                </plugin>
+
         </plugins>
 
     </build>

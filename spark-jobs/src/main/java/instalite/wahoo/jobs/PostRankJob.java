@@ -278,7 +278,7 @@ public class PostRankJob extends SparkJob<List<SerializablePair<String, Double>>
 				})
 				.aggregate(0.0, (agg, pair) -> Math.max(agg, pair._2()), (agg1, agg2) -> Math.max(agg1, agg2));
 			
-			d = Math.min(d, d_new);
+			d = d_new;
 			logger.info("Iteration " + i + " completed with d = " + d);
 			labelRDD = newLabelRDD;
 		}

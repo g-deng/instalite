@@ -6,7 +6,7 @@ import { exec } from 'child_process';
  */
 export function runComputeRanks() {
   return new Promise((resolve, reject) => {
-    exec('java -jar /root/nets2120/instalite/spark-jobs/target/nets2120-instalite-wahoo-0.0.1-SNAPSHOT.jar', (error, stdout, stderr) => {
+    exec('java -jar /root/nets2120/instalite/spark-jobs/target/framework.jar', (error, stdout, stderr) => {
       if (error) {
         console.error(`Error running ComputeRanksLocal: ${error.message}`);
         reject(error);
