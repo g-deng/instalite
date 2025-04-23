@@ -15,6 +15,7 @@ Also copy credentials into .env in spark-jobs directory
 ### RDS and EC2
 - if you have some keychain problems, also add `-o IgnoreUnknown=UseKeychain`
 
+
 ```bash
 ssh -i ~/.ssh/wahoo_remote_keypair.pem ubuntu@[EC2-IP]
 ```
