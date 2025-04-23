@@ -2,6 +2,11 @@
 # NETS 2120 Course Project
 
 ## Setup Notes
+Need to create Spark job jar file.
+```
+mvn clean build
+```
+Set up MySQL and Kafka.
 ```
 service mysql start
 
