@@ -5082,19 +5082,237 @@ sqlite3.OperationalError: no such table: tenants
 [32mINFO[0m:     [16-04-2025 02:31:21] Waiting for application startup.
 [32mINFO[0m:     [16-04-2025 02:31:21] Application startup complete.
 [32mINFO[0m:     [16-04-2025 02:31:21] Uvicorn running on [1mhttp://0.0.0.0:8000[0m (Press CTRL+C to quit)
-[33mWARNING[0m:  [19-04-2025 17:47:56] chroma_server_nofile is set to 65535, but this is less than current soft limit of 1048576. chroma_server_nofile will not be set.
-[32mINFO[0m:     [19-04-2025 17:47:57] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
-[36mDEBUG[0m:    [19-04-2025 17:47:57] Starting component System
-[36mDEBUG[0m:    [19-04-2025 17:47:57] Starting component OpenTelemetryClient
-[36mDEBUG[0m:    [19-04-2025 17:47:57] Starting component SqliteDB
-[36mDEBUG[0m:    [19-04-2025 17:47:57] Starting component SimpleQuotaEnforcer
-[36mDEBUG[0m:    [19-04-2025 17:47:57] Starting component Posthog
-[36mDEBUG[0m:    [19-04-2025 17:47:57] Starting component SimpleRateLimitEnforcer
-[36mDEBUG[0m:    [19-04-2025 17:47:57] Starting component LocalSegmentManager
-[36mDEBUG[0m:    [19-04-2025 17:47:57] Starting component LocalExecutor
-[36mDEBUG[0m:    [19-04-2025 17:47:57] Starting component SegmentAPI
-[36mDEBUG[0m:    [19-04-2025 17:47:57] Starting component SimpleAsyncRateLimitEnforcer
-[32mINFO[0m:     [19-04-2025 17:47:57] Started server process [[36m7057[0m]
-[32mINFO[0m:     [19-04-2025 17:47:57] Waiting for application startup.
-[32mINFO[0m:     [19-04-2025 17:47:57] Application startup complete.
-[32mINFO[0m:     [19-04-2025 17:47:57] Uvicorn running on [1mhttp://0.0.0.0:8000[0m (Press CTRL+C to quit)
+[33mWARNING[0m:  [16-04-2025 16:03:49] chroma_server_nofile is set to 65535, but this is less than current soft limit of 1048576. chroma_server_nofile will not be set.
+[32mINFO[0m:     [16-04-2025 16:03:50] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [16-04-2025 16:03:50] Starting component System
+[36mDEBUG[0m:    [16-04-2025 16:03:50] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [16-04-2025 16:03:50] Starting component SqliteDB
+[36mDEBUG[0m:    [16-04-2025 16:03:50] Starting component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [16-04-2025 16:03:50] Starting component Posthog
+[36mDEBUG[0m:    [16-04-2025 16:03:50] Starting component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [16-04-2025 16:03:50] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [16-04-2025 16:03:50] Starting component LocalExecutor
+[36mDEBUG[0m:    [16-04-2025 16:03:50] Starting component SegmentAPI
+[36mDEBUG[0m:    [16-04-2025 16:03:50] Starting component SimpleAsyncRateLimitEnforcer
+[32mINFO[0m:     [16-04-2025 16:03:50] Started server process [[36m10553[0m]
+[32mINFO[0m:     [16-04-2025 16:03:50] Waiting for application startup.
+[32mINFO[0m:     [16-04-2025 16:03:50] Application startup complete.
+[32mINFO[0m:     [16-04-2025 16:03:50] Uvicorn running on [1mhttp://0.0.0.0:8000[0m (Press CTRL+C to quit)
+[32mINFO[0m:     [16-04-2025 16:05:56] 127.0.0.1:56118 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:05:56] 127.0.0.1:56134 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:05:56] 127.0.0.1:56118 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[36mDEBUG[0m:    [16-04-2025 16:05:56] Starting component PersistentLocalHnswSegment
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 0
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 0
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 1
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 2
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 3
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 4
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 5
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 6
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 7
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 8
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 9
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 10
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 11
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 12
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 13
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 14
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 15
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 16
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 17
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 18
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 19
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 20
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 21
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 22
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 23
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 24
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 25
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 26
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 27
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 28
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 29
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 30
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 31
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 32
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 33
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 34
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 35
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 36
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 37
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 38
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 39
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 40
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 41
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 42
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 43
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 44
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 45
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 46
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 47
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 48
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 49
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 50
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 51
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 52
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 53
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 54
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 55
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 56
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 57
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 58
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 59
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 60
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 61
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 62
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 63
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 64
+[33mWARNING[0m:  [16-04-2025 16:05:56] Add of existing embedding ID: 65
+[32mINFO[0m:     [16-04-2025 16:05:56] 127.0.0.1:56134 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/query HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:49] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:49] 127.0.0.1:56274 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:49] 127.0.0.1:56268 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 200
+[36mDEBUG[0m:    [16-04-2025 16:06:49] Collection indexedData already exists, returning existing collection.
+[36mDEBUG[0m:    [16-04-2025 16:06:49] Collection indexedData already exists, returning existing collection.
+[32mINFO[0m:     [16-04-2025 16:06:49] 127.0.0.1:56296 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 200
+[36mDEBUG[0m:    [16-04-2025 16:06:49] Collection indexedData already exists, returning existing collection.
+[32mINFO[0m:     [16-04-2025 16:06:49] 127.0.0.1:56284 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:49] 127.0.0.1:56286 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:50] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[36mDEBUG[0m:    [16-04-2025 16:06:50] Starting component PersistentLocalHnswSegment
+[32mINFO[0m:     [16-04-2025 16:06:50] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:50] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:50] 127.0.0.1:56274 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:50] 127.0.0.1:56284 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:50] 127.0.0.1:56268 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:50] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:50] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:50] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:50] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:50] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:50] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:50] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:50] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56274 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56284 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:51] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:52] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:53] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:53] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:53] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:53] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:53] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:53] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:53] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:53] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:53] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:53] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:53] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:53] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:53] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:53] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:06:53] 127.0.0.1:56268 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/indexedData HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:06:53] 127.0.0.1:56274 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/add HTTP/1.1" 201
+[32mINFO[0m:     [16-04-2025 16:10:12] 127.0.0.1:48782 - "GET /api/v2/tenants/default_tenant HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:10:12] 127.0.0.1:48786 - "GET /api/v2/tenants/default_tenant/databases/default_database HTTP/1.1" 200
+[36mDEBUG[0m:    [16-04-2025 16:10:12] Collection indexedData already exists, returning existing collection.
+[32mINFO[0m:     [16-04-2025 16:10:12] 127.0.0.1:48782 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:10:13] 127.0.0.1:48782 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/query HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:10:42] 127.0.0.1:55932 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/query HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:10:57] 127.0.0.1:38532 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/query HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:11:16] 127.0.0.1:58322 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/query HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:11:32] 127.0.0.1:38354 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/query HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:30:21] 127.0.0.1:45562 - "GET /api/v2/tenants/default_tenant/databases/default_database/collections/imdb_photos HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:30:21] 127.0.0.1:45578 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/01a3e012-bc10-415c-9032-263ff23dc60a/query HTTP/1.1" 200
+[32mINFO[0m:     [16-04-2025 16:32:19] 127.0.0.1:48788 - "POST /api/v2/tenants/default_tenant/databases/default_database/collections/5e6a516d-2fb4-4c0b-9e7e-79804bcd94ab/query HTTP/1.1" 200
+[33mWARNING[0m:  [22-04-2025 23:59:03] chroma_server_nofile is set to 65535, but this is less than current soft limit of 1048576. chroma_server_nofile will not be set.
+[32mINFO[0m:     [22-04-2025 23:59:04] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Starting component System
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Starting component SqliteDB
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Starting component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Starting component Posthog
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Starting component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Starting component LocalExecutor
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Starting component SegmentAPI
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Starting component SimpleAsyncRateLimitEnforcer
+[32mINFO[0m:     [22-04-2025 23:59:04] Started server process [[36m77857[0m]
+[32mINFO[0m:     [22-04-2025 23:59:04] Waiting for application startup.
+[32mINFO[0m:     [22-04-2025 23:59:04] Application startup complete.
+[31mERROR[0m:    [22-04-2025 23:59:04] [Errno 98] error while attempting to bind on address ('0.0.0.0', 8000): address already in use
+[32mINFO[0m:     [22-04-2025 23:59:04] Waiting for application shutdown.
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Stopping component System
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Stopping component SegmentAPI
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Stopping component LocalExecutor
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Stopping component LocalSegmentManager
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Stopping component SimpleAsyncRateLimitEnforcer
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Stopping component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Stopping component Posthog
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Stopping component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Stopping component SqliteDB
+[36mDEBUG[0m:    [22-04-2025 23:59:04] Stopping component OpenTelemetryClient
+[32mINFO[0m:     [22-04-2025 23:59:04] Application shutdown complete.
+[33mWARNING[0m:  [23-04-2025 00:25:20] chroma_server_nofile is set to 65535, but this is less than current soft limit of 1048576. chroma_server_nofile will not be set.
+[32mINFO[0m:     [23-04-2025 00:25:20] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Starting component System
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Starting component SqliteDB
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Starting component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Starting component Posthog
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Starting component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Starting component LocalExecutor
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Starting component SegmentAPI
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Starting component SimpleAsyncRateLimitEnforcer
+[32mINFO[0m:     [23-04-2025 00:25:20] Started server process [[36m96582[0m]
+[32mINFO[0m:     [23-04-2025 00:25:20] Waiting for application startup.
+[32mINFO[0m:     [23-04-2025 00:25:20] Application startup complete.
+[31mERROR[0m:    [23-04-2025 00:25:20] [Errno 98] error while attempting to bind on address ('0.0.0.0', 8000): address already in use
+[32mINFO[0m:     [23-04-2025 00:25:20] Waiting for application shutdown.
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Stopping component System
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Stopping component SegmentAPI
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Stopping component LocalExecutor
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Stopping component LocalSegmentManager
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Stopping component SimpleAsyncRateLimitEnforcer
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Stopping component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Stopping component Posthog
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Stopping component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Stopping component SqliteDB
+[36mDEBUG[0m:    [23-04-2025 00:25:20] Stopping component OpenTelemetryClient
+[32mINFO[0m:     [23-04-2025 00:25:20] Application shutdown complete.

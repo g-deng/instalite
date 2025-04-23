@@ -123,6 +123,7 @@ async function postLogin(req, res) {
                 res.status(401).send({error: 'Username and/or password are invalid.'});
             }
         } catch (error) {
+            console.log(error);
             res.status(500).send({error: 'Error querying database'});
         }
     }

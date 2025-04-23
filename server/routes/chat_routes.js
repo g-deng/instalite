@@ -346,14 +346,15 @@ async function getUserFriends(req, res) {
             res.status(403).send({error: 'Not logged in.'});
         } else {
             const query = `
-            SELECT n2.nconst, n2.primaryName, u2.user_id FROM followers 
-            JOIN names AS n1 ON n1.nconst = followers.follower
-            JOIN names AS n2 ON n2.nconst = followers.followed
-            JOIN users AS u1 ON u1.linked_nconst = n1.nconst
-            JOIN users AS u2 ON u2.linked_nconst = n2.nconst
+            SELECT n2.nconst, n2.primaryName, u2.user_id FROM friends
+            JOIN users AS u1 ON u1.user_id = friends.follower
+            JOIN users AS u2 ON u2.user_id = friends.followed
+            JOIN names AS n1 ON n1.nconst = u1.linked_nconst
+            JOIN names AS n2 ON n2.nconst = u2.linked_nconst
             JOIN online_users AS ou ON ou.user_id = u2.user_id
             WHERE u1.user_id = ?
             `;
+
             const params = [req.session.user_id];
             const result = await queryDatabase(query, params);
             const fixed_result = result[0].map(row => ({

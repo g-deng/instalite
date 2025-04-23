@@ -2,12 +2,34 @@
 # NETS 2120 Course Project
 
 ## Setup Notes
-Need to create Spark job jar file.
+
+### AWS credentials
+Launch Learner Lab and copy AWS credentials into `credentials` then run:
 ```
+cp credentials ~/.aws
+```
+Also copy credentials into .env in home directory under the [user] credentials
+
+Also copy credentials into .env in spark-jobs directory
+
+### RDS and EC2
+- if you have some keychain problems, also add `-o IgnoreUnknown=UseKeychain`
+
+```bash
+ssh -i ~/.ssh/wahoo_remote_keypair.pem ubuntu@[EC2-IP]
+```
+
+```bash
+ssh -i ~/.ssh/wahoo_remote_keypair.pem -4 -L 8000:localhost:8000 ubuntu@[EC2-IP]
+```
+
+### Kafka
+Need to create Spark job jar file.
+```bash
 mvn clean build
 ```
 Set up MySQL and Kafka.
-```
+```bash
 service mysql start
 
 ssh -i ~/nets2120/nets2120_tunnel -4 -L 9092:localhost:9092 sshtunnel@ec2-18-218-240-208.us-east-2.compute.amazonaws.com
