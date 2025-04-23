@@ -103,7 +103,7 @@ async function createComment(req, res) {
     var post_id = req.body.post_id;
     var text_content = req.body.text_content;
 
-    if (!post_id || !text_content || text_content.trim().length == 0 || post_id.trim().length == 0) {
+    if (!post_id || !text_content || text_content.trim().length == 0) {
         return res.status(400).send({error: 'One or more of the fields you entered was empty, please try again.'});
     } else if (!helper.isLoggedIn(req, req.params.username)) {
         console.log(req.session);
@@ -168,7 +168,7 @@ async function getFeed(req, res) {
                 SELECT users.username, posts.image_url, posts.text_content, posts.hashtags,
                     COUNT(likes.user_id) AS likes, 
                     MAX(post_comments.comments) AS comments,
-                    post_weights.weight
+                    post_weights.weight, posts.post_id
                 FROM post_weights
                     JOIN posts 
                     ON post_weights.post_id = posts.post_id
@@ -178,7 +178,7 @@ async function getFeed(req, res) {
                     ON posts.post_id = likes.post_id
                     LEFT JOIN post_comments
                     ON posts.post_id = post_comments.post_id
-                WHERE post_weights.user_id = 1
+                WHERE post_weights.user_id = ?
                 GROUP BY posts.post_id
                 ORDER BY post_weights.weight DESC
                 LIMIT 1000

@@ -41,7 +41,7 @@ export default function Home() {
   const onLike = async (postId: number) => {
       try {
         const response = await axios.post(`${rootURL}/${username}/like`, { post_id: postId }, { withCredentials: true });
-        if (response.status === 200) {
+        if (response.status === 201) {
           console.log('Post liked successfully');
           fetchData(); // Refresh the posts after liking
         } else {
@@ -57,7 +57,7 @@ export default function Home() {
         console.log('Comment:', comment);
         console.log('Post ID:', postId);
         const response = await axios.post(`${rootURL}/${username}/comment`, { post_id: postId, text_content: comment }, { withCredentials: true });
-        if (response.status === 200) {
+        if (response.status === 201) {
           console.log('Comment added successfully');
           fetchData(); // Refresh the posts after commenting
         } else {
@@ -93,9 +93,9 @@ export default function Home() {
           <CreatePostComponent updatePosts={fetchData} />
           {
             // CUT HERE
-            posts.map(p => <PostComponent onLike={() => onLike(Number(p['post_id']))} user={p['username']} text={p['text_content']} 
+            posts.map(p => <PostComponent onLike={() => onLike(p['post_id'])} user={p['username']} text={p['text_content']} 
             hashtags={p['hashtags']} likes={p['likes']} comments={p['comments']} key={p['post_id']} weight={[p['weight']]}
-            onComment={(comment)=>onComment(Number(p['post_id']), comment)}/>)
+            onComment={(comment)=>onComment(p['post_id'], comment)}/>)
             // END CUT
           }
         </div>
