@@ -37,6 +37,8 @@ async function populate_tables() {
         await dbaccess.send_sql('DELETE FROM post_weights;');
         await dbaccess.send_sql('DELETE FROM posts;');
         await dbaccess.send_sql("ALTER TABLE posts AUTO_INCREMENT = 1");
+        await dbaccess.send_sql('DELETE FROM friends;');
+        await dbaccess.send_sql('DELETE FROM social_rank');
         await dbaccess.send_sql('DELETE FROM users;');
         await dbaccess.send_sql("ALTER TABLE users AUTO_INCREMENT = 1");
     }

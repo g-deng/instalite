@@ -133,13 +133,28 @@ async function createLike(req, res) {
         return res.status(400).send({error: 'Post ID is required.'});
     } else {
         try {
-            const query = `
-                INSERT INTO likes (user_id, post_id) 
-                VALUES (?, ?)
+            const checkIfLiked = `
+                SELECT * FROM likes
+                WHERE user_id = ? AND post_id = ?
             `;
             const params = [req.session.user_id, req.body.post_id];
-            const result = await queryDatabase(query, params);
-            console.log(result);
+            const checkResult = await queryDatabase(checkIfLiked, params);
+            console.log(checkResult);
+            if (checkResult[0].length > 0) {
+                const deleteLikeQuery = `
+                    DELETE FROM likes
+                    WHERE user_id = ? AND post_id = ?
+                `;
+                await queryDatabase(deleteLikeQuery, params);
+            } else {
+                const createLikeQuery = `
+                    INSERT INTO likes (user_id, post_id) 
+                    VALUES (?, ?)
+                `;
+                console.log('creating like');
+                await queryDatabase(createLikeQuery, params);
+                console.log('like created');
+            }
             return res.status(201).send({message: 'Like created.'});  
         } catch {
             return res.status(500).send({error: 'Error querying database'});
@@ -190,7 +205,6 @@ async function getFeed(req, res) {
             // TODO: decide on what to do with empty queries
             if (result[0].length == 0) {
                 return res.status(200).send({results: []});
-                return;
             }
             const parsed_result = result[0].map(row => ({
                 username: row.username,

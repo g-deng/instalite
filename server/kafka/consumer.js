@@ -55,8 +55,7 @@ const runKafkaConsumer = async () => {
                 ) {
                     console.log('Reading post from Bluesky...');
                     parsedData = {
-                        title: `${post.author.displayName} on BlueSky`, 
-                        content: post.post_text, 
+                        text_content: `${post.author.displayName} on BlueSky ${post.post_text}`, 
                         username: post.author.displayName,
                         source_site: post.source_site,
                         topic: 'BlueSky'
@@ -75,8 +74,7 @@ const runKafkaConsumer = async () => {
                 ) {
                     console.log('Reading post from FederatedPosts...');
                     parsedData = {
-                        title: `${postData.username} on ${postData.source_site}`, 
-                        content: postData.post_text, 
+                        text_content: `${postData.username} on ${postData.source_site}: ${postData.post_text}`, 
                         username: postData.username,
                         source_site: postData.source_site,
                         topic: topic
@@ -89,7 +87,6 @@ const runKafkaConsumer = async () => {
                 if (parsedData) {
                     await addKafkaPostToDB(parsedData);
                 }
-                console.log('Post added to DB');
             } catch (error) {
                 console.error('Error posting to app:', error);
             } 
@@ -137,9 +134,11 @@ const addKafkaPostToDB = async (post) => {
 
     if (source == 'local') {
         console.log('Post is from local source, not adding to DB');
-        console.log({title, username, content, source_site, source})
+        console.log({username, content, source_site, source})
         return;
     }
+
+
 
     if (!text_content || text_content.trim().length == 0) {
         return;
@@ -148,7 +147,7 @@ const addKafkaPostToDB = async (post) => {
             const user_id = await registerKafkaUser(source);
             const query = `
                 INSERT INTO posts (user_id, image_url, text_content, hashtags, source) 
-                VALUES (?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?)
             `;
             const params = [user_id, image_url, text_content, hashtags, source];
             const result = await queryDatabase(query, params);
