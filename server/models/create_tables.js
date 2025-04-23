@@ -79,7 +79,7 @@ async function create_tables() {
         CREATE TABLE IF NOT EXISTS post_weights (
             post_id int NOT NULL,
             user_id int NOT NULL,
-            weight int,
+            weight double,
             PRIMARY KEY (post_id, user_id),
             FOREIGN KEY (post_id) REFERENCES posts(post_id),
             FOREIGN KEY (user_id) REFERENCES users(user_id)
