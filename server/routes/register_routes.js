@@ -1,6 +1,7 @@
 import { getHelloWorld, postLogin, postRegister, getMovie, uploadImage } from './routes.js';
 import { getFriends, getFriendRecs, addFriend, removeFriend } from './friend_routes.js';
-import { createPost, getFeed, getKafkaDemo } from './feed_routes.js';
+import { createPost, getFeed, getKafkaDemo, createLike, createComment } from './feed_routes.js';
+import { postComputeRanks } from '../algorithms/run_compute_ranks.js';
 import {get_embedding, get_topk} from './embedding_routes.js';
 import multer from 'multer';
 
@@ -16,8 +17,16 @@ function register_routes(app) {
     app.get('/:username/recommendations', getFriendRecs);
     app.post('/:username/addFriend', addFriend);
     app.post('/:username/removeFriend', removeFriend);
+
+    // FEED 
     app.post('/:username/createPost', createPost); 
     app.get('/:username/feed', getFeed); 
+    app.post('/:username/createLike', createLike);
+    app.post('/:username/createComment', createComment);
+
+    // SPARK
+    app.post('/api/computeRanks', postComputeRanks);
+
     app.post('/:username/movies', getMovie);
     app.post('/upload', upload.single('image'), uploadImage);
     app.get('/embeddings/:name', get_embedding);
