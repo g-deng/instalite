@@ -165,6 +165,18 @@ async function addFriend(req, res) {
         // insert bidirectionally 
         insertParams = [friendId, req.session.user_id];
         await queryDatabase(insertQuery, insertParams);
+
+
+        const deleteRecQuery = `
+        DELETE FROM friend_recs
+        WHERE (user = ? AND recommendation = ?)
+           OR (user = ? AND recommendation = ?)
+         `;
+        await queryDatabase(deleteRecQuery, [
+             req.session.user_id, friendId,
+             friendId,             req.session.user_id
+         ]);
+
         res.status(200).send({ message: 'Friend added successfully.' });
     } catch (error) {
         console.error(error);
