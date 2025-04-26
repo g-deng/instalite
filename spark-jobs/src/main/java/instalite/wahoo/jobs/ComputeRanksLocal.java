@@ -67,6 +67,14 @@ public class ComputeRanksLocal {
         sendPostRanksToDB(postRanks);
         logger.info("*** Finished sending post ranks to DB! ***");
 
+        // FOLLOWER OF FOLLOWERS
+        logger.info("*** Followers of Followers starting ***");
+        FollowersOfFollowersJob fofJob = new FollowersOfFollowersJob(spark, true, debug, rankLogger, config);
+        List<SerializablePair<String, Integer>> fofRecs = fofJob.mainLogic();
+        sendFofRecsToDB(fofRecs);
+        logger.info("*** Followers of Followers complete ***");
+
+
         // Close the Spark session
         spark.stop();
     }
@@ -144,6 +152,35 @@ public class ComputeRanksLocal {
 
         } catch (Exception e) {
             logger.error("Error writing to post_weights: " + e.getMessage(), e);
+        }
+    }
+    
+    private static void sendFofRecsToDB(List<SerializablePair<String, Integer>> recs) {
+        if (recs == null || recs.isEmpty()) {
+            logger.warn("No follow‑recommendations to persist");
+            return;
+        }
+        try (Connection conn = DriverManager.getConnection(Config.DATABASE_CONNECTION,
+                                                           Config.DATABASE_USERNAME,
+                                                           Config.DATABASE_PASSWORD);
+             Statement wipe = conn.createStatement();
+             PreparedStatement ins = conn.prepareStatement(
+                     "REPLACE INTO friend_recs (user, recommendation, strength) VALUES (?, ?, ?)") ) {
+
+            wipe.executeUpdate("DELETE FROM friend_recs");
+            for (SerializablePair<String, Integer> p : recs) {
+                String[] ids = p.getLeft().split(",");
+                int userId = Integer.parseInt(ids[0]);
+                int recId  = Integer.parseInt(ids[1]);
+                ins.setInt(1, userId);
+                ins.setInt(2, recId);
+                ins.setInt(3, p.getRight());
+                ins.addBatch();
+            }
+            ins.executeBatch();
+            logger.info("friend_recs refreshed");
+        } catch (Exception e) {
+            logger.error("Error writing friend_recs", e);
         }
     }
 }
