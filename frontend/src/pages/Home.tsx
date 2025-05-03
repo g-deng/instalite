@@ -95,7 +95,7 @@ export default function Home() {
             // CUT HERE
             posts.map(p => <PostComponent onLike={() => onLike(p['post_id'])} user={p['username']} text={p['text_content']} 
             hashtags={p['hashtags']} likes={p['likes']} comments={p['comments']} key={p['post_id']} weight={[p['weight']]}
-            onComment={(comment)=>onComment(p['post_id'], comment)}/>)
+            onComment={(comment)=>onComment(p['post_id'], comment)} imageUrl={p['image_url']}/>)
             // END CUT
           }
         </div>

@@ -20,7 +20,7 @@ function register_routes(app) {
     app.get('/:username/onlineUsers', getOnlineUsers);
 
     // FEED 
-    app.post('/:username/createPost', createPost); 
+    app.post('/:username/createPost', upload.single('image'), createPost); 
     app.get('/:username/feed', getFeed); 
     app.post('/:username/like', createLike);
     app.post('/:username/comment', createComment);

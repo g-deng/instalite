@@ -24,6 +24,23 @@ ssh -i ~/.ssh/wahoo_remote_keypair.pem ubuntu@[EC2-IP]
 ssh -i ~/.ssh/wahoo_remote_keypair.pem -4 -L 8000:localhost:8000 ubuntu@[EC2-IP]
 ```
 
+### S3
+
+When you make an S3 bucket for image posts, go to the permissions tab and paste in the following under Bucket Policy:
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowPublicReadOnUploads",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::nets2120-chroma-andrew08/posts/uploads/*"
+        }
+    ]
+}
+
 ### Kafka
 Need to create Spark job jar file.
 ```bash

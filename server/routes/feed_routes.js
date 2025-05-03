@@ -8,6 +8,7 @@ import { get_db_connection } from '../models/rdbms.js';
 import { sendPostToKafka, connectProducer } from '../kafka/producer.js';
 import { runKafkaConsumer } from '../kafka/consumer.js';
 import RouteHelper from '../routes/route_helper.js';
+import S3KeyValueStore from '../models/s3.js';
 
 // Database connection setup
 const db = get_db_connection();
@@ -56,9 +57,12 @@ async function getKafkaDemo(req, res) {
 
 // POST /createPost
 async function createPost(req, res) {
-    var image_url = req.body.image_url;
+    const file = req.file;
+    var image_url = null;
     var text_content = req.body.text_content;
     var hashtags = req.body.hashtags;
+    var content_type = 'text/html';
+
     if (!helper.isLoggedIn(req, req.params.username)) {
         console.log(req.session);
         return res.status(403).send({error: 'Not logged in.'});
@@ -66,6 +70,20 @@ async function createPost(req, res) {
         return res.status(400).send({error: 'One or more of the fields you entered was empty, please try again.'});
     } else {
         try {
+            if (file) {
+                const bucketName = `nets2120-chroma-${process.env.USER_ID}`;
+                const s3store = new S3KeyValueStore(bucketName, 'user');
+                const keyPrefix = 'posts/';
+                // uploadFile returns the key path
+                const key = await s3store.uploadFile(file.path, bucketName, keyPrefix);
+                // Construct the public URL
+                console.log("done uploading");
+                image_url = `https://${bucketName}.s3.amazonaws.com/${key}`;
+                console.log("boop");
+                content_type = file.mimetype;
+                console.log('Constructed image_url:', image_url);
+            }
+            console.log('Inserting post into database with image_url:', image_url);
             const query = `
                 INSERT INTO posts (user_id, image_url, text_content, hashtags) 
                 VALUES (?, ?, ?, ?)
@@ -77,20 +95,34 @@ async function createPost(req, res) {
             const post_id = result[0].insertId;
             console.log(`Post created with ID: ${post_id}`);
 
-            // TODO: attachments
+            // TODO: attachments 
+            /* 
             const kafkaPost = {
                 post_json: {
                     username: req.session.username,
                     post_text: text_content,
                     post_uuid_within_site: post_id,
-                    content_type: 'text/html',
+                    content_type: content_type,
                     source_site: 'instalite-wahoo',
                 }
+            }; */
+
+            const post_json = {
+                username: req.session.username,
+                post_text: text_content,
+                post_uuid_within_site: post_id,
+                content_type: content_type,
+                source_site: 'instalite-wahoo',
             };
 
-            await sendPostToKafka(kafkaPost);
+            if (image_url) {
+                post_json.attach = { url: image_url, content_type: content_type };
+                console.log('Added attach to postJson:', post_json.attach);
+            }
+
+            await sendPostToKafka({post_json: post_json});
             console.log('sent to Kafka');
-            console.log(kafkaPost);
+            console.log(post_json);
             return res.status(201).send({message: 'Post created.'});  
         } catch {
             return res.status(500).send({error: 'Error querying database'});

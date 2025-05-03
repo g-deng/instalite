@@ -8,7 +8,8 @@ export default function PostComponent({
     hashtags = 'iamhavingsomuchfun, aaaaa',
     likes = '0',
     comments = [],
-    text = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem porro consequatur impedit dolor, soluta rerum mollitia ut eos fugiat! Amet nam voluptate quos delectus rem enim veritatis eius iste! Et.'
+    text = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem porro consequatur impedit dolor, soluta rerum mollitia ut eos fugiat! Amet nam voluptate quos delectus rem enim veritatis eius iste! Et.',
+    imageUrl = ''
 }: {
     onLike: () => void,
     onComment: () => void,
@@ -17,11 +18,23 @@ export default function PostComponent({
     likes: number,
     comments: any[]
     text: string
+    imageUrl?: string;   
 }) {
     const [commentText, setCommentText] = React.useState<string>('');
 
     return (
         <div className='rounded-md bg-slate-50 w-full max-w-[1000px] space-y-2 p-3'>
+
+        {imageUrl && (
+                <div className="flex justify-center">
+                <img
+                    src={imageUrl}
+                    alt="Post attachment"
+                    className="max-h-80 w-auto rounded-md mb-2 object-contain"
+                />
+                </div>
+            )}
+
             <div className=' text-slate-800'>
                 <span className='font-semibold'> @{user} </span>
                 posted
