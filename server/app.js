@@ -52,6 +52,13 @@ io.on('connection', (socket) => {
         'INSERT INTO online_users (user_id, socket_id) VALUES (?, ?)',
         [userId, socket.id]
       );
+
+      const [rows] = await queryDatabase('SELECT user_id FROM online_users');
+      const onlineList = rows.map(r => r.user_id);
+    
+      // 3) broadcast both the full list and the single‐user join
+      io.emit('onlineUsers', onlineList);
+      io.emit('userOnline', userId);
       console.log(`User ${userId} is now online with socket ID ${socket.id}`);
     } catch (err) {
       console.error('Database error:', err);
@@ -241,9 +248,15 @@ io.on('connection', (socket) => {
   // Handle disconnection
   socket.on('disconnect', async () => {
     try {
+      const [res] = await queryDatabase('SELECT user_id FROM online_users WHERE socket_id = ?', [socket.id]);
       // Remove user from online_users table
       await queryDatabase('DELETE FROM online_users WHERE socket_id = ?', [socket.id]);
-      console.log('User disconnected');
+      const [afterRows] = await queryDatabase('SELECT user_id FROM online_users');
+      const afterList = afterRows.map(r => r.user_id);
+      io.emit('onlineUsers', afterList);
+      console.log(res);
+      io.emit('userOffline', res[0].user_id);
+      console.log('User disconnected', res[0].user_id);
     } catch (err) {
       console.error('Database error:', err);
     }

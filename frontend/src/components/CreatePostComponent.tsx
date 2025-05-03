@@ -13,7 +13,7 @@ function CreatePostComponent({ updatePosts }) {
     try {
       const response = await axios.post(`${config.serverRootURL}/${username}/createPost`, {
         title,
-        content,
+        text_content: content,
       }, {withCredentials: true });
       console.log(response);
       if (response.status === 201 || response.status === 200) {

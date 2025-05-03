@@ -3,12 +3,20 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios'; 
 import config from '../../config.json';
 import { useNavigate } from 'react-router-dom';
+import {getSocket} from '../Socket';
 
-const FriendComponent = ({ name, add=true, remove=true }: { name: string, add: boolean|undefined, remove: boolean|undefined}) => {
+const FriendComponent = ({ name, add=true, remove=true , online=false}: { name: string, add: boolean|undefined, remove: boolean|undefined, online: boolean|undefined}) => {
     return (
         <div className='rounded-md bg-slate-100 p-3 flex space-x-2 items-center flex-auto justify-between'>
-            <div className='font-semibold text-base'>
-                { name }
+            <div className="flex items-center space-x-2">
+                <span className="font-semibold text-base">{name}</span>
+                <span
+                    className={`inline-block w-3 h-3 rounded-full ${
+                        online ? 'bg-green-500' : 'bg-gray-400'
+                    }`}
+                    aria-label={online ? 'Online' : 'Offline'}
+                    title={online ? 'Online' : 'Offline'}
+                />
             </div>
         </div>
     )
@@ -25,6 +33,8 @@ export default function Friends() {
     const [recs, setRecs] = useState([]); 
     const [newFriend, setNewFriend] = useState('');
     const [removeFriend, setRemoveFriend] = useState('');
+
+    const [online, setOnline]    = useState<string[]>([]);
     // END CUT
 
     const feed = () => {
@@ -41,9 +51,11 @@ export default function Friends() {
         try {
           const friendRes = await axios.get(`${rootURL}/${username}/friends`, { withCredentials: true });
           const recRes = await axios.get(`${rootURL}/${username}/recommendations`, { withCredentials: true });
+          const onlineUsers = await axios.get(`${rootURL}/${username}/onlineUsers`,     { withCredentials: true })
           
           setFriends(friendRes.data.results);
           setRecs(recRes.data.results);
+          setOnline(onlineUsers.data.results);
         } catch (error) {
           console.error('Error fetching data:', error);
           navigate("/");
@@ -51,7 +63,22 @@ export default function Friends() {
       };
     
       useEffect(() => {
+        const socket = getSocket();
+        socket.on('onlineUsers', (list: string[]) => {
+            setOnline(list);
+          });
+
+        socket.on('userOnline', (user: string) => {
+            setOnline(current => Array.from(new Set([...current, user])));
+        });
+        socket.on('userOffline', (user: string) => {
+            setOnline(current => current.filter(u => u !== user));
+        });
+        console.log(online);
         fetchData();
+        return () => {
+            socket.off();
+        };
       }, []);
     
 
@@ -108,7 +135,7 @@ export default function Friends() {
                 <div className='space-y-2'>
                     {
                         // CUT HERE
-                        friends.map(f => <FriendComponent name={f['username']} add={false} remove={true} key={f['followed']}/>)
+                        friends.map(f => <FriendComponent name={f['username']} add={false} remove={true} online={online.includes(f['user_id'])} key={f['followed']}/>)
                         // END CUT
                     }
                 </div>
@@ -118,7 +145,7 @@ export default function Friends() {
                 <div className='space-y-2'>
                     {
                         // CUT HERE
-                        recs.map(r => <FriendComponent name={r['username']} add={true} remove={false} key={r['recommendation']}/>)
+                        recs.map(r => <FriendComponent name={r['username']} add={true} remove={false} online={online.includes(r['user_id'])} key={r['recommendation']}/>)
                         // END CUT
                     }
                 </div>

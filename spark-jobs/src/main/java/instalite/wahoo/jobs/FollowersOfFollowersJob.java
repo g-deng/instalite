@@ -121,7 +121,7 @@ public class FollowersOfFollowersJob
     @Override
     public List<SerializablePair<String,Integer>> call(JobContext arg0)
             throws Exception {
-        initialize();          // provided by SparkJob
+        initialize();          
         return run(false);
     }
 }

@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import config from '../../config.json';
 import { io } from 'socket.io-client';
+import { getSocket } from '../Socket';
 
 const MessageComponent = ({ sender, content, timestamp }: { sender: string, content: string, timestamp: string }) => {
   const formatTime = (timestamp: string) => {
@@ -28,7 +29,8 @@ export default function ChatMode() {
   const [chatName, setChatName] = useState<string>('');
   const [messages, setMessages] = useState<any[]>([]);
   const [messageInput, setMessageInput] = useState<string>('');
-  const [socket, setSocket] = useState<any>(null);
+  //const [socket, setSocket] = useState<any>(null);
+  const newSocket = useRef(getSocket()).current;
   const [userId, setUserId] = useState<number | null>(null);
   const [friendList, setFriendList] = useState<any[]>([]);
   const [showNewChatForm, setShowNewChatForm] = useState<boolean>(false);
@@ -51,7 +53,7 @@ export default function ChatMode() {
 
   // Connect to socket when we go to this page
   useEffect(() => {
-    const newSocket = io('http://localhost:8080', { withCredentials: true });
+    //const newSocket = io('http://localhost:8080', { withCredentials: true });
     
     newSocket.on('connect', () => {
       console.log('Connected to socket server with ID:', newSocket.id);
@@ -85,14 +87,14 @@ export default function ChatMode() {
       }]);
     });
 
-    setSocket(newSocket);
+    //setSocket(newSocket);
 
     // Get current user ID
     axios.get(`${rootURL}/${username}/profile`, { withCredentials: true })
       .then(response => {
         setUserId(response.data.user_id);
-        newSocket.emit('user_connect', response.data.user_id);
-        console.log('Connected as user:', response.data.user_id);
+        //newSocket.emit('user_connect', response.data.user_id);
+        //console.log('Connected as user:', response.data.user_id);
       })
       .catch(error => {
         console.error('Error fetching user data:', error);
@@ -100,7 +102,7 @@ export default function ChatMode() {
       });
 
     return () => {
-      newSocket.disconnect();
+      newSocket.off();
     };
   }, []);
 

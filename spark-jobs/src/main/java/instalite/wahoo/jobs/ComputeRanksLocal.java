@@ -60,7 +60,7 @@ public class ComputeRanksLocal {
         sendSocialRanksToDB(socialRanks);
         logger.info("*** Finished sending social ranks to DB! ***");
 
-        // POST RANKING
+        // POST RANKING & FRIEND RANKING
         logger.info("*** Starting post ranking! ***");
         PostRankJob postRankJob = new PostRankJob(d_max, i_max, spark, true, debug, rankLogger, config);
         List<SerializablePair<String, Double>> postRanks = postRankJob.mainLogic();
@@ -68,11 +68,12 @@ public class ComputeRanksLocal {
         logger.info("*** Finished sending post ranks to DB! ***");
 
         // FOLLOWER OF FOLLOWERS
+        /* 
         logger.info("*** Followers of Followers starting ***");
         FollowersOfFollowersJob fofJob = new FollowersOfFollowersJob(spark, true, debug, rankLogger, config);
         List<SerializablePair<String, Integer>> fofRecs = fofJob.mainLogic();
         sendFofRecsToDB(fofRecs);
-        logger.info("*** Followers of Followers complete ***");
+        logger.info("*** Followers of Followers complete ***"); */
 
 
         // Close the Spark session
@@ -122,32 +123,47 @@ public class ComputeRanksLocal {
                 Config.DATABASE_CONNECTION, Config.DATABASE_USERNAME, Config.DATABASE_PASSWORD
             );
             Statement clearStmt = conn.createStatement();
-            PreparedStatement insertStmt = conn.prepareStatement(
+            PreparedStatement insertStmtPost = conn.prepareStatement(
                 "REPLACE INTO post_weights (post_id, user_id, weight) VALUES (?, ?, ?)"
-            )
+            );
+            PreparedStatement insertStmtFriend = conn.prepareStatement(
+                "REPLACE INTO friend_recs (user, recommendation, strength) VALUES (?, ?, ?)"
+            );
         ) {
             // Clear the table
             clearStmt.executeUpdate("DELETE FROM post_weights");
+            clearStmt.executeUpdate("DELETE FROM friend_recs");
 
             // Insert new ranks
             for (SerializablePair<String, Double> item : postRanks) {
                 String[] parts = item.getLeft().split(",");
-                String[] post = parts[0].split("");
+                String[] node = parts[0].split("");
                 String[] user = parts[1].split("");
                 logger.info(parts[0] + " " + parts[1] + " " + item.getRight());
-                if (post[0].equals("p") && user[0].equals("u")) {
-                    int postId = Integer.parseInt(post[1]);
+                if (node[0].equals("p") && user[0].equals("u")) {
+                    int postId = Integer.parseInt(node[1]);
                     int userId = Integer.parseInt(user[1]);
                     double weight = item.getRight();
     
-                    insertStmt.setInt(1, postId);
-                    insertStmt.setInt(2, userId);
-                    insertStmt.setDouble(3, weight);
-                    insertStmt.addBatch();
+                    insertStmtPost.setInt(1, postId);
+                    insertStmtPost.setInt(2, userId);
+                    insertStmtPost.setDouble(3, weight);
+                    insertStmtPost.addBatch();
+                } else if (node[0].equals("u") && user[0].equals("u")) {
+                    // friend recommendation
+                    int userId = Integer.parseInt(node[1]);
+                    int recUserId = Integer.parseInt(user[1]);
+                    if (userId != recUserId) {
+                        double weight = item.getRight();
+                        insertStmtFriend.setInt(1, userId);
+                        insertStmtFriend.setInt(2, recUserId);
+                        insertStmtFriend.setDouble(3, weight);
+                    }
                 }
             }
 
-            insertStmt.executeBatch();
+            insertStmtPost.executeBatch();
+            insertStmtFriend.executeBatch();
             logger.info("Refreshed post_weights table with new entries.");
 
         } catch (Exception e) {
@@ -157,7 +173,7 @@ public class ComputeRanksLocal {
     
     private static void sendFofRecsToDB(List<SerializablePair<String, Integer>> recs) {
         if (recs == null || recs.isEmpty()) {
-            logger.warn("No follow‑recommendations to persist");
+            logger.warn("No follow recommendations to persist");
             return;
         }
         try (Connection conn = DriverManager.getConnection(Config.DATABASE_CONNECTION,

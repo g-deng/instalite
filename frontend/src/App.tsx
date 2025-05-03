@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
@@ -8,8 +9,20 @@ import ChatInterface from "./pages/ChatInterface";
 import ChatMode from "./pages/ChatMode";
 import Upload from "./pages/Upload";
 import KafkaDemo from "./pages/KafkaDemo";
+import { getSocket } from "./Socket";  
 
 function App() {
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+          const sock = getSocket();
+          sock.disconnect();
+        };
+    
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => {
+          window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+      }, []);
     return (
         <BrowserRouter>
             <Routes>

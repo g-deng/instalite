@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; 
 import config from '../../config.json';
+import {getSocket} from "../Socket";
 
 export default function Signup() {
     const navigate = useNavigate(); 
@@ -32,7 +33,19 @@ export default function Signup() {
                     password: password,
                     linked_id: linked_nconst
                 }, { withCredentials: true }).then((response) => {
+                    console.log(response);
                     alert('Welcome ' + username + '!');
+                    let jsonStr = response.data.message
+                    // quote the keys:  username: → "username":
+                    .replace(/(\w+):/g, '"$1":')
+                    // convert single quotes to double quotes
+                    .replace(/'/g, '"');
+            
+                    const obj = JSON.parse(jsonStr);
+            
+                    const sock = getSocket();
+                    console.log(response.data);
+                    sock.emit('user_connect', obj.user_id);
                     navigate("/" + username + "/home");
                 }).catch((error) => {
                     console.error('Registration error:', error.response.data.error);

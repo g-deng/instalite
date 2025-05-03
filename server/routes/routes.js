@@ -33,6 +33,7 @@ function getHelloWorld(req, res) {
     res.status(200).send({message: "Hello, world!"});
 }
 
+
 async function getVectorStore() {
     if (vectorStore == null) {
         vectorStore = await Chroma.fromExistingCollection(new OpenAIEmbeddings(), {
@@ -43,6 +44,18 @@ async function getVectorStore() {
         console.log('Vector store already initialized');
     return vectorStore;
 }
+
+// GET for online users
+async function getOnlineUsers(req, res) {
+    try {
+        const [rows] = await queryDatabase('SELECT user_id FROM online_users');
+        const users = rows.map(r => r.user_id);
+        res.json({ results: users });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'could not fetch online users' });
+    }
+};
 
 // POST /register 
 async function postRegister(req, res) {
@@ -72,14 +85,13 @@ async function postRegister(req, res) {
                 const query = 'INSERT INTO users (username, hashed_password, linked_nconst) VALUES (?, ?, ?)';
                 const params = [user, password, linked_id];
                 const result = await queryDatabase(query, params);
-
                 const user_id_query = 'SELECT user_id FROM users WHERE username = ?';
                 const user_id_params = [user];
                 const user_id_result = await queryDatabase(user_id_query, user_id_params);
                 req.session.username = user;
                 req.session.user_id = user_id_result[0][0].user_id;
                 console.log(req.session);
-                res.status(200).send({message: `{username: '${user}'}`});
+                res.status(200).send({message: `{username: '${user}', user_id: '${user_id_result[0][0].user_id}'}`});
             }
         } catch (error) {
             res.status(500).send({error: 'An error occurred while registering the user, please try again.'});
@@ -117,7 +129,7 @@ async function postLogin(req, res) {
                 } else {
                     req.session.username = username;
                     req.session.user_id = user.user_id;
-                    res.status(200).send({message: `{username: '${username}'}`});
+                    res.status(200).send({message: `{username: '${username}', user_id: '${user.user_id}'}`});
                 }
             } else {
                 res.status(401).send({error: 'Username and/or password are invalid.'});
@@ -212,5 +224,6 @@ export {
     postLogout,
     getMovie,
     uploadImage,
+    getOnlineUsers
 };
 

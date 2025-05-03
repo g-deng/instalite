@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios'; // Import Axios
 import config from '../../config.json';
 import { useNavigate } from 'react-router-dom';
+import { getSocket } from '../Socket';
 
 export default function Login() {
   const navigate = useNavigate(); 
@@ -24,6 +25,19 @@ export default function Login() {
       // Handle successful login
       console.log('Login successful:', response.data);
       console.log(response);
+
+      let jsonStr = response.data.message
+        // quote the keys:  username: → "username":
+        .replace(/(\w+):/g, '"$1":')
+        // convert single quotes to double quotes
+        .replace(/'/g, '"');
+
+      const obj = JSON.parse(jsonStr);
+
+      const sock = getSocket();
+      console.log(response.data);
+      sock.emit('user_connect', obj.user_id);
+
       navigate(`/${username}/home`);
     } catch (error) {
       // Handle login error
