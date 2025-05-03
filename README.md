@@ -26,6 +26,10 @@ ssh -i ~/.ssh/wahoo_remote_keypair.pem -4 -L 8000:localhost:8000 ubuntu@[EC2-IP]
 
 ### S3
 
+Go to the S3 section in AWS and create a new bucket with the following name. Accept all default settings.
+
+nets2120-chroma-[USER_ID]
+
 When you make an S3 bucket for image posts, go to the permissions tab and paste in the following under Bucket Policy:
 
 {
