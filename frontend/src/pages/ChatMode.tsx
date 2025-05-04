@@ -131,8 +131,8 @@ export default function ChatMode() {
       }
       
       // join socket room
-      if (socket) {
-        socket.emit('join_room', activeChat);
+      if (newSocket) {
+        newSocket.emit('join_room', activeChat);
       }
     }
   }, [activeChat]);
@@ -160,7 +160,7 @@ export default function ChatMode() {
   };
 
   const sendMessage = () => {
-    if (!messageInput.trim() || !activeChat || !socket || !userId) {
+    if (!messageInput.trim() || !activeChat || !newSocket || !userId) {
         return;
     }
 
@@ -170,7 +170,7 @@ export default function ChatMode() {
       content: messageInput
     };
 
-    socket.emit('send_message', message);
+    newSocket.emit('send_message', message);
     setMessageInput('');
   };
 
@@ -189,7 +189,7 @@ export default function ChatMode() {
 
   // sending chat invite to start 1-on-1 chat
   const sendChatInvite = (receiverId: number) => {
-    if (!socket || !userId) return;
+    if (!newSocket || !userId) return;
 
     console.log('Checking if 1-on-1 chat already exists');
     
@@ -205,7 +205,7 @@ export default function ChatMode() {
         console.log('Starting new chat with user:', receiverId);
         
         // For new chats, don't include roomId (should be null anyways)
-        socket.emit('send_invite', {
+        newSocket.emit('send_invite', {
           senderId: userId,
           receiverId: receiverId
           // No roomId indicates new chat
@@ -223,7 +223,7 @@ export default function ChatMode() {
 
   // Invite to existing group chat
   const inviteUserToCurrentChat = (receiverId: number) => {
-    if (!socket || !userId || !activeChat) {
+    if (!newSocket || !userId || !activeChat) {
       return;
     }
 
@@ -240,7 +240,7 @@ export default function ChatMode() {
       } else {
         console.log('Inviting to existing group chat. Room ID:', activeChat, 'User:', receiverId);
         
-        socket.emit('send_invite', {
+        newSocket.emit('send_invite', {
           senderId: userId,
           receiverId: receiverId,
           roomId: activeChat // add roomId here to indicate group
@@ -286,12 +286,12 @@ export default function ChatMode() {
   }, [activeChat]);
 
   const leaveChat = (roomId: number) => {
-    if (!socket || !userId) return;
+    if (!newSocket || !userId) return;
     
     // confirming window
     if (window.confirm("Are you sure you want to leave this chat?")) {
       // Send socket event to leave the chat
-      socket.emit('leave_chat', {
+      newSocket.emit('leave_chat', {
         userId: userId,
         roomId: roomId
       });
