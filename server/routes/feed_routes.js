@@ -212,7 +212,7 @@ async function getFeed(req, res) {
                     ON comments.user_id = c_users.user_id
                     GROUP BY posts.post_id
                 )
-                SELECT users.username, posts.image_url, posts.text_content, posts.hashtags,
+                SELECT users.username, posts.image_url, posts.text_content, posts.hashtags, posts.source,
                     COUNT(likes.user_id) AS likes, 
                     MAX(post_comments.comments) AS comments,
                     post_weights.weight, posts.post_id
@@ -249,7 +249,8 @@ async function getFeed(req, res) {
                     return {username, text_content};
                 }) : [],
                 weight: row.weight,
-                post_id: row.post_id
+                post_id: row.post_id,
+                source: row.source
             }));
             return res.status(200).send({results: parsed_result});
         } catch {

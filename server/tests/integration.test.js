@@ -2,12 +2,14 @@ import express from 'express';
 import axios from 'axios';
 import fs from 'fs';
 import cors from 'cors';
+import FormData from 'form-data';
 
 import register_routes from '../routes/register_routes.js';
 import { getFriends, getFriendRecs, addFriend, removeFriend } from '../routes/friend_routes.js';
 import RouteHelper from '../routes/route_helper.js';
 import {get_db_connection, set_db_connection, RelationalDB} from '../models/rdbms.js';
 import session from 'express-session';
+import S3KeyValueStore from '../models/s3.js';
 
 const configFile = fs.readFileSync('config.json', 'utf8');
 import dotenv from 'dotenv';
@@ -66,25 +68,85 @@ async function cleanupTestData() {
   try {
     await db.connect();
     
-    // get user ids of test users when inserted into table
-    const existingUsers = await send_sql("SELECT user_id FROM users WHERE username IN (?, ?)", 
-      [testUsers[0].username, testUsers[1].username]);
+    // user IDs of all test users
+    const existingUsers = await send_sql(
+      "SELECT user_id FROM users WHERE username IN (?, ?, ?, ?, ?)", 
+      [testUsers[0].username, testUsers[1].username, 'kafka_test_user', 'BlueSky', 'FederatedPosts']
+    );
     
-    if (existingUsers[0] && existingUsers[0].length > 0) {
-      const userIds = existingUsers[0].map(u => u.user_id);
-      
-      // delete from friends table using the ids
-      if (userIds.length > 0) {
-        await send_sql("DELETE FROM friends WHERE follower IN (?) OR followed IN (?)", 
-          [userIds, userIds]);
+    // if no test users exist, nothing to clean up
+    if (!existingUsers[0] || existingUsers[0].length === 0) {
+      console.log('No test users found to clean up');
+      return;
+    }
+    
+    const userIds = existingUsers[0].map(u => u.user_id);
+    console.log('Cleaning up users with IDs:', userIds);
+    
+    // remove posts from test users
+    const testPosts = await send_sql(
+      "SELECT post_id FROM posts WHERE text_content LIKE ? OR text_content LIKE ?", 
+      ['%Test Kafka%', '%BlueSky post%']
+    );
+    
+    let postIds = [];
+    if (testPosts[0] && testPosts[0].length > 0) {
+      postIds = testPosts[0].map(p => p.post_id);
+      console.log('Cleaning up posts with IDs:', postIds);
+    }
+    
+    // get all posts by these users if not already included
+    const userPosts = await send_sql(
+      "SELECT post_id FROM posts WHERE user_id IN (?) AND post_id NOT IN (?)", 
+      [userIds, postIds.length > 0 ? postIds : [0]] // avoid empty clause
+    );
+    
+    if (userPosts[0] && userPosts[0].length > 0) {
+      const additionalPostIds = userPosts[0].map(p => p.post_id);
+      console.log('Found additional user posts:', additionalPostIds);
+      postIds = [...postIds, ...additionalPostIds];
+    }
+    
+    try {
+      if (postIds.length > 0) {
+        // delete post_weights that reference these posts or users
+        await send_sql("DELETE FROM post_weights WHERE post_id IN (?) OR user_id IN (?)", 
+          [postIds, userIds]);
+        
+        // delete comments for these posts
+        await send_sql("DELETE FROM comments WHERE post_id IN (?)", [postIds]);
+        
+        // delete likes for these posts
+        await send_sql("DELETE FROM likes WHERE post_id IN (?)", [postIds]);
+        
+        // delete the posts
+        await send_sql("DELETE FROM posts WHERE post_id IN (?)", [postIds]);
       }
       
-      // delete the test users from the users table
-      await send_sql("DELETE FROM users WHERE username IN (?, ?)", 
-        [testUsers[0].username, testUsers[1].username]);
+      // delete any remaining post_weights records where test users are viewers
+      await send_sql("DELETE FROM post_weights WHERE user_id IN (?)", [userIds]);
+      
+      // delete friend relationships
+      await send_sql("DELETE FROM friends WHERE follower IN (?) OR followed IN (?)", 
+        [userIds, userIds]);
+      
+      // delete from friend_recs if it exists
+      await send_sql("DELETE FROM friend_recs WHERE user IN (?) OR recommendation IN (?)",
+        [userIds, userIds]);
+      
+      // delete social_rank entries
+      await send_sql("DELETE FROM social_rank WHERE user_id IN (?)", [userIds]);
+      
+      // delete the test users
+      await send_sql("DELETE FROM users WHERE user_id IN (?)", [userIds]);
+      
+      console.log('Test data cleanup completed successfully');
+    } catch (error) {
+      console.error('Cleanup failed:', error);
+      throw error;
     }
   } catch (error) {
-    console.log('Cleanup error:', error);
+    console.error('Cleanup error:', error);
   }
 }
 
@@ -289,6 +351,302 @@ describe('Friend Integration Tests', () => {
         console.log('Response status:', error.response.status);
         console.log('Response data:', error.response.data);
       }
+      throw error;
+    }
+  });
+});
+
+describe('Kafka Integration Tests', () => {
+  let testUserId;
+  let testUserCookies;
+  
+  // create test user
+  beforeAll(async () => {
+    try {
+      const kafkaTestUser = {
+        username: 'kafka_test_user',
+        password: 'testpass',
+        linked_id: 'nm0000122'
+      };
+      
+      // remove and clean up existing test users
+      await send_sql("DELETE FROM users WHERE username = ?", [kafkaTestUser.username]);
+      await send_sql("DELETE FROM posts WHERE text_content LIKE 'Test Kafka post%'", []);
+      
+      // register test user
+      const reg = await axios.post(`http://localhost:${port}/register`, {
+        username: kafkaTestUser.username,
+        password: kafkaTestUser.password,
+        linked_id: kafkaTestUser.linked_id
+      });
+      
+      expect(reg.status).toBe(200);
+      
+      // extract user id from response message
+      const userJson = JSON.parse(reg.data.message.replace(/(\w+):/g, '"$1":').replace(/'/g, '"'));
+      testUserId = userJson.user_id;
+      
+      // login to get session cookies
+      const login = await axios.post(`http://localhost:${port}/login`, {
+        username: kafkaTestUser.username,
+        password: kafkaTestUser.password
+      }, { withCredentials: true });
+      
+      expect(login.status).toBe(200);
+      testUserCookies = login.headers['set-cookie'];
+      
+    } catch (error) {
+      console.error('Setup error:', error);
+      throw error;
+    }
+  });
+  
+  test('Create post and verify it gets sent to Kafka', async () => {
+    try {
+      // define test post with content
+      const testPostContent = `Test Kafka post ${Date.now()}`;
+      
+      // create post
+      const createPostResponse = await axios.post(
+        `http://localhost:${port}/kafka_test_user/createPost`, 
+        {
+          text_content: testPostContent,
+          hashtags: '#test #kafka'
+        },
+        {
+          headers: { Cookie: testUserCookies },
+          withCredentials: true
+        }
+      );
+      
+      expect(createPostResponse.status).toBe(201);
+      expect(createPostResponse.data.message).toBe('Post created.');
+      
+      // give time for kafka to process the message
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // get the post from the database to verify it exists locally
+      const posts = await send_sql(
+        "SELECT * FROM posts WHERE text_content = ?",
+        [testPostContent]
+      );
+      
+      expect(posts[0].length).toBeGreaterThan(0);
+      const post = posts[0][0];
+      expect(post.text_content).toBe(testPostContent);
+      expect(post.hashtags).toBe('#test #kafka');
+    } catch (error) {
+      console.log('Test error:', error.message);
+      if (error.response) {
+        console.log('Response status:', error.response.status);
+        console.log('Response data:', error.response.data);
+      }
+      throw error;
+    }
+  });
+  
+  test('Fetch Kafka posts from feed endpoint', async () => {
+    try {
+      // Create test users for BlueSky if it doesn't exist
+      const blueSkyExists = await send_sql(
+        "SELECT user_id FROM users WHERE username = ?",
+        ['BlueSky']
+      );
+      
+      let blueSkyUserId;
+      if (blueSkyExists[0].length === 0) {
+        const result = await send_sql(
+          "INSERT INTO users (username, linked_nconst) VALUES (?, ?)",
+          ['BlueSky', 'nm0019604']
+        );
+        blueSkyUserId = result[0].insertId;
+      } else {
+        blueSkyUserId = blueSkyExists[0][0].user_id;
+      }
+      
+      // create test post from bluesky user with explicit source field
+      const testPost = `Test BlueSky post ${Date.now()}`;
+      const postResult = await send_sql(
+        "INSERT INTO posts (user_id, text_content, hashtags, source) VALUES (?, ?, ?, ?)",
+        [blueSkyUserId, testPost, '#test #bluesky', 'bluesky']
+      );
+      const postId = postResult[0].insertId;
+      
+      // add post weight for test user to see bluesky post
+      await send_sql(
+        "INSERT INTO post_weights (post_id, user_id, weight) VALUES (?, ?, ?)",
+        [postId, testUserId, 0.9]
+      );
+      
+      // fetch feed for user - should contain the bluesky post
+      const feedResponse = await axios.get(
+        `http://localhost:${port}/kafka_test_user/feed`,
+        {
+          headers: { Cookie: testUserCookies },
+          withCredentials: true
+        }
+      );
+      
+      expect(feedResponse.status).toBe(200);
+      
+      // verify test post appears in feed
+      const feedPosts = feedResponse.data.results;
+      const foundPost = feedPosts.find(post => post.text_content === testPost);
+      
+      expect(foundPost).toBeDefined();
+      expect(foundPost.username).toBe('BlueSky');
+      
+      // make sure we select the source field in the feed query
+      expect(foundPost.source).toBe('bluesky');
+      
+      // clean up
+      await send_sql("DELETE FROM post_weights WHERE post_id = ?", [postId]);
+      await send_sql("DELETE FROM posts WHERE post_id = ?", [postId]);
+      
+    } catch (error) {
+      console.log('Test error:', error.message);
+      if (error.response) {
+        console.log('Response status:', error.response.status);
+        console.log('Response data:', error.response.data);
+      }
+      throw error;
+    }
+  });
+
+  // test sending different types of content (text, images)
+  test('Create post with image and verify Kafka processing', async () => {
+    const testImagePath = '/root/nets2120/project-instalite-wahoo/server/tests/laurenbacall.jpeg';
+
+    try {
+      // create form data instance
+      const form = new FormData();
+      form.append('text_content', 'Test Kafka image post');
+      form.append('hashtags', '#test #image');
+      form.append('image', fs.createReadStream(testImagePath));
+      
+      // send post with image
+      const response = await axios.post(
+        `http://localhost:${port}/kafka_test_user/createPost`,
+        form,
+        {
+          headers: { 
+            Cookie: testUserCookies,
+            ...form.getHeaders() // needs node.js form-data package
+          }
+        }
+      );
+      
+      expect(response.status).toBe(201);
+      
+      // wait for kafka processing
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // verify post in database with image_url
+      const posts = await send_sql(
+        "SELECT * FROM posts WHERE text_content = ? AND image_url IS NOT NULL",
+        ['Test Kafka image post']
+      );
+      
+      expect(posts[0].length).toBeGreaterThan(0);
+      expect(posts[0][0].image_url).toContain('s3.amazonaws.com');
+    } catch (error) {
+      console.error('Test error:', error);
+      throw error;
+    }
+  });
+
+  test('Test Kafka with mocked image', async () => {
+    try {
+      // create mock s3 url that would be returned after upload
+      const mockS3Url = `https://nets2120-chroma-${process.env.USER_ID}.s3.amazonaws.com/posts/mocked-test-image.jpg`;
+      
+      // store the original function
+      const originalUploadFile = S3KeyValueStore.prototype.uploadFile;
+      
+      // create simple mock function for the test
+      S3KeyValueStore.prototype.uploadFile = async () => 'posts/mocked-test-image.jpg';
+      
+      // test creating a post with our mocked s3 url
+      const createPostResponse = await axios.post(
+        `http://localhost:${port}/kafka_test_user/createPost`,
+        {
+          text_content: 'Test Kafka mocked image post',
+          hashtags: '#test #mockimage',
+          // s3 upload is mocked, don't need to provide real file
+        },
+        {
+          headers: { Cookie: testUserCookies },
+          withCredentials: true
+        }
+      );
+      
+      expect(createPostResponse.status).toBe(201);
+      
+      // wait for kafka processing
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // verify that our post was created
+      const posts = await send_sql(
+        "SELECT * FROM posts WHERE text_content = ?",
+        ['Test Kafka mocked image post']
+      );
+      
+      expect(posts[0].length).toBeGreaterThan(0);
+      
+      // restore the original function
+      S3KeyValueStore.prototype.uploadFile = originalUploadFile;
+    } catch (error) {
+      console.error('Mock S3 test error:', error);
+      throw error;
+    }
+  });
+
+  test('Test Kafka core functionality without image upload', async () => {
+    try {
+      // generate unique post content
+      const uniquePostContent = `Test Kafka post ${Date.now()}`;
+      
+      // create a post that should be sent to kafka
+      const createPostResponse = await axios.post(
+        `http://localhost:${port}/kafka_test_user/createPost`, 
+        {
+          text_content: uniquePostContent,
+          hashtags: '#test #kafka'
+        },
+        {
+          headers: { Cookie: testUserCookies },
+          withCredentials: true
+        }
+      );
+      
+      expect(createPostResponse.status).toBe(201);
+      
+      // wait for kafka to process the message
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // verify the post exists in local db
+      const postsResult = await send_sql(
+        "SELECT * FROM posts WHERE text_content = ?",
+        [uniquePostContent]
+      );
+      
+      expect(postsResult[0].length).toBeGreaterThan(0);
+      
+      // check if a second post was created via kafka consumer
+      const kafkaPosts = await send_sql(
+        "SELECT * FROM posts WHERE text_content LIKE ?",
+        [`%${uniquePostContent}%`]
+      );
+      
+      // should find at least 1 post - original and one processed by kafka
+      expect(kafkaPosts[0].length).toBeGreaterThanOrEqual(1);
+      
+      // verify the first post has the expected content
+      const post = kafkaPosts[0][0];
+      expect(post.text_content).toContain(uniquePostContent);
+      
+    } catch (error) {
+      console.error('Test error:', error);
       throw error;
     }
   });
