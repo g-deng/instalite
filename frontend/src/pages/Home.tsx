@@ -52,11 +52,12 @@ export default function Home() {
       }
     };
 
-  const onComment = async (postId: number, comment: string) => {
+  const onComment = async (postId: number, parentId: number, comment: string) => {
       try {
         console.log('Comment:', comment);
         console.log('Post ID:', postId);
-        const response = await axios.post(`${rootURL}/${username}/comment`, { post_id: postId, text_content: comment }, { withCredentials: true });
+        console.log('Parent ID:', parentId)
+        const response = await axios.post(`${rootURL}/${username}/comment`, { post_id: postId, parent_id: parentId, text_content: comment }, { withCredentials: true });
         if (response.status === 201) {
           console.log('Comment added successfully');
           fetchData(); // Refresh the posts after commenting
@@ -95,7 +96,7 @@ export default function Home() {
             // CUT HERE
             posts.map(p => <PostComponent onLike={() => onLike(p['post_id'])} user={p['username']} text={p['text_content']} 
             hashtags={p['hashtags']} likes={p['likes']} comments={p['comments']} key={p['post_id']} weight={[p['weight']]}
-            onComment={(comment)=>onComment(p['post_id'], comment)} imageUrl={p['image_url']}/>)
+            onComment={(parent_id, comment)=>onComment(p['post_id'], parent_id, comment)} imageUrl={p['image_url']}/>)
             // END CUT
           }
         </div>
