@@ -30,10 +30,10 @@ app.use(session({secret: 'nets2120_insecure', saveUninitialized: true, resave: t
 register_routes(app);
 
 // register friend routes for testing
-app.get('/friends', getFriends);
-app.get('/recommendations', getFriendRecs);
-app.post('/friends', addFriend);
-app.delete('/friends', removeFriend); 
+app.get('/:username/friends', getFriends);
+app.get('/:username/recommendations', getFriendRecs);
+app.post('/:username/addFriend', addFriend);
+app.post('/:username/removeFriend', removeFriend);
 
 var server = null;
 
@@ -171,11 +171,11 @@ describe('Friend Integration Tests', () => {
       
       // user 1 adds user 2 as friend
       console.log('Adding friend relationship...');
-      console.log(`POST http://localhost:${port}/friends`);
+      console.log(`POST http://localhost:${port}/${testUsers[0].username}/addFriend`);
       console.log('Request body:', { friendUsername: testUsers[1].username });
       console.log('Request headers:', { Cookie: cookies1 });
       
-      const addFriend = await axios.post(`http://localhost:${port}/friends`, {
+      const addFriend = await axios.post(`http://localhost:${port}/${testUsers[0].username}/addFriend`, {
         friendUsername: testUsers[1].username
       }, {
         headers: { Cookie: cookies1 },
@@ -201,7 +201,7 @@ describe('Friend Integration Tests', () => {
       
       // check friendships through api for both users
       console.log("checking first user's friends list...");
-      const friends1 = await axios.get(`http://localhost:${port}/friends`, {
+      const friends1 = await axios.get(`http://localhost:${port}/${testUsers[0].username}/friends`, {
         headers: { Cookie: cookies1 },
         withCredentials: true
       });
@@ -214,7 +214,7 @@ describe('Friend Integration Tests', () => {
       )).toBe(true);
       
       console.log("checking second user's friends list...");
-      const friends2 = await axios.get(`http://localhost:${port}/friends`, {
+      const friends2 = await axios.get(`http://localhost:${port}/${testUsers[1].username}/friends`, {
         headers: { Cookie: cookies2 },
         withCredentials: true
       });
@@ -225,6 +225,63 @@ describe('Friend Integration Tests', () => {
         f.user_id === user1Id || 
         f.username === testUsers[0].username
       )).toBe(true);
+      
+      // remove the friendship
+      console.log('Removing friend relationship...');
+      console.log(`POST http://localhost:${port}/${testUsers[0].username}/removeFriend`);
+      console.log('Request body:', { friendUsername: testUsers[1].username });
+      console.log('Request headers:', { Cookie: cookies1 });
+      
+      const removeFriendResp = await axios.post(`http://localhost:${port}/${testUsers[0].username}/removeFriend`, {
+        friendUsername: testUsers[1].username
+      }, {
+        headers: { Cookie: cookies1 },
+        withCredentials: true
+      });
+      
+      console.log('remove friend response:', removeFriendResp.data);
+      expect(removeFriendResp.status).toBe(200);
+      expect(removeFriendResp.data.message).toBe('Friend removed successfully.');
+      
+      // verify friendship was removed from database
+      console.log('verifying friendship removal in database...');
+      const friendshipsAfterRemoval = await send_sql(
+        `SELECT * FROM friends 
+         WHERE (follower = ? AND followed = ?) 
+            OR (follower = ? AND followed = ?)`,
+        [user1Id, user2Id, user2Id, user1Id]
+      );
+      
+      console.log('Friendship records after removal:', friendshipsAfterRemoval[0]);
+      // should find no records (friendship was bidirectionally removed)
+      expect(friendshipsAfterRemoval[0].length).toBe(0);
+      
+      // verify through api that friends are removed for both users
+      console.log("checking first user's friends list after removal...");
+      const friends1AfterRemoval = await axios.get(`http://localhost:${port}/${testUsers[0].username}/friends`, {
+        headers: { Cookie: cookies1 },
+        withCredentials: true
+      });
+      
+      console.log("first user's friends after removal:", friends1AfterRemoval.data);
+      expect(friends1AfterRemoval.status).toBe(200);
+      expect(friends1AfterRemoval.data.results.some(f => 
+        f.user_id === user2Id || 
+        f.username === testUsers[1].username
+      )).toBe(false);
+      
+      console.log("checking second user's friends list after removal...");
+      const friends2AfterRemoval = await axios.get(`http://localhost:${port}/${testUsers[1].username}/friends`, {
+        headers: { Cookie: cookies2 },
+        withCredentials: true
+      });
+      
+      console.log("second user's friends after removal:", friends2AfterRemoval.data);
+      expect(friends2AfterRemoval.status).toBe(200);
+      expect(friends2AfterRemoval.data.results.some(f => 
+        f.user_id === user1Id || 
+        f.username === testUsers[0].username
+      )).toBe(false);
       
     } catch (error) {
       console.log('Test error:', error.message);
