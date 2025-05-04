@@ -4,7 +4,7 @@ import config from '../../config.json';
 import { useParams } from 'react-router-dom';
 
 function CreatePostComponent({ updatePosts }) {
-  const [title, setTitle] = useState('');
+  const [hashtags, setHashtags] = useState('');
   const [content, setContent] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -31,8 +31,11 @@ function CreatePostComponent({ updatePosts }) {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('title', title);
     formData.append('text_content', content);
+    if (hashtags.trim()) {
+      // backend expects comma-separated list
+      formData.append('hashtags', hashtags.trim());
+    }
     if (imageFile) {
       formData.append('image', imageFile);
     }
@@ -43,7 +46,6 @@ function CreatePostComponent({ updatePosts }) {
         text_content: content,
       }, {withCredentials: true });
       */
-     console.log("posting...");
       const response = await axios.post(
         `${config.serverRootURL}/${username}/createPost`,
         formData,
@@ -52,11 +54,10 @@ function CreatePostComponent({ updatePosts }) {
           withCredentials: true,
         }
       );
-      console.log("back in the frontend");
       console.log(response);
       if (response.status === 201 || response.status === 200) {
-        setTitle('');
         setContent('');
+        setHashtags('');
         setImageFile(null);
         setPreviewUrl(null);
         updatePosts();
@@ -74,12 +75,7 @@ function CreatePostComponent({ updatePosts }) {
           Create Post
         </div>
         <div className='flex space-x-4 items-center justify-between'>
-          <label htmlFor="title" className='font-semibold'>Title</label>
-          <input id="title" type="text" className='outline-none bg-white rounded-md border border-slate-100 p-2'
-            value={title} onChange={(e) => setTitle(e.target.value)} />
-        </div>
-        <div className='flex space-x-4 items-center justify-between'>
-          <label htmlFor="content" className='font-semibold'>Content</label>
+          <label htmlFor="content" className='font-semibold'>Caption</label>
           {/* <input id="content" type="text" className='outline-none bg-white rounded-md border border-slate-100 p-2'
             value={content} onChange={(e) => setContent(e.target.value)} /> */}
             <textarea
@@ -91,6 +87,17 @@ function CreatePostComponent({ updatePosts }) {
           required
         ></textarea>
         </div>
+        <div className="flex flex-col">
+            <label htmlFor="hashtags" className="font-semibold mb-1">Hashtags (comma-separated)</label>
+            <input
+              id="hashtags"
+              type="text"
+              placeholder="e.g. travel,photography,foodie"
+              value={hashtags}
+              onChange={(e) => setHashtags(e.target.value)}
+              className="border border-gray-300 p-2 rounded-md"
+            />
+          </div>
         <div className="flex flex-col">
             <label htmlFor="image" className="font-semibold mb-1">Image (optional)</label>
             <input

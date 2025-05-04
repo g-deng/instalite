@@ -68,12 +68,11 @@ public class ComputeRanksLocal {
         logger.info("*** Finished sending post ranks to DB! ***");
 
         // FOLLOWER OF FOLLOWERS
-        /* 
         logger.info("*** Followers of Followers starting ***");
         FollowersOfFollowersJob fofJob = new FollowersOfFollowersJob(spark, true, debug, rankLogger, config);
         List<SerializablePair<String, Integer>> fofRecs = fofJob.mainLogic();
         sendFofRecsToDB(fofRecs);
-        logger.info("*** Followers of Followers complete ***"); */
+        logger.info("*** Followers of Followers complete ***"); 
 
 
         // Close the Spark session
@@ -152,16 +151,7 @@ public class ComputeRanksLocal {
                     insertStmtPost.setInt(2, userId);
                     insertStmtPost.setDouble(3, weight);
                     insertStmtPost.addBatch();
-                } else if (nodeType == 'u' && userType == 'u') {
-                    // friend recommendation
-                    int userId = Integer.parseInt(nodeIdStr);
-                    int recUserId = Integer.parseInt(userIdStr);
-                    if (userId != recUserId) {
-                        insertStmtFriend.setInt(1, userId);
-                        insertStmtFriend.setInt(2, recUserId);
-                        insertStmtFriend.setDouble(3, weight);
-                    }
-                }
+                } 
             }
 
             insertStmtPost.executeBatch();

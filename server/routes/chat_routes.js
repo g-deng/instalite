@@ -346,11 +346,9 @@ async function getUserFriends(req, res) {
             res.status(403).send({error: 'Not logged in.'});
         } else {
             const query = `
-            SELECT n2.nconst, n2.primaryName, u2.user_id FROM friends
+            SELECT u2.username, u2.user_id FROM friends
             JOIN users AS u1 ON u1.user_id = friends.follower
             JOIN users AS u2 ON u2.user_id = friends.followed
-            JOIN names AS n1 ON n1.nconst = u1.linked_nconst
-            JOIN names AS n2 ON n2.nconst = u2.linked_nconst
             JOIN online_users AS ou ON ou.user_id = u2.user_id
             WHERE u1.user_id = ?
             `;
@@ -358,8 +356,8 @@ async function getUserFriends(req, res) {
             const params = [req.session.user_id];
             const result = await queryDatabase(query, params);
             const fixed_result = result[0].map(row => ({
-                followed: row.nconst,
-                primaryName: row.primaryName,
+                followed: row.username,
+                primaryName: row.username,
                 user_id: row.user_id
             }));
             res.status(200).send({results: fixed_result});
