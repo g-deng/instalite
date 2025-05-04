@@ -212,22 +212,35 @@ async function getFeed(req, res) {
                     ON comments.user_id = c_users.user_id
                     GROUP BY posts.post_id
                 )
-                SELECT users.username, posts.image_url, posts.text_content, posts.hashtags, posts.source,
+                SELECT ANY_VALUE(users.username) AS username, ANY_VALUE(posts.image_url) AS image_url, ANY_VALUE(posts.text_content) AS text_content, ANY_VALUE(posts.hashtags) AS hashtags, posts.source,
                     COUNT(likes.user_id) AS likes, 
-                    MAX(post_comments.comments) AS comments,
-                    post_weights.weight, posts.post_id
+                    ANY_VALUE(post_comments.comments) AS comments,
+                    ANY_VALUE(post_weights.weight) AS weight, posts.post_id
                 FROM post_weights
                     JOIN posts 
                     ON post_weights.post_id = posts.post_id
                     JOIN users
                     ON posts.user_id = users.user_id
+                    JOIN users AS cu ON cu.user_id = ? 
+                    LEFT JOIN friends
+                        ON friends.follower = cu.user_id AND friends.followed = users.user_id
                     LEFT JOIN likes
                     ON posts.post_id = likes.post_id
                     LEFT JOIN post_comments
                     ON posts.post_id = post_comments.post_id
-                WHERE post_weights.user_id = ?
+                WHERE (
+                    users.user_id = cu.user_id OR friends.followed IS NOT NULL OR (
+                        cu.hashtags IS NOT NULL
+                        AND posts.hashtags IS NOT NULL
+                        AND posts.hashtags REGEXP CONCAT(
+                            '(^|,)',
+                            REPLACE(cu.hashtags, ',', '($|,)|(^|,)'),
+                            '($|,)'
+                        )
+                    ) OR posts.source = 'FederatedPosts'
+                )
                 GROUP BY posts.post_id
-                ORDER BY post_weights.weight DESC
+                ORDER BY weight DESC
                 LIMIT 1000
             `;
 
@@ -253,7 +266,8 @@ async function getFeed(req, res) {
                 source: row.source
             }));
             return res.status(200).send({results: parsed_result});
-        } catch {
+        } catch (err) {
+            console.error(err);
             return res.status(500).send({error: 'Error querying database'});
         }
     }

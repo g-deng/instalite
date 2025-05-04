@@ -76,22 +76,43 @@ export default function Home() {
 
 
   return (
-    <div className='w-screen h-screen'>
-        <div className='w-full h-16 bg-slate-50 flex justify-center mb-2'>
-            <div className='text-2xl max-w-[1800px] w-full flex items-center'>
-                Pennstagram - {username} &nbsp;
-                <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
-              onClick={friends}>Friends</button>&nbsp;
-                <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
-              onClick={chat}>Chat</button>
-                <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
-              onClick={chatMode}>ChatMode</button>
-
-            </div>
+    <div className='w-screen h-screen flex'>
+      {/* Sidebar */}
+      <aside className="w-56 bg-slate-100 p-4 flex flex-col">
+        <div className="text-xl font-bold mb-6">
+          Pennstagram
+          <div className="text-sm font-normal">@{username}</div>
         </div>
-        
-        <div className='h-full w-full mx-auto max-w-[1800px] flex flex-col items-center space-y-4'>
-          <CreatePostComponent updatePosts={fetchData} />
+
+        <button
+          type="button"
+          className="px-2 py-2 mb-2 rounded-md bg-gray-500 outline-none text-white"
+          onClick={friends}
+        >
+          Friends
+        </button>
+        <button
+          type="button"
+          className="px-2 py-2 mb-2 rounded-md bg-gray-500 outline-none text-white"
+          onClick={chat}
+        >
+          Chat
+        </button>
+        <button
+          type="button"
+          className="px-2 py-2 rounded-md bg-gray-500 outline-none text-white"
+          onClick={chatMode}
+        >
+          ChatMode
+        </button>
+      </aside>
+        <div className='flex-1 flex flex-col'>
+          {/* <CreatePostComponent updatePosts={fetchData} /> */ }
+          <header className="h-16 bg-white flex items-center justify-center border-b shadow-sm">
+          <span className="text-2xl font-medium">Feed</span>
+          </header>
+
+          <div className="flex-1 overflow-y-auto mx-auto w-full max-w-[600px] flex flex-col items-center space-y-4 p-4">
           {
             // CUT HERE
             posts.map(p => <PostComponent onLike={() => onLike(p['post_id'])} user={p['username']} text={p['text_content']} 
@@ -99,6 +120,7 @@ export default function Home() {
             onComment={(parent_id, comment)=>onComment(p['post_id'], parent_id, comment)} imageUrl={p['image_url']}/>)
             // END CUT
           }
+          </div>
         </div>
     </div>
   )

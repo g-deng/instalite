@@ -68,65 +68,71 @@ function CreatePostComponent({ updatePosts }) {
   };
 
   return (
-    <div className='w-screen h-screen flex justify-center'>
-    <form>
-      <div className='rounded-md bg-slate-50 p-6 space-y-2 w-full'>
-        <div className='font-bold flex w-full justify-center text-2xl mb-4'>
-          Create Post
+    <div className="w-screen h-screen flex justify-center">
+      <form onSubmit={handleSubmit} className="w-full max-w-sm bg-white rounded-2xl shadow-xl border border-gray-200 p-6 space-y-5">
+        <h2 className="text-center font-semibold text-xl tracking-wide">New post</h2>
+
+        {/* Caption */}
+        <div className="flex flex-col space-y-2">
+          <label htmlFor="content" className="text-sm font-medium text-gray-700">Caption</label>
+          <textarea
+            id="content"
+            placeholder="Write a caption..."
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className="w-full resize-none border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+            rows={3}
+            maxLength={2200}
+            required
+          />
+          <span className="self-end text-xs text-gray-400">{content.length}/2,200</span>
         </div>
-        <div className='flex space-x-4 items-center justify-between'>
-          <label htmlFor="content" className='font-semibold'>Caption</label>
-          {/* <input id="content" type="text" className='outline-none bg-white rounded-md border border-slate-100 p-2'
-            value={content} onChange={(e) => setContent(e.target.value)} /> */}
-            <textarea
-          placeholder="Content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className="border border-gray-300 p-2 rounded-md mb-2"
-          rows={4}
-          required
-        ></textarea>
+
+        {/* Hashtags */}
+        <div className="flex flex-col space-y-2">
+          <label htmlFor="hashtags" className="text-sm font-medium text-gray-700">Hashtags (comma separated)</label>
+          <input
+            id="hashtags"
+            type="text"
+            placeholder="travel,photography,foodie"
+            value={hashtags}
+            onChange={(e) => setHashtags(e.target.value)}
+            className="border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
         </div>
-        <div className="flex flex-col">
-            <label htmlFor="hashtags" className="font-semibold mb-1">Hashtags (comma-separated)</label>
-            <input
-              id="hashtags"
-              type="text"
-              placeholder="e.g. travel,photography,foodie"
-              value={hashtags}
-              onChange={(e) => setHashtags(e.target.value)}
-              className="border border-gray-300 p-2 rounded-md"
+
+        {/* Image */}
+        <div className="flex flex-col space-y-2">
+          <label htmlFor="image" className="text-sm font-medium text-gray-700">Image (optional)</label>
+          <input
+            id="image"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-purple-600 file:to-pink-500 file:text-white hover:file:opacity-90"
+          />
+        </div>
+
+        {/* Preview */}
+        {previewUrl && (
+          <div className="w-full aspect-square overflow-hidden rounded-lg border border-gray-200">
+            <img
+              src={previewUrl}
+              alt="Image preview"
+              className="w-full h-full object-cover"
             />
           </div>
-        <div className="flex flex-col">
-            <label htmlFor="image" className="font-semibold mb-1">Image (optional)</label>
-            <input
-              id="image"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-          </div>
-          {previewUrl && (
-            <div className="flex justify-center">
-              <img
-                src={previewUrl}
-                alt="Image Preview"
-                className="max-h-48 rounded-md border border-gray-200 mt-2"
-              />
-            </div>
-          )}
-        <div className='w-full flex justify-center'>
-          <button type="button" className='px-4 py-2 rounded-md bg-indigo-500 outline-none font-bold text-white'
-            onClick={handleSubmit}>Create Post</button>
-        </div>
-      </div>
-    </form>
-  </div>
+        )}
 
-   
-
-
+        {/* Submit */}
+        <button
+          type="submit"
+          className="w-full py-2 rounded-lg font-semibold text-white bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 hover:opacity-90 focus:outline-none focus:ring-4 focus:ring-pink-300 transition"
+        >
+          Share
+        </button>
+      </form>
+    </div>
   );
 }
 

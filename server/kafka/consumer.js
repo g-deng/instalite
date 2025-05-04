@@ -140,7 +140,7 @@ const addKafkaPostToDB = async (post) => {
 
 
 
-    if (!text_content || text_content.trim().length == 0) {
+    if (!text_content || text_content.trim().length == 0 || text_content.includes("instalite-wahoo")) {
         return;
     } else {
         try {
