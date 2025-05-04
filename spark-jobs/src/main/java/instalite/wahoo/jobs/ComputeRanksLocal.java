@@ -137,24 +137,26 @@ public class ComputeRanksLocal {
             // Insert new ranks
             for (SerializablePair<String, Double> item : postRanks) {
                 String[] parts = item.getLeft().split(",");
-                String[] node = parts[0].split("");
-                String[] user = parts[1].split("");
+                char nodeType = parts[0].charAt(0);
+                String nodeIdStr = parts[0].substring(1);
+                char userType = parts[1].charAt(0);
+                String userIdStr = parts[1].substring(1);
+                double weight = item.getRight();
                 logger.info(parts[0] + " " + parts[1] + " " + item.getRight());
-                if (node[0].equals("p") && user[0].equals("u")) {
-                    int postId = Integer.parseInt(node[1]);
-                    int userId = Integer.parseInt(user[1]);
-                    double weight = item.getRight();
+                if (nodeType == 'p' && userType == 'u' && weight != 0) {
+                    // post ranking
+                    int postId = Integer.parseInt(nodeIdStr);
+                    int userId = Integer.parseInt(userIdStr);
     
                     insertStmtPost.setInt(1, postId);
                     insertStmtPost.setInt(2, userId);
                     insertStmtPost.setDouble(3, weight);
                     insertStmtPost.addBatch();
-                } else if (node[0].equals("u") && user[0].equals("u")) {
+                } else if (nodeType == 'u' && userType == 'u') {
                     // friend recommendation
-                    int userId = Integer.parseInt(node[1]);
-                    int recUserId = Integer.parseInt(user[1]);
+                    int userId = Integer.parseInt(nodeIdStr);
+                    int recUserId = Integer.parseInt(userIdStr);
                     if (userId != recUserId) {
-                        double weight = item.getRight();
                         insertStmtFriend.setInt(1, userId);
                         insertStmtFriend.setInt(2, recUserId);
                         insertStmtFriend.setDouble(3, weight);

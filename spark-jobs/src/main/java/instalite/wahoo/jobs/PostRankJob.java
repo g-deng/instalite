@@ -285,6 +285,9 @@ public class PostRankJob extends SparkJob<List<SerializablePair<String, Double>>
 
 		logger.info("postRank interative calculations complete.");
 
+		// Filter out labels with 0 weight
+		labelRDD = labelRDD.filter(pair -> pair._2()._2() != 0.0);
+
 		List<SerializablePair<String, Double>> out = labelRDD
 			.map(pair -> new SerializablePair<>(pair._1() + "," + pair._2()._1(), pair._2()._2()))
 			.collect();
