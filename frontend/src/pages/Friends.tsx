@@ -4,7 +4,7 @@ import axios from 'axios';
 import config from '../../config.json';
 import { useNavigate } from 'react-router-dom';
 import {getSocket} from '../Socket';
-
+import { FiHome, FiMessageCircle, FiSearch } from "react-icons/fi";
 const FriendComponent = ({ name, add=true, remove=true , online=false}: { name: string, add: boolean|undefined, remove: boolean|undefined, online: boolean|undefined}) => {
     return (
         <div className='rounded-md bg-slate-100 p-3 flex space-x-2 items-center flex-auto justify-between'>
@@ -116,76 +116,121 @@ export default function Friends() {
     };
 
 
-  return (
-    <div>
-        <div className='w-full h-16 bg-slate-50 flex justify-center mb-2'>
-            <div className='text-2xl max-w-[1800px] w-full flex items-center'>
-            Pennstagram - {username} &nbsp;
-            <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
-              onClick={feed}>Feed</button>&nbsp;
-            <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
-              onClick={chat}>Chat</button>
-              <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
-              onClick={chatMode}>ChatMode</button>
-            </div>
-        </div>
-        <div className='h-full w-full mx-auto max-w-[1800px] flex space-x-4 p-3'>
-            <div className='font-bold text-2xl'>
-                { `${ username }'s friends` }
-                <div className='space-y-2'>
-                    {
-                        // CUT HERE
-                        friends.map(f => <FriendComponent name={f['username']} add={false} remove={true} online={online.includes(f['user_id'])} key={f['followed']}/>)
-                        // END CUT
-                    }
+    return (
+        <div className="w-screen h-screen flex bg-gray-50">
+            <aside className="w-24 bg-white p-4 flex flex-col items-center border-r">
+                <div className="mb-6">
+                <span className="text-3xl font-black tracking-tight">Insta</span>
                 </div>
-            </div>
-            <div className='font-bold text-2xl'>
-                { `${ username }'s recommended friends` }
-                <div className='space-y-2'>
-                    {
-                        // CUT HERE
-                        recs.map(r => <FriendComponent name={r['username']} add={true} remove={false} online={online.includes(r['user_id'])} key={r['recommendation']}/>)
-                        // END CUT
-                    }
-                </div>
-            </div>
-            {/* adding friend */}
-            <div className='mb-4'>
-            <h2 className='text-2xl font-bold'>Add a Friend</h2>
-            <input
-                type="text"
-                placeholder="Enter Friend Username"
-                value={newFriend}
-                onChange={(e) => setNewFriend(e.target.value)}
-                className='border p-2 rounded mr-2'
-            />
-            <button 
-                onClick={handleAddFriend} 
-                className='px-3 py-2 bg-blue-500 text-white rounded'
-            >
-                Add Friend
-            </button>
-            </div>
 
-            {/* remove friend */}
-            <div className='mb-4'>
-            <h2 className='text-2xl font-bold'>Remove a Friend</h2>
-            <input
-                type="text"
-                placeholder="Enter Friend Username"
-                value={removeFriend}
-                onChange={(e) => setRemoveFriend(e.target.value)}
-                className='border p-2 rounded mr-2'
-            />
-            <button 
-                onClick={handleRemoveFriend} 
-                className='px-3 py-2 bg-blue-500 text-white rounded'
-            >
-                Add Friend
-            </button>
+                <button
+                type="button"
+                onClick={feed}
+                className="mb-6 p-2 hover:bg-gray-100 rounded-lg flex flex-col items-center"
+                >
+                <FiHome size={24} />
+                <span className="text-xs mt-1">Feed</span>
+                </button>
+
+                <button
+                type="button"
+                onClick={chatMode}
+                className="mb-6 p-2 hover:bg-gray-100 rounded-lg flex flex-col items-center"
+                >
+                <FiMessageCircle size={24} />
+                <span className="text-xs mt-1">Chat</span>
+                </button>
+
+                <button
+                type="button"
+                onClick={chat}
+                className="p-2 hover:bg-gray-100 rounded-lg flex flex-col items-center"
+                >
+                <FiSearch size={24} />
+                <span className="text-xs mt-1">Search</span>
+                </button>
+            </aside>
+    
+      <main className="flex-1 flex flex-col">
+        <header className="h-16 bg-white flex items-center justify-center border-b shadow-sm">
+          <span className="text-2xl font-medium">Friends</span>
+        </header>
+
+        <div className="flex-1 overflow-y-auto mx-auto w-full max-w-[1200px] flex flex-row space-x-6 p-4">
+          <div className="flex-1 bg-white border border-gray-200 rounded-lg shadow-sm p-4">
+            <h2 className="text-xl font-semibold mb-3">
+              {`${username}'s Friends`}
+            </h2>
+            <div className="space-y-2">
+              {friends.map((f) => (
+                <FriendComponent
+                  key={f.followed}
+                  name={f.username}
+                  add={false}
+                  remove={true}
+                  online={online.includes(f.user_id)}
+                />
+              ))}
             </div>
+          </div>
+
+          <div className="flex-1 bg-white border border-gray-200 rounded-lg shadow-sm p-4">
+            <h2 className="text-xl font-semibold mb-3">
+              {`${username}'s Recommended Friends`}
+            </h2>
+            <div className="space-y-2">
+              {recs.map((r) => (
+                <FriendComponent
+                  key={r.recommendation}
+                  name={r.username}
+                  add={true}
+                  remove={false}
+                  online={online.includes(r.user_id)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="w-80 flex flex-col space-y-6">
+            <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
+              <h2 className="text-xl font-semibold mb-3">Add a Friend</h2>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="text"
+                  placeholder="Enter username"
+                  value={newFriend}
+                  onChange={(e) => setNewFriend(e.target.value)}
+                  className="border p-2 rounded flex-1"
+                />
+                <button
+                  onClick={handleAddFriend}
+                  className="px-3 py-2 bg-blue-500 text-white rounded"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+            <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
+              <h2 className="text-xl font-semibold mb-3">Remove a Friend</h2>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="text"
+                  placeholder="Enter username"
+                  value={removeFriend}
+                  onChange={(e) => setRemoveFriend(e.target.value)}
+                  className="border p-2 rounded flex-1"
+                />
+                <button
+                  onClick={handleRemoveFriend}
+                  className="px-3 py-2 bg-red-500 text-white rounded"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
-  )
+      </main>
+        </div>
+      );
 }

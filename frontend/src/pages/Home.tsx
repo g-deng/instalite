@@ -5,7 +5,7 @@ import config from '../../config.json';
 import PostComponent from '../components/PostComponent'
 import CreatePostComponent from '../components/CreatePostComponent';
 import { useNavigate } from 'react-router-dom';
-
+import { FiHome, FiMessageCircle, FiSearch, FiUsers } from "react-icons/fi";
 export default function Home() {
 
     const { username } = useParams();
@@ -78,38 +78,42 @@ export default function Home() {
   return (
     <div className='w-screen h-screen flex'>
       {/* Sidebar */}
-      <aside className="w-56 bg-slate-100 p-4 flex flex-col">
-        <div className="text-xl font-bold mb-6">
-          Pennstagram
-          <div className="text-sm font-normal">@{username}</div>
-        </div>
+      <aside className="w-24 bg-white p-4 flex flex-col items-center border-r">
+          <div className="mb-6">
+          <span className="text-3xl font-black tracking-tight">Insta</span>
+          </div>
 
-        <button
+          <button
           type="button"
-          className="px-2 py-2 mb-2 rounded-md bg-gray-500 outline-none text-white"
           onClick={friends}
-        >
-          Friends
-        </button>
-        <button
+          className="mb-6 p-2 hover:bg-gray-100 rounded-lg flex flex-col items-center"
+          >
+          <FiUsers size={24} />
+          <span className="text-xs mt-1">Friends</span>
+          </button>
+
+          <button
           type="button"
-          className="px-2 py-2 mb-2 rounded-md bg-gray-500 outline-none text-white"
-          onClick={chat}
-        >
-          Chat
-        </button>
-        <button
-          type="button"
-          className="px-2 py-2 rounded-md bg-gray-500 outline-none text-white"
           onClick={chatMode}
-        >
-          ChatMode
-        </button>
+          className="mb-6 p-2 hover:bg-gray-100 rounded-lg flex flex-col items-center"
+          >
+          <FiMessageCircle size={24} />
+          <span className="text-xs mt-1">Chat</span>
+          </button>
+
+          <button
+          type="button"
+          onClick={chat}
+          className="p-2 hover:bg-gray-100 rounded-lg flex flex-col items-center"
+          >
+          <FiSearch size={24} />
+          <span className="text-xs mt-1">Search</span>
+          </button>
       </aside>
         <div className='flex-1 flex flex-col'>
           {/* <CreatePostComponent updatePosts={fetchData} /> */ }
           <header className="h-16 bg-white flex items-center justify-center border-b shadow-sm">
-          <span className="text-2xl font-medium">Feed</span>
+          <span className="text-2xl font-medium">{`Feed (@${username})`}</span>
           </header>
 
           <div className="flex-1 overflow-y-auto mx-auto w-full max-w-[600px] flex flex-col items-center space-y-4 p-4">
@@ -122,6 +126,10 @@ export default function Home() {
           }
           </div>
         </div>
+
+        <aside className="w-80 bg-gray-50 border-l p-4 flex-shrink-0 h-full overflow-y-auto">
+        <CreatePostComponent updatePosts={fetchData} />
+      </aside>
     </div>
   )
 }

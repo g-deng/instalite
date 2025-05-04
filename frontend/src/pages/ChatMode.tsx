@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import config from '../../config.json';
 import { io } from 'socket.io-client';
 import { getSocket } from '../Socket';
-
+import { FiHome, FiMessageCircle, FiSearch, FiUsers } from "react-icons/fi";
 const MessageComponent = ({ sender, content, timestamp }: { sender: string, content: string, timestamp: string }) => {
   const formatTime = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -49,6 +49,10 @@ export default function ChatMode() {
   
   const friends = () => {
     navigate("/" + username + "/friends");
+  };
+
+  const chat = () => {
+    navigate("/"+ username+"/chat");
   };
 
   // Connect to socket when we go to this page
@@ -307,16 +311,39 @@ export default function ChatMode() {
   };
 
   return (
-    <div className='w-screen h-screen'>
-      <div className='w-full h-16 bg-slate-50 flex justify-center mb-2'>
-        <div className='text-2xl max-w-[1800px] w-full flex items-center'>
-          Pennstagram - {username} &nbsp;
-          <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
-            onClick={feed}>Feed</button>&nbsp;
-          <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
-            onClick={friends}>Friends</button>
-        </div>
-      </div>
+    <div className='w-screen h-screen flex'>
+      <aside className="w-24 bg-white p-4 flex flex-col items-center border-r">
+          <div className="mb-6">
+          <span className="text-3xl font-black tracking-tight">Insta</span>
+          </div>
+
+          <button
+          type="button"
+          onClick={feed}
+          className="mb-6 p-2 hover:bg-gray-100 rounded-lg flex flex-col items-center"
+          >
+          <FiHome size={24} />
+          <span className="text-xs mt-1">Feed</span>
+          </button>
+
+          <button
+          type="button"
+          onClick={friends}
+          className="mb-6 p-2 hover:bg-gray-100 rounded-lg flex flex-col items-center"
+          >
+          <FiUsers size={24} />
+          <span className="text-xs mt-1">Friends</span>
+          </button>
+
+          <button
+          type="button"
+          onClick={chat}
+          className="p-2 hover:bg-gray-100 rounded-lg flex flex-col items-center"
+          >
+          <FiSearch size={24} />
+          <span className="text-xs mt-1">Search</span>
+          </button>
+      </aside>
       
       <div className='h-[calc(100%-4rem)] w-full mx-auto max-w-[1800px] flex space-x-4 p-3'>
         {/* Chat List */}
