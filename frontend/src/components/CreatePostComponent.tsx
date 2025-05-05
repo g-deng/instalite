@@ -70,7 +70,6 @@ function CreatePostComponent({ updatePosts }) {
   return (
     <div className="w-screen h-screen flex justify-center">
       <form onSubmit={handleSubmit} className="w-full max-w-sm bg-white rounded-2xl shadow-xl border border-gray-200 p-6 space-y-5">
-        <h2 className="text-center font-semibold text-xl tracking-wide">New post</h2>
 
         {/* Caption */}
         <div className="flex flex-col space-y-2">

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { FiHome, FiMessageCircle, FiSearch, FiUsers } from "react-icons/fi";
+import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare } from "react-icons/fi";
 const MessageComponent = ({ sender, message }: { sender: string, message: string }) => {
     return (
         <div className={`w-full flex ${sender === 'user' && 'justify-end'}`}>
@@ -22,10 +22,19 @@ export default function ChatInterface() {
     const feed = () => {
         navigate('/' + username + '/home');
     };
+
+    const post = () => {
+        navigate('/' + username + '/createPost');
+    }
+
     const friends = () => {
         navigate("/"+ username+"/friends");
     };
 
+    const chat = () => {
+        navigate("/"+ username+"/chat");
+      };
+  
     const chatMode = () => {
         navigate("/"+ username+"/chatMode");
     };
@@ -51,37 +60,65 @@ export default function ChatInterface() {
     return (
         <div className='w-screen h-screen flex'>
       <aside className="w-24 bg-white p-4 flex flex-col items-center border-r">
-          <div className="mb-6">
-          <span className="text-3xl font-black tracking-tight">Insta</span>
-          </div>
+    <div className="mb-6">
+      <span className="text-3xl font-black tracking-tight">Insta</span>
+    </div>
 
-          <button
-          type="button"
-          onClick={feed}
-          className="mb-6 p-2 hover:bg-gray-100 rounded-lg flex flex-col items-center"
-          >
-          <FiHome size={24} />
-          <span className="text-xs mt-1">Feed</span>
-          </button>
+    <button
+      type="button"
+      onClick={feed}
+      className={`mb-6 p-2 rounded-lg flex flex-col items-center ${
+         'hover:bg-gray-100'
+      }`}
+    >
+      <FiHome size={24} />
+      <span className="text-xs mt-1">Home</span>
+    </button>
 
-          <button
-          type="button"
-          onClick={friends}
-          className="mb-6 p-2 hover:bg-gray-100 rounded-lg flex flex-col items-center"
-          >
-          <FiUsers size={24} />
-          <span className="text-xs mt-1">Friends</span>
-          </button>
+    <button
+      type="button"
+      onClick={post}
+      className={`mb-6 p-2 rounded-lg flex flex-col items-center ${
+         'hover:bg-gray-100'
+      }`}
+    >
+      <FiPlusSquare size={24} />
+      <span className="text-xs mt-1">Post</span>
+    </button>
 
-          <button
-          type="button"
-          onClick={chatMode}
-          className="p-2 hover:bg-gray-100 rounded-lg flex flex-col items-center"
-          >
-          <FiMessageCircle size={24} />
-          <span className="text-xs mt-1">Chat</span>
-          </button>
-      </aside>
+    <button
+      type="button"
+      onClick={friends}
+      className={`mb-6 p-2 rounded-lg flex flex-col items-center ${
+         'hover:bg-gray-100'
+      }`}
+    >
+      <FiUsers size={24} />
+      <span className="text-xs mt-1">Friends</span>
+    </button>
+
+    <button
+      type="button"
+      onClick={chatMode}
+      className={`mb-6 p-2 rounded-lg flex flex-col items-center ${
+        'hover:bg-gray-100'
+      }`}
+    >
+      <FiMessageCircle size={24} />
+      <span className="text-xs mt-1">Chat</span>
+    </button>
+
+    <button
+      type="button"
+      onClick={chat}
+      className={`p-2 rounded-lg flex flex-col items-center ${
+        'bg-gray-100'
+      }`}
+    >
+      <FiSearch size={24} />
+      <span className="text-xs mt-1">Search</span>
+    </button>
+    </aside>
       <main className="flex-1 flex flex-col items-center justify-center p-4 space-y-6">
         <h1 className="text-3xl font-bold">Natural Language Search</h1>
         <div className="h-[40rem] w-[30rem] bg-slate-100 p-3 flex flex-col">

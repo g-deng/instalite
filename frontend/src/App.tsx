@@ -7,6 +7,7 @@ import Signup from "./pages/Signup";
 import Friends from "./pages/Friends";
 import ChatInterface from "./pages/ChatInterface";
 import ChatMode from "./pages/ChatMode";
+import CreatePost from "./pages/CreatePost";
 import Upload from "./pages/Upload";
 import KafkaDemo from "./pages/KafkaDemo";
 import { getSocket } from "./Socket";  
@@ -31,6 +32,7 @@ function App() {
                 <Route path='/:username/home' element={<Home />} />
                 <Route path='/:username/friends' element={<Friends />} />
                 <Route path="/:username/chat" element={<ChatInterface />} />
+                <Route path="/:username/createPost" element={<CreatePost />} />
                 <Route path="/upload" element={<Upload />} />
                 <Route path="/:username/chatMode" element={<ChatMode />} />
                 <Route path="/kafkademo" element={<KafkaDemo/>} />
