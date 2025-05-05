@@ -20,9 +20,8 @@ export function runComputeRanks() {
     });
 
     child.stderr.on('data', (data) => {
-      const errText = data.toString().trim();
+      // const errText = data.toString().trim();
       // console.error('[CRON] stderr:', errText);
-      reject(new Error(errText));
     });
     
 
