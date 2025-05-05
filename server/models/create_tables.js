@@ -36,6 +36,12 @@ async function create_tables() {
             hashed_password VARCHAR(255),
             hashtags VARCHAR(255),
             linked_nconst VARCHAR(255),
+            profile_photo VARCHAR(255),
+            first_name VARCHAR(255),
+            last_name VARCHAR(255),
+            birthday DATE,
+            email VARCHAR(255),
+            affiliation VARCHAR(255),
             FOREIGN KEY (linked_nconst) REFERENCES names(nconst)
         );
     `);

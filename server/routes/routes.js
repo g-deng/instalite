@@ -59,12 +59,22 @@ async function getOnlineUsers(req, res) {
 
 // POST /register 
 async function postRegister(req, res) {
-    var linked_id = req.body.linked_id;
-    var user = req.body.username;
-    var raw_pass = req.body.password;
+    const linked_id = req.body.linked_id;
+    const user = req.body.username;
+    const raw_pass = req.body.password;
+    const first_name = req.body.first_name;
+    const last_name = req.body.last_name;
+    const birthday = req.body.birthday;
+    const email = req.body.email;
+    const affiliation = req.body.affiliation;
     if (linked_id.trim().length == 0 || 
         user.trim().length == 0 || 
-        raw_pass.trim().length == 0 || 
+        raw_pass.trim().length == 0 ||
+        first_name.trim().length == 0 ||
+        last_name.trim().length == 0 ||
+        birthday.trim().length == 0 ||
+        email.trim().length == 0 ||
+        affiliation.trim().length == 0 || 
         !helper.isOK(user)) {
         console.log('Invalid values in the request');
         res.status(400).send({error: "One or more of the fields you entered was empty or invalid, please try again."}); 
@@ -81,15 +91,16 @@ async function postRegister(req, res) {
                 console.log(result[0]);
                 res.status(409).send({error: "An account with this username already exists, please try again."});
             } else {
-                const password = await helper.encryptPassword(raw_pass);
-                const query = 'INSERT INTO users (username, hashed_password, linked_nconst) VALUES (?, ?, ?)';
-                const params = [user, password, linked_id];
+                const password = helper.encryptPassword(raw_pass);
+                const query = 'INSERT INTO users (username, hashed_password, linked_nconst, first_name, last_name, birthday, email, affiliation) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+                const params = [user, password, linked_id, first_name, last_name, birthday, email, affiliation];
                 const result = await queryDatabase(query, params);
                 const user_id_query = 'SELECT user_id FROM users WHERE username = ?';
                 const user_id_params = [user];
                 const user_id_result = await queryDatabase(user_id_query, user_id_params);
                 req.session.username = user;
                 req.session.user_id = user_id_result[0][0].user_id;
+                console.log('User registered successfully');
                 console.log(req.session);
                 res.status(200).send({message: `{username: '${user}', user_id: '${user_id_result[0][0].user_id}'}`});
             }
@@ -196,7 +207,10 @@ async function uploadImage(req, res) {
         const keyPrefix = 'uploads/';
 
         // Upload the file to S3
-        await s3_user.uploadFile(filePath, bucketName, keyPrefix);
+        const key = await s3_user.uploadFile(filePath, bucketName, keyPrefix);
+        if (!key) {
+            return res.status(500).send({ error: "Failed to upload file to S3." });
+        }
 
         console.log(`Image uploaded to S3: ${fileName}`);
 
@@ -207,10 +221,31 @@ async function uploadImage(req, res) {
         res.status(200).send({
             message: `Image uploaded successfully to ${fileName}`,
             embedding: embedding,
+            key: key
         });
     } catch (error) {
         console.error("Error uploading image:", error);
         res.status(500).send({ error: "An error occurred while uploading the image." });
+    }
+}
+
+async function selectPhoto(req, res) {
+    const user_id = req.session.user_id;
+    const image_path = req.body.image_path;
+
+    const sql_command = 'UPDATE users SET profile_photo = ? WHERE user_id = ?';
+    const sql_params = [image_path, user_id];
+    try {
+        const result = await queryDatabase(sql_command, sql_params);
+        if (result[0].affectedRows == 0) {
+            return res.status(404).send({ error: "User not found." });
+        } else {
+            console.log(`User ${user_id} updated with profile photo: ${key}`);
+            res.status(200).send({message: `Image selected successfully`});
+        }
+    } catch (error) {
+        console.error("Error selecting image:", error);
+        res.status(500).send({ error: "An error occurred while selecting the image." });
     }
 }
 
@@ -224,6 +259,7 @@ export {
     postLogout,
     getMovie,
     uploadImage,
-    getOnlineUsers
+    getOnlineUsers,
+    selectPhoto,
 };
 

@@ -7,7 +7,7 @@ interface Comment {
     comment_id: number
     parent_id: number  // top-level comments use -1
     text_content: string
-  }
+}
 
 export default function PostComponent({
     onLike,
@@ -21,6 +21,7 @@ export default function PostComponent({
 }: {
     onLike: () => void,
     onComment: (parentIndex: number, text: string) => void,
+    weight: string,
     user: string,
     hashtags?: string,
     likes: number,
@@ -33,68 +34,68 @@ export default function PostComponent({
     const [replyText, setReplyText] = useState('')
 
 
-  // Build nested comment structure
-  const nestedComments = useMemo(() => {
-    const map = new Map<number, Comment & { replies: any[] }>()
-    comments.forEach(c => map.set(c.comment_id, { ...c, replies: [] }))
-    const roots: (Comment & { replies: any[] })[] = []
+    // Build nested comment structure
+    const nestedComments = useMemo(() => {
+        const map = new Map<number, Comment & { replies: any[] }>()
+        comments.forEach(c => map.set(c.comment_id, { ...c, replies: [] }))
+        const roots: (Comment & { replies: any[] })[] = []
 
-    map.forEach(c => {
-      if (c.parent_id !== -1 && map.has(c.parent_id)) {
-        map.get(c.parent_id)!.replies.push(c)
-      } else {
-        roots.push(c)
-      }
-    })
+        map.forEach(c => {
+            if (c.parent_id !== -1 && map.has(c.parent_id)) {
+                map.get(c.parent_id)!.replies.push(c)
+            } else {
+                roots.push(c)
+            }
+        })
 
-    return roots
-  }, [comments])
+        return roots
+    }, [comments])
 
 
-  const renderComments = (
-    list: (Comment & { replies: any[] })[],
-    level = 0
-  ): React.ReactNode => {
-    return list.map(c => (
-      <div key={c.comment_id} className="space-y-1" style={{ marginLeft: level * 16 }}>
-        <div className="flex items-center space-x-2">
-          <span className="font-semibold">{c.username}</span>
-          <span>{c.text_content}</span>
-          <button
-            className="ml-auto focus:outline-none"
-            onClick={() => setReplyToId(replyToId === c.comment_id ? null : c.comment_id)}
-          >
-            <FiCornerUpLeft size={16} />
-          </button>
-        </div>
+    const renderComments = (
+        list: (Comment & { replies: any[] })[],
+        level = 0
+    ): React.ReactNode => {
+        return list.map(c => (
+            <div key={c.comment_id} className="space-y-1" style={{ marginLeft: level * 16 }}>
+                <div className="flex items-center space-x-2">
+                    <span className="font-semibold">{c.username}</span>
+                    <span>{c.text_content}</span>
+                    <button
+                        className="ml-auto focus:outline-none"
+                        onClick={() => setReplyToId(replyToId === c.comment_id ? null : c.comment_id)}
+                    >
+                        <FiCornerUpLeft size={16} />
+                    </button>
+                </div>
 
-        {replyToId === c.comment_id && (
-          <div className="ml-6 flex items-center space-x-2">
-            <input
-              type="text"
-              value={replyText}
-              onChange={e => setReplyText(e.target.value)}
-              placeholder="Write a reply..."
-              className="flex-1 text-sm focus:outline-none border-b border-gray-300 pb-1"
-            />
-            <button
-              onClick={() => {
-                onComment(c.comment_id, replyText)
-                setReplyText('')
-                setReplyToId(null)
-              }}
-              className="font-semibold text-blue-500 disabled:opacity-50"
-              disabled={!replyText.trim()}
-            >
-              Reply
-            </button>
-          </div>
-        )}
+                {replyToId === c.comment_id && (
+                    <div className="ml-6 flex items-center space-x-2">
+                        <input
+                            type="text"
+                            value={replyText}
+                            onChange={e => setReplyText(e.target.value)}
+                            placeholder="Write a reply..."
+                            className="flex-1 text-sm focus:outline-none border-b border-gray-300 pb-1"
+                        />
+                        <button
+                            onClick={() => {
+                                onComment(c.comment_id, replyText)
+                                setReplyText('')
+                                setReplyToId(null)
+                            }}
+                            className="font-semibold text-blue-500 disabled:opacity-50"
+                            disabled={!replyText.trim()}
+                        >
+                            Reply
+                        </button>
+                    </div>
+                )}
 
-        {c.replies.length > 0 && renderComments(c.replies, level + 1)}
-      </div>
-    ))
-  }
+                {c.replies.length > 0 && renderComments(c.replies, level + 1)}
+            </div>
+        ))
+    }
 
 
     return (
@@ -138,13 +139,13 @@ export default function PostComponent({
             </div>
 
             <div>
-            {hashtags && (
-                <div className="px-4 text-sm text-blue-500 flex flex-wrap space-x-2">
-                    {hashtags.split(',').map((tag, idx) => (
-                        <span key={idx}>#{tag.trim()}</span>
-                    ))}
-                </div>
-            )}
+                {hashtags && (
+                    <div className="px-4 text-sm text-blue-500 flex flex-wrap space-x-2">
+                        {hashtags.split(',').map((tag, idx) => (
+                            <span key={idx}>#{tag.trim()}</span>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Comments Section */}
@@ -156,21 +157,21 @@ export default function PostComponent({
             {/* Add Comment */}
             <div className="border-t border-gray-200 px-4 py-2 flex items-center">
                 <input
-                type="text"
-                value={commentText}
-                onChange={e => setCommentText(e.target.value)}
-                className="flex-1 text-sm focus:outline-none"
-                placeholder="Add a comment..."
+                    type="text"
+                    value={commentText}
+                    onChange={e => setCommentText(e.target.value)}
+                    className="flex-1 text-sm focus:outline-none"
+                    placeholder="Add a comment..."
                 />
                 <button
-                onClick={() => {
-                    onComment(-1, commentText)
-                    setCommentText('')
-                }}
-                className="font-semibold text-blue-500 px-2 disabled:opacity-50"
-                disabled={!commentText.trim()}
+                    onClick={() => {
+                        onComment(-1, commentText)
+                        setCommentText('')
+                    }}
+                    className="font-semibold text-blue-500 px-2 disabled:opacity-50"
+                    disabled={!commentText.trim()}
                 >
-                Post
+                    Post
                 </button>
             </div>
         </div>

@@ -58,6 +58,20 @@ service mysql start
 ssh -i ~/nets2120/nets2120_tunnel -4 -L 9092:localhost:9092 sshtunnel@ec2-18-218-240-208.us-east-2.compute.amazonaws.com
 ```
 
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev --host
+```
+
+### Backend
+```bash
+cd server
+npm install
+npm run start
+```
+
 ## Overview
 
 The course project will involve building "InstaLite," an Instagram-like social media site with full support for images. This project is to be done in *teams* and will build upon components you built over the semester in your homeworks.
