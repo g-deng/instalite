@@ -60,6 +60,8 @@ io.on('connection', (socket) => {
       io.emit('onlineUsers', onlineList);
       io.emit('userOnline', userId);
       console.log(`User ${userId} is now online with socket ID ${socket.id}`);
+
+      localStorage.setItem('userId', userId);
     } catch (err) {
       console.error('Database error:', err);
     }
@@ -257,6 +259,8 @@ io.on('connection', (socket) => {
       console.log(res);
       io.emit('userOffline', res[0].user_id);
       console.log('User disconnected', res[0].user_id);
+
+      localStorage.removeItem('userId');
     } catch (err) {
       console.error('Database error:', err);
     }
