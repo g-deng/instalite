@@ -36,12 +36,20 @@ If you don't have an updated `spark-jobs\target\framework.jar` also must call fr
 ```mvn clean package```
 
 #### For Livy
+If EMR cluster is terminated, you need to make a new one. EMR clusters terminate whenever the lab ends. If there is one that is `Waiting...`, you're good (skip to the .env edits). 
+- In security groups my-emr-primary-sg and my-emr-core-sg, remove the rules for 0.0.0.0/0 (AWS won't let you create a cluster with these due to security). 
+- Then clone the Livy Cluster settings as used before. (You can use one of the terminated ones.) 
+- Wait for the cluster to start (it will say `Starting...`. When it is ready it will say `Waiting...`). Takes about 5 min.
+- Once it's started, add the rules back to allow traffic from 0.0.0.0/0 to port 8998 to both my-emr-primary-sg and my-emr-core-sg (so that we can access the cluster).
+
 To add in spark-jobs/.env and the .env in home directory: 
 - Set `LIVY_HOST` to Primary node public DNS from EMR cluster 
 - Set `DATABASE_SERVER` to the AWS RDS endpoint (doesn't change between labs)
 
 Note Livy uses the AWS RDS database to read and write data. Additionally, note that when running directly via Maven (as below) it is not necessary to compile via `mvn clean package`, as we will use a pre-uploaded `.jar` on S3.
 
+
+The following command can be run for testing of the computing job. It is unnecessary if you only want to see the automated calling from the backend.
 ```
 mvn exec:java@livy
 ```
