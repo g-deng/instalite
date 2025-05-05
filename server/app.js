@@ -280,7 +280,7 @@ import { runComputeRanks } from './algorithms/run_compute_ranks.js'; // adjust p
 // Schedule the job to run at the top of every hour
 // okay it's actually every 5 min for now lol
 cron.schedule('*/5 * * * *', async () => {
-  console.log('[CRON] Running ComputeRanksLocal...');
+  console.log('[CRON] Running Compute Ranks Jobs...');
 
   try {
     const output = await runComputeRanks();

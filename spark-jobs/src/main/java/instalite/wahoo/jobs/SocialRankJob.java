@@ -59,7 +59,7 @@ protected JavaPairRDD<String, String> getSocialNetworkFromMySQL() {
 
 
     // Assuming table schema: followed, follower
-    JavaRDD<Row> rowRDD = df.select("user1_id", "user2_id").javaRDD();
+    JavaRDD<Row> rowRDD = df.select("followed", "follower").javaRDD();
 
     JavaPairRDD<String, String> network = rowRDD.mapToPair(row -> {
         String followed = Integer.toString(row.getInt(0));

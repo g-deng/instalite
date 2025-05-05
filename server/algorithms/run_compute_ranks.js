@@ -8,7 +8,7 @@ export function runComputeRanks() {
     const child = spawn('java', [
       '-cp',
       '/root/nets2120/project-instalite-wahoo/spark-jobs/target/framework.jar',
-      'instalite.wahoo.jobs.ComputeRanksLivy'
+      'instalite.wahoo.jobs.ComputeRanksLocal'
     ]);    
 
     let stdout = '';

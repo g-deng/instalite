@@ -15,11 +15,10 @@ import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
 
+import instalite.wahoo.config.AppConfig;
+import instalite.wahoo.jobs.utils.FlexibleLogger;
 import instalite.wahoo.jobs.utils.SerializablePair;
 import instalite.wahoo.spark.SparkJob;
-import instalite.wahoo.config.AppConfig;
-import instalite.wahoo.jobs.utils.FlexibleLogger;   
-
 import scala.Tuple2;
 
 public class FollowersOfFollowersJob
@@ -49,13 +48,13 @@ public class FollowersOfFollowersJob
         logger.debug("getFollowerEdges started");
 
         Dataset<Row> df = queryMySQL(
-                "SELECT user1_id , user2_id "
+                "SELECT followed , follower "
               + "FROM friends "
-              + "WHERE user1_id IS NOT NULL "
-              + "  AND user2_id IS NOT NULL");
+              + "WHERE followed IS NOT NULL "
+              + "  AND follower IS NOT NULL");
 
         JavaPairRDD<String,String> edges = df
-            .select("user1_id","user2_id")
+            .select("followed","follower")
             .javaRDD()
             .mapToPair(r -> new Tuple2<>(
                     "u" + r.getInt(0),   

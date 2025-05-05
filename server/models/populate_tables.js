@@ -71,16 +71,16 @@ async function populate_tables() {
 
 
     // POPULATING FRIENDS
-    const addFriend = async (user1_id, user2_id) => {
+    const addFriend = async (followed, follower) => {
         await dbaccess.send_sql(`
-            INSERT IGNORE INTO friends (user1_id, user2_id) 
+            INSERT IGNORE INTO friends (followed, follower) 
             VALUES (?, ?)`, 
-            [user1_id, user2_id]
+            [followed, follower]
         );
         await dbaccess.send_sql(`
-            INSERT IGNORE INTO friends (user1_id, user2_id)
+            INSERT IGNORE INTO friends (followed, follower)
             VALUES (?, ?)`,
-            [user2_id, user1_id]
+            [follower, followed]
         );
     }
     await addFriend(cd_id, ws_id);

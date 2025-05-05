@@ -1,11 +1,10 @@
 package instalite.wahoo.jobs;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,15 +16,30 @@ import instalite.wahoo.jobs.utils.SerializablePair;
 
 import instalite.wahoo.config.AppConfig;
 
+/**
+ * The `ComputeRanksLivy` class is responsible for running a social network ranking job using Apache Livy.
+ * It takes command line arguments to configure the job parameters and performs the following tasks:
+ * 1. Runs a SocialRankJob with backlinks set to true and writes the output to a file named "socialrank-livy-backlinks.csv".
+ * 2. Runs a SocialRankJob with backlinks set to false and writes the output to a file named "socialrank-livy-nobacklinks.csv".
+ * 3. Compares the top-10 results from both runs and writes the comparison to a file named "socialrank-livy-results.txt".
+ * <p>
+ * The class uses the Apache Livy library to submit and execute the jobs on a Livy server.
+ * It also uses the SparkJob class to run the SocialRankJob and obtain the results.
+ * <p>
+ * To run the job, the `LIVY_HOST` environment variable must be set. If not set, the program will exit with an error message.
+ */
 public class ComputeRanksLivy {
     static Logger logger = LogManager.getLogger(ComputeRanksLivy.class);
 
-    public static void main(String[] args) throws InterruptedException, ExecutionException {
+
+    public static void main(String[] args)
+            throws IOException, URISyntaxException, InterruptedException, ExecutionException {
         boolean debug;
+
         double d_max;
         int i_max;
 
-        // Parse CLI args
+        // Process command line arguments if given
         if (args.length == 1) {
             d_max = Double.parseDouble(args[0]);
             i_max = 25;
@@ -44,60 +58,51 @@ public class ComputeRanksLivy {
             debug = false;
         }
 
-        FlexibleLogger flogger = new FlexibleLogger(null, false, debug);
+        
+        FlexibleLogger logger = new FlexibleLogger(null, false, debug);
 
-        // Load env vars
+        // Set up serializable config
         Dotenv dotenv = Dotenv.configure().load();
+
         Map<String, String> envVars = new HashMap<>();
         for (String key : new String[] {
-                "DATABASE_SERVER", "DATABASE_NAME", "DATABASE_USER", "DATABASE_PASSWORD",
-                "SPARK_MASTER", "LIVY_HOST",
-                "ACCESS_KEY_ID", "SECRET_ACCESS_KEY", "SESSION_TOKEN"
+            "DATABASE_SERVER", "DATABASE_NAME", "DATABASE_USER", "DATABASE_PASSWORD",
+            "SPARK_MASTER", "LIVY_HOST",
+            "ACCESS_KEY_ID", "SECRET_ACCESS_KEY", "SESSION_TOKEN"
         }) {
             String val = dotenv.get(key);
             if (val == null) throw new IllegalStateException("Missing: " + key);
             envVars.put(key, val);
         }
         AppConfig appConfig = new AppConfig(envVars);
-
-        // Start parallel job execution
-        ExecutorService executor = Executors.newFixedThreadPool(3);
-
-        Future<List<SerializablePair<String, Double>>> futureSocialRank = executor.submit(() -> {
-            SocialRankJob socialRankJob = new SocialRankJob(d_max, i_max, null, false, false, debug, flogger);
-            socialRankJob.setParams(envVars);
-            return SparkJob.runJob(appConfig.livyUrl, appConfig.jar, socialRankJob);
-        });
-
-        Future<Void> futurePostRank = executor.submit(() -> {
-            PostRankJob postRankJob = new PostRankJob(d_max, i_max, null, false, debug, flogger);
-            postRankJob.setParams(envVars);
-            SparkJob.runJob(appConfig.livyUrl, appConfig.jar, postRankJob);
-            return null;
-        });
-
-        Future<List<SerializablePair<String, Integer>>> futureFOF = executor.submit(() -> {
-            FollowersOfFollowersJob fofJob = new FollowersOfFollowersJob(null, true, debug, flogger);
-            fofJob.setParams(envVars);
-            return SparkJob.runJob(appConfig.livyUrl, appConfig.jar, fofJob);
-        });
-
-        // Wait for results
-        List<SerializablePair<String, Double>> socialRankResult = futureSocialRank.get();
-        List<SerializablePair<String, Integer>> fofResult = futureFOF.get();
-        futurePostRank.get();  // ensure completion even if no output
-
-        flogger.info("*** Finished social network ranking via Livy! ***");
+        
+        SocialRankJob socialRankJob = new SocialRankJob(d_max, i_max, null, false, false, debug, logger);
+        socialRankJob.setParams(envVars);
+        List<SerializablePair<String, Double>> socialRankResult = SparkJob.runJob(appConfig.livyUrl, appConfig.jar, socialRankJob);
+        logger.info("*** Finished social network ranking via Livy! ***");
+        
         for (SerializablePair<String, Double> result : socialRankResult) {
-            flogger.info(result.getLeft() + " " + result.getRight());
+            logger.info(result.getLeft() + " " + result.getRight());
         }
 
-        flogger.info("*** Followers of Followers complete ***");
-        flogger.info("Preview:");
-        for (SerializablePair<String, Integer> result : fofResult) {
-            flogger.info(result.getLeft() + " " + result.getRight());
+        PostRankJob postRankJob = new PostRankJob(d_max, i_max, null, false, debug, logger);
+        postRankJob.setParams(envVars);
+        SparkJob.runJob(appConfig.livyUrl, appConfig.jar, postRankJob);
+        logger.info("*** Finished post ranking via Livy! ***");
+
+        // FOLLOWER OF FOLLOWERS
+        logger.info("*** Followers of Followers starting ***");
+        FollowersOfFollowersJob fofJob = new FollowersOfFollowersJob(null, true, debug, logger);
+        fofJob.setParams(envVars);
+        List<SerializablePair<String, Integer>> fofRecs = SparkJob.runJob(appConfig.livyUrl, appConfig.jar, fofJob);
+        
+        logger.info("*** Followers of Followers complete ***"); 
+        logger.info("Preview:");
+        for (SerializablePair<String, Integer> result : fofRecs) {
+            logger.info(result.getLeft() + " " + result.getRight());
         }
 
-        executor.shutdown();
     }
-}
+    
+
+}   

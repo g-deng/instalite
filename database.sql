@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS names (
 
 -- Creating the users table
 CREATE TABLE users (
-    user_id INT PRIMARY KEY,
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(255) NOT NULL,
     hashed_password VARCHAR(255) NOT NULL,
     hashtags VARCHAR(255),
@@ -17,7 +17,7 @@ CREATE TABLE users (
 
 -- Creating the posts table
 CREATE TABLE posts (
-    post_id INT PRIMARY KEY,
+    post_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
     image_url VARCHAR(255),
     text_content TEXT NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE posts (
 
 -- Creating the social_rank table
 CREATE TABLE social_rank (
-    user_id INT PRIMARY KEY,
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
     social_rank INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
@@ -46,7 +46,7 @@ CREATE TABLE post_weights (
 
 -- Creating the comments table
 CREATE TABLE comments (
-    comment_id INT PRIMARY KEY,
+    comment_id INT PRIMARY KEY AUTO_INCREMENT,
     post_id INT,
     parent_id INT,
     user_id INT,
@@ -58,7 +58,7 @@ CREATE TABLE comments (
 
 -- Creating the likes table
 CREATE TABLE likes (
-    like_id INT PRIMARY KEY,
+    like_id INT PRIMARY KEY AUTO_INCREMENT,
     post_id INT,
     user_id INT,
     FOREIGN KEY (post_id) REFERENCES posts(post_id),
@@ -67,11 +67,11 @@ CREATE TABLE likes (
 
 -- Creating the friends table
 CREATE TABLE friends (
-    user1_id INT,
-    user2_id INT,
-    PRIMARY KEY (user1_id, user2_id),
-    FOREIGN KEY (user1_id) REFERENCES users(user_id),
-    FOREIGN KEY (user2_id) REFERENCES users(user_id)
+    followed INT,
+    follower INT,
+    PRIMARY KEY (followed, follower),
+    FOREIGN KEY (followed) REFERENCES users(user_id),
+    FOREIGN KEY (follower) REFERENCES users(user_id)
 );
 
 -- Creating the friend_recs table
@@ -85,7 +85,7 @@ CREATE TABLE friend_recs (
 
 -- Creating the chats table
 CREATE TABLE chats (
-    chat_id INT PRIMARY KEY,
+    chat_id INT PRIMARY KEY AUTO_INCREMENT,
     is_group_chat BOOLEAN NOT NULL
 );
 
@@ -101,7 +101,7 @@ CREATE TABLE chat_members (
 
 -- Creating the chat_messages table
 CREATE TABLE chat_messages (
-    message_id INT PRIMARY KEY,
+    message_id INT PRIMARY KEY AUTO_INCREMENT,
     chat_id INT,
     sender_id INT,
     content TEXT NOT NULL,
@@ -112,7 +112,7 @@ CREATE TABLE chat_messages (
 
 -- Creating the chat_invites table
 CREATE TABLE chat_invites (
-    invite_id INT PRIMARY KEY,
+    invite_id INT PRIMARY KEY AUTO_INCREMENT,
     from_user_id INT,
     to_user_id INT,
     chat_id INT,

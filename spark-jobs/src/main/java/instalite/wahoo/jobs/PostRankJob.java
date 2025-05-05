@@ -164,9 +164,9 @@ public class PostRankJob extends SparkJob<List<SerializablePair<String, Double>>
 				return Arrays.asList(new Tuple2<>("u" + userId, "p" + postId)).iterator();
 			});
 
-		Dataset<Row> uu_df = queryMySQL("SELECT user1_id, user2_id FROM friends WHERE user1_id IS NOT NULL AND user2_id IS NOT NULL");
+		Dataset<Row> uu_df = queryMySQL("SELECT followed, follower FROM friends WHERE followed IS NOT NULL AND follower IS NOT NULL");
 		JavaPairRDD<String,String> uuRDD = uu_df
-			.select("user1_id", "user2_id")
+			.select("followed", "follower")
 			.javaRDD()
 			.flatMapToPair(row -> {
 				int followedId = row.getInt(0);
