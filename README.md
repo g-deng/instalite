@@ -32,8 +32,10 @@ And then enter the DB password (the one that ends in a comma)
 ### Spark
 The automated Spark job from the backend (via `npm run start`) is now set to Livy. Therefore you must complete the For Livy section. Local execution can be used for basic testing. (Or if you want to populate your local DB and not the RDS).
 
-If you don't have an updated `spark-jobs\target\framework.jar` also must call from spark-jobs directory to create the .jar file (it is run automatically by the CRON scheduler). No need to call multiple times, unless the Spark job code was updated.
-```mvn clean package```
+If you don't have an updated `spark-jobs\target\framework.jar` also must call the following from `spark-jobs` directory to create the .jar file (it is run automatically by the CRON scheduler). No need to call it each time, unless the spark-jobs code was updated.
+```
+mvn clean package
+```
 
 #### For Livy
 If EMR cluster is terminated, you need to make a new one. EMR clusters terminate whenever the lab ends. If there is one that is `Waiting...`, you're good (skip to the .env edits). 
