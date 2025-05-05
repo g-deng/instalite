@@ -295,12 +295,14 @@ public class PostRankJob extends SparkJob<List<SerializablePair<String, Double>>
 
 		writeOutputToMySQL(labelRDD);
 
-		List<SerializablePair<String, Double>> out = labelRDD
-			.map(pair -> new SerializablePair<>(pair._1() + "," + pair._2()._1(), pair._2()._2()))
-			.take(1000);
+		// SOMEHOW NOT SERIALIZABLE BUT ITS OKAY BECAUSE WE WRITE DIRECTLY TO RDS
+		// List<SerializablePair<String, Double>> out = labelRDD
+		// 	.map(pair -> new SerializablePair<>(pair._1() + " " + pair._2()._1(), pair._2()._2()))
+		// 	.take(10);
 
 		logger.info("PostRankJob run complete");
-		return out;
+
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -321,7 +323,6 @@ public class PostRankJob extends SparkJob<List<SerializablePair<String, Double>>
             int postId = Integer.parseInt(node.substring(1));
             int userId = Integer.parseInt(user.substring(1));
             double weight = tuple._2._2;
-			System.out.println(postId + " " + userId + " " + weight);
             return RowFactory.create(postId, userId, weight);
 
         }).filter(Objects::nonNull);

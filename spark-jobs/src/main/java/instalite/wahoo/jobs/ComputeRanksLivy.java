@@ -1,22 +1,10 @@
 package instalite.wahoo.jobs;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.URISyntaxException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,7 +12,6 @@ import instalite.wahoo.jobs.utils.FlexibleLogger;
 
 import instalite.wahoo.spark.SparkJob;
 import io.github.cdimascio.dotenv.Dotenv;
-import instalite.wahoo.jobs.SocialRankJob;
 import instalite.wahoo.jobs.utils.SerializablePair;
 
 import instalite.wahoo.config.AppConfig;
@@ -84,25 +71,24 @@ public class ComputeRanksLivy {
             "ACCESS_KEY_ID", "SECRET_ACCESS_KEY", "SESSION_TOKEN"
         }) {
             String val = dotenv.get(key);
-            if (val == null) throw new RuntimeException("Missing: " + key);
+            if (val == null) throw new IllegalStateException("Missing: " + key);
             envVars.put(key, val);
         }
         AppConfig appConfig = new AppConfig(envVars);
-
-        SocialRankJob job = new SocialRankJob(d_max, i_max, null, false, false, debug, logger);
-        job.setParams(envVars);
-        List<SerializablePair<String, Double>> noBacklinksResult = SparkJob.runJob(appConfig.livyUrl, appConfig.jar, job);
-
-        System.out.println("Without backlinks: " + noBacklinksResult);
-        try (PrintStream out = new PrintStream(new FileOutputStream("socialrank-livy-nobacklinks.csv"))) {
-            for (SerializablePair<String, Double> item : noBacklinksResult) {
-                out.println(item.getLeft() + "," + item.getRight());
-            }
-        } catch (Exception e) {
-            logger.error("Error writing to file: " + e.getMessage());
+        
+        SocialRankJob socialRankJob = new SocialRankJob(d_max, i_max, null, false, false, debug, logger);
+        socialRankJob.setParams(envVars);
+        List<SerializablePair<String, Double>> socialRankResult = SparkJob.runJob(appConfig.livyUrl, appConfig.jar, socialRankJob);
+        logger.info("*** Finished social network ranking via Livy! ***");
+        
+        for (SerializablePair<String, Double> result : socialRankResult) {
+            logger.info(result.getLeft() + " " + result.getRight());
         }
 
-        logger.info("*** Finished social network ranking via Livy! ***");
+        PostRankJob postRankJob = new PostRankJob(d_max, i_max, null, false, debug, logger);
+        postRankJob.setParams(envVars);
+        List<SerializablePair<String, Double>> postRankResult = SparkJob.runJob(appConfig.livyUrl, appConfig.jar, postRankJob);
+        logger.info("*** Finished post ranking via Livy! ***");
 
     }
     

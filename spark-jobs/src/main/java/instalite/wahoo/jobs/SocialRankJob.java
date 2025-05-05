@@ -36,8 +36,6 @@ public class SocialRankJob extends SparkJob<List<SerializablePair<String, Double
 
 	public SocialRankJob(double d_max, int i_max, SparkSession spark, boolean useBacklinks, boolean isLocal, boolean debug, FlexibleLogger logger) {
 		super(logger, spark, isLocal, debug); 
-		System.out.println("Logger:");
-		System.out.println(logger);
         this.useBacklinks = useBacklinks;
         this.d_max = d_max;
         this.i_max = i_max;
@@ -50,10 +48,6 @@ public class SocialRankJob extends SparkJob<List<SerializablePair<String, Double
  */
 protected JavaPairRDD<String, String> getSocialNetworkFromMySQL() {
     logger.debug("getSocialNetworkFromMySQL started");
-	System.out.println(appConfig);
-	System.out.println(appConfig.dbUrl);
-	System.out.println(appConfig.dbUser);
-	System.out.println(appConfig.dbPassword);
     Dataset<Row> df = spark.read()
         .format("jdbc")
         .option("url", appConfig.dbUrl)
@@ -109,7 +103,7 @@ protected JavaPairRDD<String, String> getSocialNetworkFromMySQL() {
 
 		// Load the social network, aka. the edges (followed, follower)
 		JavaPairRDD<String, String> edgeRDD = getSocialNetworkFromMySQL();
-
+		
 		// Find the sinks in edgeRDD as an RDD
 		JavaRDD<String> sinks = getSinks(edgeRDD);
 		logger.info("There are " + sinks.count() + " sinks");
@@ -159,7 +153,7 @@ protected JavaPairRDD<String, String> getSocialNetworkFromMySQL() {
 			// goal: (node, |socialRank - nextSocialRank|)	
 			JavaPairRDD<String, Double> differencesRDD = socialRankRDD.join(nextSocialRankRDD)
 			 .mapToPair((pair) -> new Tuple2<>(pair._1, Math.abs(pair._2._1 - pair._2._2)));
-
+			
 			socialRankRDD = nextSocialRankRDD;
 			d = differencesRDD.values().reduce(Math::max);
 			if (debug) {

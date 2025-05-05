@@ -62,7 +62,7 @@ public abstract class SparkJob<T> implements Job<T> {
     public void initialize() throws IOException, InterruptedException {
         logger.info("Connecting to Spark...");
         if (appConfig == null) appConfig = new AppConfig(envVars);
-        
+
         spark = SparkConnector.getSparkConnection(
             appConfig.sparkAppName,
             appConfig.sparkMaster,
@@ -173,7 +173,7 @@ public abstract class SparkJob<T> implements Job<T> {
 
             System.out.printf("Uploading %s to the Spark context...\n", jarPath);
             //client.uploadJar(new File(jarPath)).get();
-            client.addJar(new URI("s3://nets2120-livyjars-wahoo/framework-livy.jar"));
+            client.addJar(new URI("s3://nets2120-livyjars-wahoo/framework.jar"));
 
             System.out.printf("Running job...\n");
             T result = client.submit(job).get();
