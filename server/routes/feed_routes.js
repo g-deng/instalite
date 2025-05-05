@@ -60,7 +60,7 @@ async function createPost(req, res) {
     const file = req.file;
     var image_url = null;
     var text_content = req.body.text_content;
-    var hashtags = req.body.hashtags;
+    var hashtags = req.body.hashtags; //  a comma seperated string
     var content_type = 'text/html';
 
     if (!helper.isLoggedIn(req, req.params.username)) {
@@ -77,11 +77,8 @@ async function createPost(req, res) {
                 // uploadFile returns the key path
                 const key = await s3store.uploadFile(file.path, bucketName, keyPrefix);
                 // Construct the public URL
-                console.log("done uploading");
                 image_url = `https://${bucketName}.s3.amazonaws.com/${key}`;
-                console.log("boop");
                 content_type = file.mimetype;
-                console.log('Constructed image_url:', image_url);
             }
             console.log('Inserting post into database with image_url:', image_url);
             const query = `
@@ -133,6 +130,7 @@ async function createPost(req, res) {
 // POST /createComment
 async function createComment(req, res) {
     var post_id = req.body.post_id;
+    var parent_id = req.body.parent_id;
     var text_content = req.body.text_content;
 
     if (!post_id || !text_content || text_content.trim().length == 0) {
@@ -141,16 +139,18 @@ async function createComment(req, res) {
         console.log(req.session);
         return res.status(403).send({error: 'Not logged in.'});
     } else {
+        console.log(post_id, parent_id, text_content);
         try {
             const query = `
-                INSERT INTO comments (post_id, user_id, text_content) 
-                VALUES (?, ?, ?)
+                INSERT INTO comments (post_id, parent_id, user_id, text_content) 
+                VALUES (?, ?, ?, ?)
             `;
-            const params = [post_id, req.session.user_id, text_content];
+            const params = [post_id, parent_id, req.session.user_id, text_content];
             const result = await queryDatabase(query, params);
             console.log(result);
             return res.status(201).send({message: 'Comment created.'});  
-        } catch {
+        } catch (err) {
+            console.error("ERROR:", err);
             return res.status(500).send({error: 'Error querying database'});
         }
     }
@@ -200,11 +200,13 @@ async function getFeed(req, res) {
     if (!helper.isLoggedIn(req, req.params.username)) {
         return res.status(403).send({error: 'Not logged in.'});
     } else {
+        const limit = parseInt(req.query.limit, 10) || 10;
+        const offset = parseInt(req.query.offset, 10) || 0;
         try {
             console.log('getting feed');
             const query = `
                 WITH post_comments AS (
-                    SELECT posts.post_id, GROUP_CONCAT(CONCAT(c_users.username, ':', comments.text_content) SEPARATOR ',') AS comments
+                    SELECT posts.post_id, GROUP_CONCAT(CONCAT(c_users.username, ':', comments.comment_id, ':', comments.parent_id, ':', comments.text_content) SEPARATOR ',') AS comments
                     FROM posts
                     LEFT JOIN comments
                     ON posts.post_id = comments.post_id
@@ -212,26 +214,39 @@ async function getFeed(req, res) {
                     ON comments.user_id = c_users.user_id
                     GROUP BY posts.post_id
                 )
-                SELECT users.username, posts.image_url, posts.text_content, posts.hashtags,
+                SELECT ANY_VALUE(users.username) AS username, ANY_VALUE(posts.image_url) AS image_url, ANY_VALUE(posts.text_content) AS text_content, ANY_VALUE(posts.hashtags) AS hashtags, posts.source,
                     COUNT(likes.user_id) AS likes, 
-                    MAX(post_comments.comments) AS comments,
-                    post_weights.weight, posts.post_id
+                    ANY_VALUE(post_comments.comments) AS comments,
+                    ANY_VALUE(post_weights.weight) AS weight, posts.post_id
                 FROM post_weights
                     JOIN posts 
                     ON post_weights.post_id = posts.post_id
                     JOIN users
                     ON posts.user_id = users.user_id
+                    JOIN users AS cu ON cu.user_id = ? 
+                    LEFT JOIN friends
+                        ON friends.follower = cu.user_id AND friends.followed = users.user_id
                     LEFT JOIN likes
                     ON posts.post_id = likes.post_id
                     LEFT JOIN post_comments
                     ON posts.post_id = post_comments.post_id
-                WHERE post_weights.user_id = ?
+                WHERE (
+                    users.user_id = cu.user_id OR friends.followed IS NOT NULL OR (
+                        cu.hashtags IS NOT NULL
+                        AND posts.hashtags IS NOT NULL
+                        AND posts.hashtags REGEXP CONCAT(
+                            '(^|,)',
+                            REPLACE(cu.hashtags, ',', '($|,)|(^|,)'),
+                            '($|,)'
+                        )
+                    ) OR posts.source = 'FederatedPosts'
+                )
                 GROUP BY posts.post_id
-                ORDER BY post_weights.weight DESC
-                LIMIT 1000
+                ORDER BY weight DESC
+                LIMIT ? OFFSET ?;
             `;
 
-            const params = [req.session.user_id];
+            const params = [req.session.user_id, limit, offset];
             const result = await queryDatabase(query, params);
             console.log(result);
             // TODO: decide on what to do with empty queries
@@ -245,14 +260,15 @@ async function getFeed(req, res) {
                 hashtags: row.hashtags,
                 likes: row.likes,
                 comments: row.comments ? row.comments.split(',').map(comment => {
-                    const [username, text_content] = comment.split(':');
-                    return {username, text_content};
+                    const [username, comment_id, parent_id, text_content] = comment.split(':');
+                    return {username, comment_id:  Number(comment_id), parent_id: Number(parent_id), text_content};
                 }) : [],
                 weight: row.weight,
-                post_id: row.post_id
+                post_id: row.post_id,
             }));
-            return res.status(200).send({results: parsed_result});
-        } catch {
+            return res.status(200).send({results: parsed_result, hasMore: result[0].length === limit});
+        } catch (err) {
+            console.error(err);
             return res.status(500).send({error: 'Error querying database'});
         }
     }

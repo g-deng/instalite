@@ -183,28 +183,28 @@ protected JavaPairRDD<String, String> getSocialNetworkFromMySQL() {
 		return run(false);
 	}
 
-public void writeOutputToMySQL(JavaPairRDD<String, Double> rdd, SparkSession spark) {
-    JavaRDD<Row> rowRDD = rdd.map(pair -> {
-        int userId = Integer.parseInt(pair._1());
-        double rank = pair._2();
-        return RowFactory.create(userId, rank);
-    });
+	public void writeOutputToMySQL(JavaPairRDD<String, Double> rdd, SparkSession spark) {
+		JavaRDD<Row> rowRDD = rdd.map(pair -> {
+			int userId = Integer.parseInt(pair._1());
+			double rank = pair._2();
+			return RowFactory.create(userId, rank);
+		});
 
-    StructType schema = new StructType()
-        .add("user_id", DataTypes.IntegerType, false)
-        .add("social_rank", DataTypes.DoubleType, false);
+		StructType schema = new StructType()
+			.add("user_id", DataTypes.IntegerType, false)
+			.add("social_rank", DataTypes.DoubleType, false);
 
-    Dataset<Row> df = spark.createDataFrame(rowRDD, schema);
+		Dataset<Row> df = spark.createDataFrame(rowRDD, schema);
 
-    df.write()
-        .mode(SaveMode.Overwrite)
-        .format("jdbc")
-        .option("url", appConfig.dbUrl)
-        .option("dbtable", "social_rank")
-        .option("user", appConfig.dbUser)
-        .option("password", appConfig.dbPassword)
-        .save();
-}
+		df.write()
+			.mode(SaveMode.Overwrite)
+			.format("jdbc")
+			.option("url", appConfig.dbUrl)
+			.option("dbtable", "social_rank")
+			.option("user", appConfig.dbUser)
+			.option("password", appConfig.dbPassword)
+			.save();
+	}
 
 
 }

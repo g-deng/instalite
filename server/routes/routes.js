@@ -12,6 +12,9 @@ import { get_db_connection } from '../models/rdbms.js';
 import RouteHelper from '../routes/route_helper.js';
 
 import bcrypt from 'bcrypt';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import fs from 'fs';
+import { sendPostToKafka } from '../kafka/producer.js';
 
 // Database connection setup
 const db = get_db_connection();
@@ -59,20 +62,24 @@ async function getOnlineUsers(req, res) {
 
 // POST /register 
 async function postRegister(req, res) {
-    var linked_id = req.body.linked_id;
-    var user = req.body.username;
-    var raw_pass = req.body.password;
-    if (linked_id.trim().length == 0 || 
-        user.trim().length == 0 || 
-        raw_pass.trim().length == 0 || 
-        !helper.isOK(user)) {
+    const linked_nconst = req.body.linked_nconst;
+    const user = req.body.username;
+    const raw_pass = req.body.password;
+    const first_name = req.body.first_name || '';
+    const last_name = req.body.last_name || '';
+    const birthday = req.body.birthday || '';
+    const email = req.body.email || '';
+    const affiliation = req.body.affiliation || '';
+    const hashtags = req.body.hashtags || '';
+    
+    if (!linked_nconst || linked_nconst.trim().length == 0 || 
+        !user || user.trim().length == 0 || 
+        !raw_pass || raw_pass.trim().length == 0) {
         console.log('Invalid values in the request');
-        res.status(400).send({error: "One or more of the fields you entered was empty or invalid, please try again."}); 
+        res.status(400).send({error: "One or more of the required fields (username, password, linked_id) was empty or invalid."}); 
     } else {
         console.debug('Checking if user exists');
 
-        // TODO: check if user exists
-        // IF NOT: encrypt password, store in database, set session
         try {
             const exist_query = 'SELECT * FROM users WHERE username = ?';
             const exist_params = [user];
@@ -81,15 +88,18 @@ async function postRegister(req, res) {
                 console.log(result[0]);
                 res.status(409).send({error: "An account with this username already exists, please try again."});
             } else {
+                console.log('Creating user');
                 const password = await helper.encryptPassword(raw_pass);
-                const query = 'INSERT INTO users (username, hashed_password, linked_nconst) VALUES (?, ?, ?)';
-                const params = [user, password, linked_id];
+                const query = 'INSERT INTO users (username, hashed_password, linked_nconst, first_name, last_name, birthday, email, affiliation, hashtags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                const params = [user, password, linked_nconst, first_name, last_name, birthday, email, affiliation, hashtags];
                 const result = await queryDatabase(query, params);
+                console.log(result);
                 const user_id_query = 'SELECT user_id FROM users WHERE username = ?';
                 const user_id_params = [user];
                 const user_id_result = await queryDatabase(user_id_query, user_id_params);
                 req.session.username = user;
                 req.session.user_id = user_id_result[0][0].user_id;
+                console.log('User registered successfully');
                 console.log(req.session);
                 res.status(200).send({message: `{username: '${user}', user_id: '${user_id_result[0][0].user_id}'}`});
             }
@@ -157,7 +167,7 @@ async function getMovie(req, res) {
     console.log('Ready to run RAG chain...');
 
     const prompt =
-    PromptTemplate.fromTemplate(`Answer the question. Context: {context}. Question: {question}`);
+    PromptTemplate.fromTemplate(`Answer the question. Context: ${context}. Question: ${question}`);
     const llm = new ChatOpenAI({ modelName: "gpt-4o-mini", temperature: 0 });
 
     const ragChain = RunnableSequence.from([
@@ -179,7 +189,6 @@ async function getMovie(req, res) {
 
 async function uploadImage(req, res) {
     const bucketName = 'nets2120-chroma-' + process.env.USER_ID;
-
     const s3_user = new S3KeyValueStore(bucketName, "user");
 
     try {
@@ -191,27 +200,265 @@ async function uploadImage(req, res) {
         const file = req.file;
 
         // Generate a unique file name
-        const fileName = `${Date.now()}_${file.originalname}`;
         const filePath = file.path;
         const keyPrefix = 'uploads/';
 
         // Upload the file to S3
-        await s3_user.uploadFile(filePath, bucketName, keyPrefix);
+        const key = await s3_user.uploadFile(filePath, bucketName, keyPrefix);
+        if (!key) {
+            return res.status(500).send({ error: "Failed to upload file to S3." });
+        }
 
-        console.log(`Image uploaded to S3: ${fileName}`);
+        console.log(`Image uploaded to S3: ${filePath}`);
 
         const file_obj = await s3_user.convertFileToBinary(filePath, bucketName, keyPrefix);
         const embeddings = await face.getEmbeddingsFromBuffer(file_obj);
         const embedding = embeddings[0];
 
         res.status(200).send({
-            message: `Image uploaded successfully to ${fileName}`,
+            message: `Image uploaded successfully to ${filePath}`,
             embedding: embedding,
+            key: key
         });
     } catch (error) {
         console.error("Error uploading image:", error);
         res.status(500).send({ error: "An error occurred while uploading the image." });
     }
+}
+
+async function selectPhoto(req, res) {
+    const user_id = req.session.user_id;
+    const username = req.session.username;
+    const image_path = req.body.image_path;
+    const actor_name = req.body.actor_name;
+
+    const sql_command = 'UPDATE users SET profile_photo = ? WHERE user_id = ?';
+    const sql_params = [image_path, user_id];
+    try {
+        const result = await queryDatabase(sql_command, sql_params);
+        if (result[0].affectedRows == 0) {
+            return res.status(404).send({ error: "User not found." });
+        } else {
+            // create a status post about actor change
+            if (actor_name) {
+                const text_content = `${username} is now linked to ${actor_name}`;
+                
+                // insert post into the database
+                const postQuery = `INSERT INTO posts (user_id, text_content) VALUES (?, ?)`;
+                const postParams = [user_id, text_content];
+                const postResult = await queryDatabase(postQuery, postParams);
+                const post_id = postResult[0].insertId;
+                
+                // prepare post for Kafka
+                const post_json = {
+                    username: username,
+                    post_text: text_content,
+                    post_uuid_within_site: post_id,
+                    content_type: 'text/html',
+                    source_site: 'instalite-wahoo',
+                };
+                
+                // send to Kafka
+                await sendPostToKafka({post_json: post_json});
+                console.log('Status post sent to Kafka:', post_json);
+            }
+            
+            res.status(200).send({message: `Image selected successfully`});
+        }
+    } catch (error) {
+        console.error("Error selecting image:", error);
+        res.status(500).send({ error: "An error occurred while selecting the image." });
+    }
+}
+
+async function saveUserSelfie(req, res) {
+    // Get the user ID from the session
+    const user_id = req.session.user_id;
+    if (!user_id) {
+        return res.status(403).send({ error: "Not logged in." });
+    }
+
+    const image_path = req.body.image_path;
+    if (!image_path) {
+        return res.status(400).send({ error: "Image path is required." });
+    }
+
+    const sql_command = 'UPDATE users SET selfie_photo = ? WHERE user_id = ?';
+    const sql_params = [image_path, user_id];
+    
+    try {
+        const result = await queryDatabase(sql_command, sql_params);
+        if (result[0].affectedRows == 0) {
+            return res.status(404).send({ error: "User not found." });
+        } else {
+            res.status(200).send({ message: "Image saved successfully" });
+        }
+    } catch (error) {
+        console.error("Error saving image:", error);
+        res.status(500).send({ error: "An error occurred while saving the image." });
+    }
+}
+
+async function getEmbeddingFromSelfieKey(req, res) {
+  const key = req.body.key;
+  if (!key) {
+    return res.status(400).send({ error: "Image key is required." });
+  }
+
+  const bucketName = 'nets2120-chroma-' + process.env.USER_ID;
+  const s3_user = new S3KeyValueStore(bucketName, "user");
+
+  try {
+    const file_obj = await s3_user.fetchFileBinary(key);
+    const embeddings = await face.getEmbeddingsFromBuffer(file_obj);
+    const embedding = embeddings[0];
+    
+    res.status(200).send({
+      embedding: embedding
+    });
+  } catch (error) {
+    console.error("Error getting embedding:", error);
+    res.status(500).send({ error: "An error occurred while getting the embedding." });
+  }
+}
+
+async function getPopularHashtags(req, res) {
+    try {
+        const query = `
+            SELECT hashtags
+            FROM posts
+            WHERE hashtags IS NOT NULL AND hashtags <> ''
+        `;
+        
+        const result = await queryDatabase(query);
+        
+        // process hashtags 
+        const hashtags = {};
+        result[0].forEach(row => {
+            if (row.hashtags) {
+                const tagsArray = row.hashtags.split(',');
+                tagsArray.forEach(tag => {
+                    const trimmedTag = tag.trim();
+                    if (trimmedTag) {
+                        hashtags[trimmedTag] = (hashtags[trimmedTag] || 0) + 1;
+                    }
+                });
+            }
+        });
+        
+        // convert to array and sort by popularity
+        const sortedHashtags = Object.entries(hashtags)
+            .map(([tag, count]) => ({ tag, count }))
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 15); // get top 15
+        
+        res.status(200).json({ hashtags: sortedHashtags });
+    } catch (error) {
+        console.error('Error fetching popular hashtags:', error);
+        res.status(500).json({ error: 'Failed to get popular hashtags' });
+    }
+}
+
+async function updateHashtags(req, res) {
+  const user_id = req.session.user_id;
+  const hashtags = req.body.hashtags;
+
+  if (!user_id) {
+    return res.status(403).send({ error: "Not logged in." });
+  }
+
+  try {
+    const sql_command = 'UPDATE users SET hashtags = ? WHERE user_id = ?';
+    const sql_params = [hashtags, user_id];
+    
+    const result = await queryDatabase(sql_command, sql_params);
+    
+    if (result[0].affectedRows == 0) {
+      return res.status(404).send({ error: "User not found." });
+    } else {
+      res.status(200).send({ message: "Hashtags updated successfully" });
+    }
+  } catch (error) {
+    console.error("Error updating hashtags:", error);
+    res.status(500).send({ error: "An error occurred while updating hashtags." });
+  }
+}
+
+async function updateEmail(req, res) {
+  const user_id = req.session.user_id;
+  const email = req.body.email;
+
+  if (!user_id) {
+    return res.status(403).send({ error: "Not logged in." });
+  }
+
+  if (!email || email.trim().length === 0) {
+    return res.status(400).send({ error: "Email cannot be empty." });
+  }
+
+  try {
+    const sql_command = 'UPDATE users SET email = ? WHERE user_id = ?';
+    const sql_params = [email, user_id];
+    
+    const result = await queryDatabase(sql_command, sql_params);
+    
+    if (result[0].affectedRows === 0) {
+      return res.status(404).send({ error: "User not found." });
+    } else {
+      res.status(200).send({ message: "Email updated successfully" });
+    }
+  } catch (error) {
+    console.error("Error updating email:", error);
+    res.status(500).send({ error: "An error occurred while updating email." });
+  }
+}
+
+async function updatePassword(req, res) {
+  const user_id = req.session.user_id;
+  const currentPassword = req.body.current_password;
+  const newPassword = req.body.new_password;
+
+  if (!user_id) {
+    return res.status(403).send({ error: "Not logged in." });
+  }
+
+  if (!currentPassword || currentPassword.trim().length === 0 || 
+      !newPassword || newPassword.trim().length === 0) {
+    return res.status(400).send({ error: "Current password and new password cannot be empty." });
+  }
+
+  try {
+    // get current hashed password
+    const userQuery = 'SELECT hashed_password FROM users WHERE user_id = ?';
+    const userParams = [user_id];
+    const userResult = await queryDatabase(userQuery, userParams);
+    
+    if (userResult[0].length === 0) {
+      return res.status(404).send({ error: "User not found." });
+    }
+
+    const storedHash = userResult[0][0].hashed_password;
+    
+    // check current password
+    const match = await bcrypt.compare(currentPassword, storedHash);
+    if (!match) {
+      return res.status(401).send({ error: "Current password is incorrect." });
+    }
+    
+    const newPasswordHash = await helper.encryptPassword(newPassword);
+    const updateQuery = 'UPDATE users SET hashed_password = ? WHERE user_id = ?';
+    const updateParams = [newPasswordHash, user_id];
+    const updateResult = await queryDatabase(updateQuery, updateParams);
+    
+    if (updateResult[0].affectedRows === 0) {
+      return res.status(500).send({ error: "Failed to update password." });
+    } else {
+      res.status(200).send({ message: "Password updated successfully" });
+    }
+  } catch (error) {
+    console.error("Error updating password:", error);
+    res.status(500).send({ error: "An error occurred while updating password." });
+  }
 }
 
 /* Here we construct an object that contains a field for each route
@@ -224,6 +471,13 @@ export {
     postLogout,
     getMovie,
     uploadImage,
-    getOnlineUsers
+    getOnlineUsers,
+    selectPhoto,
+    saveUserSelfie,
+    getEmbeddingFromSelfieKey,
+    getPopularHashtags,
+    updateHashtags,
+    updateEmail,
+    updatePassword,
 };
 

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import config from '../../config.json';
 import { io } from 'socket.io-client';
 import { getSocket } from '../Socket';
+import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut, FiUser } from "react-icons/fi";
 
 const MessageComponent = ({ sender, content, timestamp }: { sender: string, content: string, timestamp: string }) => {
   const formatTime = (timestamp: string) => {
@@ -43,13 +44,35 @@ export default function ChatMode() {
   const rootURL = config.serverRootURL;
 
   // Navigation functions
-  const feed = () => {
-    navigate('/' + username + '/home');
+    const feed = () => {
+      navigate('/' + username + '/home');
   };
-  
-  const friends = () => {
-    navigate("/" + username + "/friends");
-  };
+
+  const post = () => {
+    navigate('/' + username + '/createPost');
+  }
+    const friends = () => {
+        navigate("/"+ username+"/friends");
+    };
+
+    const chat = () => {
+      navigate("/"+ username+"/chat");
+    };
+
+    const chatMode = () => {
+      navigate("/"+ username+"/chatMode");
+    };
+
+    const profile = () => {
+      navigate(`/${username}/profile`);
+    };
+
+    const logout = async () => {
+      await axios.post(`${rootURL}/logout`, { withCredentials: true });
+      const sock = getSocket();
+      sock.disconnect();
+      navigate("/");
+    }
 
   // Connect to socket when we go to this page
   useEffect(() => {
@@ -131,8 +154,8 @@ export default function ChatMode() {
       }
       
       // join socket room
-      if (socket) {
-        socket.emit('join_room', activeChat);
+      if (newSocket) {
+        newSocket.emit('join_room', activeChat);
       }
     }
   }, [activeChat]);
@@ -160,7 +183,7 @@ export default function ChatMode() {
   };
 
   const sendMessage = () => {
-    if (!messageInput.trim() || !activeChat || !socket || !userId) {
+    if (!messageInput.trim() || !activeChat || !newSocket || !userId) {
         return;
     }
 
@@ -170,7 +193,7 @@ export default function ChatMode() {
       content: messageInput
     };
 
-    socket.emit('send_message', message);
+    newSocket.emit('send_message', message);
     setMessageInput('');
   };
 
@@ -189,7 +212,7 @@ export default function ChatMode() {
 
   // sending chat invite to start 1-on-1 chat
   const sendChatInvite = (receiverId: number) => {
-    if (!socket || !userId) return;
+    if (!newSocket || !userId) return;
 
     console.log('Checking if 1-on-1 chat already exists');
     
@@ -205,7 +228,7 @@ export default function ChatMode() {
         console.log('Starting new chat with user:', receiverId);
         
         // For new chats, don't include roomId (should be null anyways)
-        socket.emit('send_invite', {
+        newSocket.emit('send_invite', {
           senderId: userId,
           receiverId: receiverId
           // No roomId indicates new chat
@@ -223,7 +246,7 @@ export default function ChatMode() {
 
   // Invite to existing group chat
   const inviteUserToCurrentChat = (receiverId: number) => {
-    if (!socket || !userId || !activeChat) {
+    if (!newSocket || !userId || !activeChat) {
       return;
     }
 
@@ -240,7 +263,7 @@ export default function ChatMode() {
       } else {
         console.log('Inviting to existing group chat. Room ID:', activeChat, 'User:', receiverId);
         
-        socket.emit('send_invite', {
+        newSocket.emit('send_invite', {
           senderId: userId,
           receiverId: receiverId,
           roomId: activeChat // add roomId here to indicate group
@@ -286,12 +309,12 @@ export default function ChatMode() {
   }, [activeChat]);
 
   const leaveChat = (roomId: number) => {
-    if (!socket || !userId) return;
+    if (!newSocket || !userId) return;
     
     // confirming window
     if (window.confirm("Are you sure you want to leave this chat?")) {
       // Send socket event to leave the chat
-      socket.emit('leave_chat', {
+      newSocket.emit('leave_chat', {
         userId: userId,
         roomId: roomId
       });
@@ -307,16 +330,90 @@ export default function ChatMode() {
   };
 
   return (
-    <div className='w-screen h-screen'>
-      <div className='w-full h-16 bg-slate-50 flex justify-center mb-2'>
-        <div className='text-2xl max-w-[1800px] w-full flex items-center'>
-          Pennstagram - {username} &nbsp;
-          <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
-            onClick={feed}>Feed</button>&nbsp;
-          <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
-            onClick={friends}>Friends</button>
-        </div>
-      </div>
+    <div className='w-screen h-screen flex'>
+      <aside className="w-24 bg-white p-4 flex flex-col items-center border-r">
+    <div className="mb-6">
+      <span className="text-3xl font-black tracking-tight">Insta</span>
+    </div>
+
+    <button
+      type="button"
+      onClick={feed}
+      className={`mb-6 p-2 rounded-lg flex flex-col items-center ${
+         'hover:bg-gray-100'
+      }`}
+    >
+      <FiHome size={24} />
+      <span className="text-xs mt-1">Home</span>
+    </button>
+
+    <button
+      type="button"
+      onClick={post}
+      className={`mb-6 p-2 rounded-lg flex flex-col items-center ${
+         'hover:bg-gray-100'
+      }`}
+    >
+      <FiPlusSquare size={24} />
+      <span className="text-xs mt-1">Post</span>
+    </button>
+
+    <button
+      type="button"
+      onClick={friends}
+      className={`mb-6 p-2 rounded-lg flex flex-col items-center ${
+         'hover:bg-gray-100'
+      }`}
+    >
+      <FiUsers size={24} />
+      <span className="text-xs mt-1">Friends</span>
+    </button>
+
+    <button
+      type="button"
+      onClick={chatMode}
+      className={`mb-6 p-2 rounded-lg flex flex-col items-center ${
+        'bg-gray-100'
+      }`}
+    >
+      <FiMessageCircle size={24} />
+      <span className="text-xs mt-1">Chat</span>
+    </button>
+
+    <button
+      type="button"
+      onClick={chat}
+      className={`p-2 rounded-lg flex flex-col items-center ${
+        'hover:bg-gray-100'
+      }`}
+    >
+      <FiSearch size={24} />
+      <span className="text-xs mt-1">Search</span>
+    </button>
+
+    <button
+      type="button"
+      onClick={profile}
+      className={`p-2 rounded-lg flex flex-col items-center ${
+        'hover:bg-gray-100'
+      }`}
+    >
+      <FiUser size={24} />
+      <span className="text-xs mt-1">Profile</span>
+    </button>
+
+      <div className="mt-auto" />
+      <button
+        type="button"
+        onClick={logout}
+        className={`p-2 rounded-lg flex flex-col items-center ${
+          'hover:bg-gray-100'
+        }`}
+      >
+        <FiLogOut size={24} />
+        <span className="text-xs mt-1">Logout</span>
+      </button>
+    </aside>
       
       <div className='h-[calc(100%-4rem)] w-full mx-auto max-w-[1800px] flex space-x-4 p-3'>
         {/* Chat List */}

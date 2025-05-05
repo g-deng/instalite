@@ -62,7 +62,7 @@ export async function createPostsTSV() {
 }
 // index all data
 
-export async function indexData() {
+async function indexData() {
   const data = ["names.tsv", "principals.tsv", "ratings.tsv", "posts.tsv"];
 
   for (const fileName of data) {
@@ -73,4 +73,4 @@ export async function indexData() {
   }
 }
 
-await indexData();
+export default indexData;

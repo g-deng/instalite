@@ -73,7 +73,7 @@ Go to the S3 section in AWS and create a new bucket with the following name. Acc
 nets2120-chroma-[USER_ID]
 
 When you make an S3 bucket for image posts, go to the permissions tab and paste in the following under Bucket Policy:
-
+```
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -82,10 +82,11 @@ When you make an S3 bucket for image posts, go to the permissions tab and paste 
             "Effect": "Allow",
             "Principal": "*",
             "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::nets2120-chroma-andrew08/posts/uploads/*"
+            "Resource": "arn:aws:s3:::nets2120-chroma-wahoo/posts/uploads/*"
         }
     ]
 }
+```
 
 ### Kafka
 Set up MySQL and Kafka.
@@ -93,6 +94,20 @@ Set up MySQL and Kafka.
 service mysql start
 
 ssh -i ~/nets2120/nets2120_tunnel -4 -L 9092:localhost:9092 sshtunnel@ec2-18-218-240-208.us-east-2.compute.amazonaws.com
+```
+
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev --host
+```
+
+### Backend
+```bash
+cd server
+npm install
+npm run start
 ```
 
 ## Overview

@@ -90,6 +90,18 @@ public class ComputeRanksLivy {
         List<SerializablePair<String, Double>> postRankResult = SparkJob.runJob(appConfig.livyUrl, appConfig.jar, postRankJob);
         logger.info("*** Finished post ranking via Livy! ***");
 
+        // FOLLOWER OF FOLLOWERS
+        logger.info("*** Followers of Followers starting ***");
+        FollowersOfFollowersJob fofJob = new FollowersOfFollowersJob(null, true, debug, logger);
+        fofJob.setParams(envVars);
+        List<SerializablePair<String, Integer>> fofRecs = fofJob.mainLogic();
+        
+        logger.info("*** Followers of Followers complete ***"); 
+        logger.info("Preview:");
+        for (SerializablePair<String, Integer> result : fofRecs) {
+            logger.info(result.getLeft() + " " + result.getRight());
+        }
+
     }
     
 

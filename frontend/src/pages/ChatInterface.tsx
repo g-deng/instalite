@@ -2,6 +2,9 @@ import { useState } from 'react'
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut, FiUser } from "react-icons/fi";
+import config from '../../config.json';
+import { getSocket } from "../Socket"; 
 
 const MessageComponent = ({ sender, message }: { sender: string, message: string }) => {
     return (
@@ -18,17 +21,37 @@ export default function ChatInterface() {
     const [input, setInput] = useState<string>('');
     const { username } = useParams();
     const navigate = useNavigate(); 
-
+    const rootURL = config.serverRootURL;
     const feed = () => {
         navigate('/' + username + '/home');
     };
+
+    const post = () => {
+        navigate('/' + username + '/createPost');
+    }
+
     const friends = () => {
         navigate("/"+ username+"/friends");
     };
 
+    const chat = () => {
+        navigate("/"+ username+"/chat");
+      };
+  
     const chatMode = () => {
         navigate("/"+ username+"/chatMode");
     };
+
+    const profile = () => {
+      navigate(`/${username}/profile`);
+    };
+
+        const logout = async () => {
+          await axios.post(`${rootURL}/logout`, { withCredentials: true });
+          const sock = getSocket();
+          sock.disconnect();
+          navigate("/");
+        }
 
     const sendMessage = async () => {
         // CUT HERE 
@@ -49,46 +72,126 @@ export default function ChatInterface() {
     }
 
     return (
-        <div className='w-screen h-screen flex flex-col items-center'>
-        <div className='w-full h-16 bg-slate-50 flex justify-center mb-2'>
-            <div className='text-2xl max-w-[1800px] w-full flex items-center'>
-            Pennstagram - {username} &nbsp;
-            <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
-              onClick={feed}>Feed</button>&nbsp;
-            <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
-              onClick={friends}>Friends</button>
-            <button type="button" className='px-2 py-2 rounded-md bg-gray-500 outline-none text-white'
-              onClick={chatMode}>ChatMode</button>
-            </div>
+        <div className='w-screen h-screen flex'>
+      <aside className="w-24 bg-white p-4 flex flex-col items-center border-r">
+    <div className="mb-6">
+      <span className="text-3xl font-black tracking-tight">Insta</span>
+    </div>
+
+    <button
+      type="button"
+      onClick={feed}
+      className={`mb-6 p-2 rounded-lg flex flex-col items-center ${
+         'hover:bg-gray-100'
+      }`}
+    >
+      <FiHome size={24} />
+      <span className="text-xs mt-1">Home</span>
+    </button>
+
+    <button
+      type="button"
+      onClick={post}
+      className={`mb-6 p-2 rounded-lg flex flex-col items-center ${
+         'hover:bg-gray-100'
+      }`}
+    >
+      <FiPlusSquare size={24} />
+      <span className="text-xs mt-1">Post</span>
+    </button>
+
+    <button
+      type="button"
+      onClick={friends}
+      className={`mb-6 p-2 rounded-lg flex flex-col items-center ${
+         'hover:bg-gray-100'
+      }`}
+    >
+      <FiUsers size={24} />
+      <span className="text-xs mt-1">Friends</span>
+    </button>
+
+    <button
+      type="button"
+      onClick={chatMode}
+      className={`mb-6 p-2 rounded-lg flex flex-col items-center ${
+        'hover:bg-gray-100'
+      }`}
+    >
+      <FiMessageCircle size={24} />
+      <span className="text-xs mt-1">Chat</span>
+    </button>
+
+    <button
+      type="button"
+      onClick={chat}
+      className={`p-2 rounded-lg flex flex-col items-center ${
+        'bg-gray-100'
+      }`}
+    >
+      <FiSearch size={24} />
+      <span className="text-xs mt-1">Search</span>
+    </button>
+
+    <button
+      type="button"
+      onClick={profile}
+      className={`p-2 rounded-lg flex flex-col items-center ${
+        'hover:bg-gray-100'
+      }`}
+    >
+      <FiUser size={24} />
+      <span className="text-xs mt-1">Profile</span>
+    </button>
+
+    <div className="mt-auto" />
+    <button
+        type="button"
+        onClick={logout}
+        className={`p-2 rounded-lg flex flex-col items-center ${
+        'hover:bg-gray-100'
+        }`}
+    >
+        <FiLogOut size={24} />
+        <span className="text-xs mt-1">Logout</span>
+    </button>
+    </aside>
+      <main className="flex-1 flex flex-col items-center justify-center p-4 space-y-6">
+        <h1 className="text-3xl font-bold">Natural Language Search</h1>
+        <div className="h-[40rem] w-[30rem] bg-slate-100 p-3 flex flex-col">
+          <div className="flex-1 overflow-y-auto space-y-2">
+            {messages.map((msg, i) => (
+              <MessageComponent
+                key={i}
+                sender={msg.sender}
+                message={msg.message}
+              />
+            ))}
+          </div>
+          <div className="w-full flex space-x-2 mt-4">
+            <input
+              className="w-full outline-none border-none px-3 py-1 rounded-md"
+              placeholder="Ask something!"
+              onChange={(e) => setInput(e.target.value)}
+              value={input}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  sendMessage();
+                  setInput('');
+                }
+              }}
+            />
+            <button
+              className="outline-none px-3 py-1 font-bold bg-indigo-600 text-white rounded"
+              onClick={() => {
+                sendMessage();
+              }}
+            >
+              Send
+            </button>
+          </div>
         </div>
-            <div className='font-bold text-3xl'>Internet Movie DB Chat</div>
-            <div className='h-[40rem] w-[30rem] bg-slate-100 p-3'>
-                <div className='h-[90%] overflow-scroll'>
-                    <div className='space-y-2'>
-                        {messages.map(msg => {
-                            return (
-                                <MessageComponent sender={msg.sender} message={msg.message} />
-                            )
-                        })}
-                    </div>
-                </div>
-                <div className='w-full flex space-x-2'>
-                    <input className='w-full outline-none border-none px-3 py-1 rounded-md'
-                        placeholder='Ask something!'
-                        onChange={e => setInput(e.target.value)}
-                        value={input}
-                        onKeyDown={e => {
-                            if (e.key === 'Enter') {
-                                sendMessage();
-                                setInput('');
-                            }
-                        }} />
-                    <button className='outline-none px-3 py-1 rounded-md text-bold bg-indigo-600 text-white'
-                        onClick={() => {
-                            sendMessage();
-                        }}>Send</button>
-                </div>
-            </div>
+      </main>
         </div>
     )
 }

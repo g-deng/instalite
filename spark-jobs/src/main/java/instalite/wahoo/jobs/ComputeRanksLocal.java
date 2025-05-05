@@ -1,18 +1,17 @@
 package instalite.wahoo.jobs;
 
-import instalite.wahoo.jobs.utils.SerializablePair;
-
-import instalite.wahoo.jobs.utils.FlexibleLogger;
-import instalite.wahoo.spark.SparkJob;
-import io.github.cdimascio.dotenv.Dotenv;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.sql.SparkSession;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import instalite.wahoo.jobs.utils.FlexibleLogger;
+import instalite.wahoo.jobs.utils.SerializablePair;
+import instalite.wahoo.spark.SparkJob;
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class ComputeRanksLocal {
     static Logger logger = LogManager.getLogger(ComputeRanksLocal.class);
@@ -82,7 +81,17 @@ public class ComputeRanksLocal {
         for (SerializablePair<String, Double> result : postRanks) {
             logger.info(result.getLeft() + " " + result.getRight());
         }
+        // FOLLOWER OF FOLLOWERS
+        logger.info("*** Followers of Followers starting ***");
+        FollowersOfFollowersJob fofJob = new FollowersOfFollowersJob(spark, true, debug, rankLogger);
+        fofJob.setParams(envVars);
+        
+        List<SerializablePair<String, Integer>> fofRecs = fofJob.mainLogic();
 
+        logger.info("*** Followers of Followers complete ***"); 
+        for (SerializablePair<String, Integer> result : fofRecs) {
+            logger.info(result.getLeft() + " " + result.getRight());
+        }
         // Close the Spark session
         spark.stop();
     }

@@ -4,6 +4,7 @@ import S3KeyValueStore from './models/s3.js';
 import FaceEmbed from './algorithms/face_embed.js';
 import fs from 'fs';
 import dotenv from 'dotenv';
+import indexData from "./util/indexTSVData.js";
 
 const configFile = fs.readFileSync('server/config.json', 'utf8');
 const config = JSON.parse(configFile);
@@ -120,7 +121,6 @@ async function clear_chroma() {
 //
 
 // Create the tables if they don't exist, in ChromaDB and DynamoDB
-
 var coll = await chroma.create_table(config.chromaDbName);
 
 try {
@@ -143,6 +143,7 @@ try {
   }
 } 
 
+await indexData();
 await face.loadModel();
 await add_rows_to_vector_store(config.max);
 
