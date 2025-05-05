@@ -384,6 +384,83 @@ async function updateHashtags(req, res) {
   }
 }
 
+async function updateEmail(req, res) {
+  const user_id = req.session.user_id;
+  const email = req.body.email;
+
+  if (!user_id) {
+    return res.status(403).send({ error: "Not logged in." });
+  }
+
+  if (!email || email.trim().length === 0) {
+    return res.status(400).send({ error: "Email cannot be empty." });
+  }
+
+  try {
+    const sql_command = 'UPDATE users SET email = ? WHERE user_id = ?';
+    const sql_params = [email, user_id];
+    
+    const result = await queryDatabase(sql_command, sql_params);
+    
+    if (result[0].affectedRows === 0) {
+      return res.status(404).send({ error: "User not found." });
+    } else {
+      res.status(200).send({ message: "Email updated successfully" });
+    }
+  } catch (error) {
+    console.error("Error updating email:", error);
+    res.status(500).send({ error: "An error occurred while updating email." });
+  }
+}
+
+async function updatePassword(req, res) {
+  const user_id = req.session.user_id;
+  const currentPassword = req.body.current_password;
+  const newPassword = req.body.new_password;
+
+  if (!user_id) {
+    return res.status(403).send({ error: "Not logged in." });
+  }
+
+  if (!currentPassword || currentPassword.trim().length === 0 || 
+      !newPassword || newPassword.trim().length === 0) {
+    return res.status(400).send({ error: "Current password and new password cannot be empty." });
+  }
+
+  try {
+    // get current hashed password
+    const userQuery = 'SELECT hashed_password FROM users WHERE user_id = ?';
+    const userParams = [user_id];
+    const userResult = await queryDatabase(userQuery, userParams);
+    
+    if (userResult[0].length === 0) {
+      return res.status(404).send({ error: "User not found." });
+    }
+
+    const storedHash = userResult[0][0].hashed_password;
+    
+    // check current password
+    const match = await bcrypt.compare(currentPassword, storedHash);
+    if (!match) {
+      return res.status(401).send({ error: "Current password is incorrect." });
+    }
+    
+    const newPasswordHash = await helper.encryptPassword(newPassword);
+    const updateQuery = 'UPDATE users SET hashed_password = ? WHERE user_id = ?';
+    const updateParams = [newPasswordHash, user_id];
+    const updateResult = await queryDatabase(updateQuery, updateParams);
+    
+    if (updateResult[0].affectedRows === 0) {
+      return res.status(500).send({ error: "Failed to update password." });
+    } else {
+      res.status(200).send({ message: "Password updated successfully" });
+    }
+  } catch (error) {
+    console.error("Error updating password:", error);
+    res.status(500).send({ error: "An error occurred while updating password." });
+  }
+}
+
 /* Here we construct an object that contains a field for each route
    we've defined, so we can call the routes from app.js. */
 
@@ -400,5 +477,7 @@ export {
     getEmbeddingFromSelfieKey,
     getPopularHashtags,
     updateHashtags,
+    updateEmail,
+    updatePassword,
 };
 

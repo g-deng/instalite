@@ -11,6 +11,8 @@ import {
     postLogout,
     getPopularHashtags,
     updateHashtags,
+    updateEmail,
+    updatePassword,
 } from './routes.js';
 import {
     getFriends,
@@ -54,6 +56,8 @@ function register_routes(app) {
     app.post('/logout', postLogout);
     app.post('/:username/selectPhoto', upload.single('image'), selectPhoto);
     app.post('/getEmbeddingFromSelfieKey', getEmbeddingFromSelfieKey);
+    app.post('/:username/updateEmail', updateEmail);
+    app.post('/:username/updatePassword', updatePassword);
 
     // FEED
     app.post('/:username/createPost', upload.single('image'), createPost);

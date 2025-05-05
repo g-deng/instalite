@@ -33,6 +33,13 @@ const Profile = () => {
   const [hashtagsUpdateSuccess, setHashtagsUpdateSuccess] = useState(false);
   const { username } = useParams();
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [emailUpdateSuccess, setEmailUpdateSuccess] = useState(false);
+  const [passwordUpdateSuccess, setPasswordUpdateSuccess] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   
   const rootURL = config.serverRootURL;
 
@@ -89,6 +96,11 @@ const Profile = () => {
         const response = await axios.get(`${rootURL}/${username}/profile`, { withCredentials: true });
         setProfileData(response.data);
         
+        // Set email from profile data
+        if (response.data.email) {
+          setEmail(response.data.email);
+        }
+        
         // get hashtags from profile data
         if (response.data.hashtags) {
           const hashtagsString = response.data.hashtags;
@@ -113,6 +125,75 @@ const Profile = () => {
 
     fetchProfile();
   }, [username, rootURL]);
+
+  const updateEmail = async () => {
+    try {
+      setIsLoading(true);
+      setEmailError(null);
+      
+      const response = await axios.post(
+        `${rootURL}/${username}/updateEmail`, 
+        { email }, 
+        { withCredentials: true }
+      );
+      
+      if (response.status === 200) {
+        setEmailUpdateSuccess(true);
+        setProfileData(prev => {
+          if (prev) {
+            return { ...prev, email: email };
+          }
+          return prev;
+        });
+        
+        setTimeout(() => {
+          setEmailUpdateSuccess(false);
+        }, 3000);
+      }
+    } catch (err) {
+      console.error('Error updating email:', err);
+      setEmailError(err.response?.data?.error || 'Failed to update email');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updatePassword = async () => {
+    try {
+      setIsLoading(true);
+      setPasswordError(null);
+      
+      if (!currentPassword || !newPassword) {
+        setPasswordError('Both current password and new password are required');
+        setIsLoading(false);
+        return;
+      }
+      
+      const response = await axios.post(
+        `${rootURL}/${username}/updatePassword`, 
+        { 
+          current_password: currentPassword, 
+          new_password: newPassword 
+        }, 
+        { withCredentials: true }
+      );
+      
+      if (response.status === 200) {
+        setPasswordUpdateSuccess(true);
+        setCurrentPassword('');
+        setNewPassword('');
+        
+        setTimeout(() => {
+          setPasswordUpdateSuccess(false);
+        }, 3000);
+      }
+    } catch (err) {
+      console.error('Error updating password:', err);
+      setPasswordError(err.response?.data?.error || 'Failed to update password');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const toggleHashtag = (tag) => {
     const isSelected = selectedHashtags.includes(tag);
@@ -402,6 +483,81 @@ const Profile = () => {
                           />
                         </div>
                       )}
+                    </div>
+                  </div>
+
+                  {/* change email and password */}
+                  <div className="mt-8 border-t pt-8">
+                    <h2 className="text-xl font-semibold mb-4">Update Profile Information</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      {/* Email Update */}
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-medium">Update Email</h3>
+                        <div className="border p-3 rounded-md bg-gray-50">
+                          <input
+                            id="email"
+                            type="email"
+                            placeholder="Enter new email address"
+                            className="w-full p-3 bg-white border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                          />
+                          
+                          <button
+                            onClick={updateEmail}
+                            disabled={isLoading}
+                            className="mt-3 w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded"
+                          >
+                            {isLoading ? 'Updating...' : 'Update Email'}
+                          </button>
+                          
+                          {emailUpdateSuccess && (
+                            <p className="text-green-500 text-sm mt-2">Email updated successfully!</p>
+                          )}
+                          {emailError && (
+                            <p className="text-red-500 text-sm mt-2">{emailError}</p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Password Update */}
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-medium">Update Password</h3>
+                        <div className="border p-3 rounded-md bg-gray-50">
+                          <input
+                            id="currentPassword"
+                            type="password"
+                            placeholder="Current password"
+                            className="w-full p-3 mb-3 bg-white border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            value={currentPassword}
+                            onChange={(e) => setCurrentPassword(e.target.value)}
+                          />
+                          
+                          <input
+                            id="newPassword"
+                            type="password"
+                            placeholder="New password"
+                            className="w-full p-3 bg-white border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                          />
+                          
+                          <button
+                            onClick={updatePassword}
+                            disabled={isLoading}
+                            className="mt-3 w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded"
+                          >
+                            {isLoading ? 'Updating...' : 'Update Password'}
+                          </button>
+                          
+                          {passwordUpdateSuccess && (
+                            <p className="text-green-500 text-sm mt-2">Password updated successfully!</p>
+                          )}
+                          {passwordError && (
+                            <p className="text-red-500 text-sm mt-2">{passwordError}</p>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
 
