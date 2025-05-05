@@ -200,6 +200,8 @@ async function getFeed(req, res) {
     if (!helper.isLoggedIn(req, req.params.username)) {
         return res.status(403).send({error: 'Not logged in.'});
     } else {
+        const limit = parseInt(req.query.limit, 10) || 10;
+        const offset = parseInt(req.query.offset, 10) || 0;
         try {
             console.log('getting feed');
             const query = `
@@ -241,10 +243,10 @@ async function getFeed(req, res) {
                 )
                 GROUP BY posts.post_id
                 ORDER BY weight DESC
-                LIMIT 1000
+                LIMIT ? OFFSET ?;
             `;
 
-            const params = [req.session.user_id];
+            const params = [req.session.user_id, limit, offset];
             const result = await queryDatabase(query, params);
             console.log(result);
             // TODO: decide on what to do with empty queries
@@ -265,7 +267,7 @@ async function getFeed(req, res) {
                 post_id: row.post_id,
                 source: row.source
             }));
-            return res.status(200).send({results: parsed_result});
+            return res.status(200).send({results: parsed_result, hasMore: result[0].length === limit});
         } catch (err) {
             console.error(err);
             return res.status(500).send({error: 'Error querying database'});
