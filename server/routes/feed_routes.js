@@ -263,7 +263,6 @@ async function getFeed(req, res) {
                 }) : [],
                 weight: row.weight,
                 post_id: row.post_id,
-                source: row.source
             }));
             return res.status(200).send({results: parsed_result});
         } catch (err) {
