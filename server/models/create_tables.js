@@ -37,6 +37,7 @@ async function create_tables() {
             hashtags VARCHAR(255),
             linked_nconst VARCHAR(255),
             profile_photo VARCHAR(255),
+            selfie_photo VARCHAR(255),
             first_name VARCHAR(255),
             last_name VARCHAR(255),
             birthday DATE,

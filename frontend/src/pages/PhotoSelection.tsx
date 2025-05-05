@@ -9,6 +9,7 @@ const PhotoSelection = () => {
     const [error, setError] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [uploadSuccess, setUploadSuccess] = useState(false);
     const username = useParams();
     const navigate = useNavigate();
 
@@ -20,7 +21,8 @@ const PhotoSelection = () => {
         }
     };
 
-    const handleUpload = async () => {
+    const handleUpload = async (e) => {
+        e.preventDefault();
         if (!selectedFile) {
             setError('Please select an image to upload.');
             return;
@@ -31,17 +33,48 @@ const PhotoSelection = () => {
         setIsLoading(true);
 
         try {
+            console.log('Sending upload request...');
             const response = await axios.post(`${rootURL}/upload`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
+                withCredentials: true,
             });
 
-            console.log(response);
+            console.log('Upload response:', response.data);
+            
+            // check for key
+            if (!response.data.key) {
+                console.error('No key in response data');
+                setError('No image key received from server');
+                setIsLoading(false);
+                return;
+            }
+            
             const embedding = response.data.embedding;
+            const key = response.data.key;
             console.log('Embedding:', embedding);
+            console.log('S3 Key:', key);
+            
+            // Save the selfie key to the user's profile
+            try {
+                console.log('Saving selfie to user profile...');
+                const saveResponse = await axios.post(
+                    `${rootURL}/saveUserSelfie`, 
+                    { image_path: key }, 
+                    { withCredentials: true }
+                );
+                console.log('Save selfie response:', saveResponse.data);
+                setUploadSuccess(true);
+            } catch (saveErr) {
+                console.error('Error saving selfie:', saveErr);
+                console.error('Save error details:', saveErr.response ? saveErr.response.data : saveErr.message);
+            }
+            
             await findMatches(embedding);
-        } catch (err: any) {
+        } catch (err) {
+            console.error('Upload error:', err);
+            console.error('Error details:', err.response ? err.response.data : err.message);
             setError(err.response ? err.response.data.error : 'An error occurred');
         } finally {
             setIsLoading(false);
@@ -50,11 +83,13 @@ const PhotoSelection = () => {
 
     const findMatches = async (embedding) => {
         try {
-            const response = await axios.post(`${rootURL}/match`, { embedding }); // Refactoring root url to config
-            console.log(response.data);
+            console.log('Finding matches for embedding...');
+            const response = await axios.post(`${rootURL}/match`, { embedding });
+            console.log('Match response:', response.data);
             setSearchResults(response.data);
             setError('');
-        } catch (err: any) {
+        } catch (err) {
+            console.error('Match error:', err);
             setSearchResults([]);
             setError(err.response ? err.response.data.error : 'An error occurred');
         }
@@ -69,7 +104,7 @@ const PhotoSelection = () => {
             } else {
                 console.error('Error selecting photo:', response.data);
             }
-        } catch (err: any) {
+        } catch (err) {
             setError(err.response ? err.response.data.error : 'An error occurred');
         }
     };
@@ -123,6 +158,11 @@ const PhotoSelection = () => {
                 >
                     {isLoading ? 'Uploading...' : 'Upload Photo'}
                 </button>
+                {uploadSuccess && (
+                    <p style={{ color: '#28a745', fontSize: '14px' }}>
+                        Selfie saved to your profile!
+                    </p>
+                )}
                 {error && (
                     <p style={{ color: '#d9534f', fontSize: '14px' }}>
                         {error}
@@ -152,7 +192,7 @@ const PhotoSelection = () => {
                             <div key={idx} style={{ position: 'relative' }}>
                                 <ActorCardComponent imagePath={img} />
                                 <button
-                                    onClick={() => handleSelectPhoto(img)}
+                                    onClick={() => handleSelectPhoto(img.path)}
                                     style={{
                                         position: 'absolute',
                                         bottom: '8px',

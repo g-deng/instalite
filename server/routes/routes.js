@@ -12,6 +12,8 @@ import { get_db_connection } from '../models/rdbms.js';
 import RouteHelper from '../routes/route_helper.js';
 
 import bcrypt from 'bcrypt';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import fs from 'fs';
 
 // Database connection setup
 const db = get_db_connection();
@@ -204,7 +206,6 @@ async function uploadImage(req, res) {
         const file = req.file;
 
         // Generate a unique file name
-        const fileName = `${Date.now()}_${file.originalname}`;
         const filePath = file.path;
         const keyPrefix = 'uploads/';
 
@@ -214,14 +215,14 @@ async function uploadImage(req, res) {
             return res.status(500).send({ error: "Failed to upload file to S3." });
         }
 
-        console.log(`Image uploaded to S3: ${fileName}`);
+        console.log(`Image uploaded to S3: ${filePath}`);
 
         const file_obj = await s3_user.convertFileToBinary(filePath, bucketName, keyPrefix);
         const embeddings = await face.getEmbeddingsFromBuffer(file_obj);
         const embedding = embeddings[0];
 
         res.status(200).send({
-            message: `Image uploaded successfully to ${fileName}`,
+            message: `Image uploaded successfully to ${filePath}`,
             embedding: embedding,
             key: key
         });
@@ -242,12 +243,39 @@ async function selectPhoto(req, res) {
         if (result[0].affectedRows == 0) {
             return res.status(404).send({ error: "User not found." });
         } else {
-            console.log(`User ${user_id} updated with profile photo: ${key}`);
             res.status(200).send({message: `Image selected successfully`});
         }
     } catch (error) {
         console.error("Error selecting image:", error);
         res.status(500).send({ error: "An error occurred while selecting the image." });
+    }
+}
+
+async function saveUserSelfie(req, res) {
+    // Get the user ID from the session
+    const user_id = req.session.user_id;
+    if (!user_id) {
+        return res.status(403).send({ error: "Not logged in." });
+    }
+
+    const image_path = req.body.image_path;
+    if (!image_path) {
+        return res.status(400).send({ error: "Image path is required." });
+    }
+
+    const sql_command = 'UPDATE users SET selfie_photo = ? WHERE user_id = ?';
+    const sql_params = [image_path, user_id];
+    
+    try {
+        const result = await queryDatabase(sql_command, sql_params);
+        if (result[0].affectedRows == 0) {
+            return res.status(404).send({ error: "User not found." });
+        } else {
+            res.status(200).send({ message: "Image saved successfully" });
+        }
+    } catch (error) {
+        console.error("Error saving image:", error);
+        res.status(500).send({ error: "An error occurred while saving the image." });
     }
 }
 
@@ -263,5 +291,6 @@ export {
     uploadImage,
     getOnlineUsers,
     selectPhoto,
+    saveUserSelfie,
 };
 

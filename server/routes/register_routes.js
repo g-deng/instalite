@@ -6,6 +6,7 @@ import {
     uploadImage,
     getOnlineUsers,
     selectPhoto,
+    saveUserSelfie,
     postLogout,
 } from './routes.js';
 import {
@@ -73,6 +74,7 @@ function register_routes(app) {
     app.get('/:username/chats/:roomId/messages', getChatMessages);
     app.post('/:username/leaveChat', leaveChat);
     app.post('/:username/checkGroupValidity', checkGroupValidity);
+    app.post('/saveUserSelfie', saveUserSelfie);
 }
 
 export default register_routes;
