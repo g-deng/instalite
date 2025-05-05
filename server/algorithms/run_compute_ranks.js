@@ -8,7 +8,7 @@ export function runComputeRanks() {
     const child = spawn('java', [
       '-cp',
       '/root/nets2120/project-instalite-wahoo/spark-jobs/target/framework.jar',
-      'instalite.wahoo.jobs.ComputeRanksLocal'
+      'instalite.wahoo.jobs.ComputeRanksLivy'
     ]);    
 
     let stdout = '';
@@ -20,8 +20,11 @@ export function runComputeRanks() {
     });
 
     child.stderr.on('data', (data) => {
-      reject(data);
+      const errText = data.toString().trim();
+      // console.error('[CRON] stderr:', errText);
+      reject(new Error(errText));
     });
+    
 
     child.on('error', (err) => {
       console.error(`Error spawning process: ${err.message}`);

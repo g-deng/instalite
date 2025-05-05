@@ -3,6 +3,7 @@ package instalite.wahoo.jobs;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.livy.JobContext;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -123,7 +124,7 @@ public class FollowersOfFollowersJob
 
         writeOutputToMySQL(formattedRecs, spark);
 
-        return formattedRecs.map(pair -> new SerializablePair<>(pair._1, pair._2)).take(10);
+        return new ArrayList<>();
     }
     @Override
     public List<SerializablePair<String,Integer>> call(JobContext arg0)

@@ -27,7 +27,7 @@ Set `DATABASE_SERVER` to the AWS RDS endpoint (doesn't change betwen labs) in th
 The automated Spark job from the backend (via `npm run start`) is now set to Livy. Therefore you must complete the For Livy section. Local execution can be used for basic testing. (Or if you want to populate your local DB and not the RDS).
 
 #### For Livy
-To add in spark-jobs/.env: 
+To add in spark-jobs/.env and the .env in home directory: 
 - Set `LIVY_HOST` to Primary node public DNS from EMR cluster 
 - Set `DATABASE_SERVER` to the AWS RDS endpoint (doesn't change between labs)
 
