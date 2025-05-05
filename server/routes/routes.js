@@ -69,6 +69,8 @@ async function postRegister(req, res) {
     const birthday = req.body.birthday;
     const email = req.body.email;
     const affiliation = req.body.affiliation;
+    const hashtags = req.body.hashtags;
+    
     if (linked_nconst.trim().length == 0 || 
         user.trim().length == 0 || 
         raw_pass.trim().length == 0 ||
@@ -83,8 +85,6 @@ async function postRegister(req, res) {
     } else {
         console.debug('Checking if user exists');
 
-        // TODO: check if user exists
-        // IF NOT: encrypt password, store in database, set session
         try {
             const exist_query = 'SELECT * FROM users WHERE username = ?';
             const exist_params = [user];
@@ -95,8 +95,8 @@ async function postRegister(req, res) {
             } else {
                 console.log('Creating user');
                 const password = await helper.encryptPassword(raw_pass);
-                const query = 'INSERT INTO users (username, hashed_password, linked_nconst, first_name, last_name, birthday, email, affiliation) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-                const params = [user, password, linked_nconst, first_name, last_name, birthday, email, affiliation];
+                const query = 'INSERT INTO users (username, hashed_password, linked_nconst, first_name, last_name, birthday, email, affiliation, hashtags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                const params = [user, password, linked_nconst, first_name, last_name, birthday, email, affiliation, hashtags];
                 const result = await queryDatabase(query, params);
                 console.log(result);
                 const user_id_query = 'SELECT user_id FROM users WHERE username = ?';
@@ -301,6 +301,43 @@ async function getEmbeddingFromSelfieKey(req, res) {
   }
 }
 
+async function getPopularHashtags(req, res) {
+    try {
+        const query = `
+            SELECT hashtags
+            FROM posts
+            WHERE hashtags IS NOT NULL AND hashtags <> ''
+        `;
+        
+        const result = await queryDatabase(query);
+        
+        // process hashtags 
+        const hashtags = {};
+        result[0].forEach(row => {
+            if (row.hashtags) {
+                const tagsArray = row.hashtags.split(',');
+                tagsArray.forEach(tag => {
+                    const trimmedTag = tag.trim();
+                    if (trimmedTag) {
+                        hashtags[trimmedTag] = (hashtags[trimmedTag] || 0) + 1;
+                    }
+                });
+            }
+        });
+        
+        // convert to array and sort by popularity
+        const sortedHashtags = Object.entries(hashtags)
+            .map(([tag, count]) => ({ tag, count }))
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 15); // get top 15
+        
+        res.status(200).json({ hashtags: sortedHashtags });
+    } catch (error) {
+        console.error('Error fetching popular hashtags:', error);
+        res.status(500).json({ error: 'Failed to get popular hashtags' });
+    }
+}
+
 /* Here we construct an object that contains a field for each route
    we've defined, so we can call the routes from app.js. */
 
@@ -315,5 +352,6 @@ export {
     selectPhoto,
     saveUserSelfie,
     getEmbeddingFromSelfieKey,
+    getPopularHashtags,
 };
 

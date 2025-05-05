@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import config from '../../config.json';
@@ -6,7 +6,7 @@ import { getSocket } from "../Socket";
 
 export default function Signup() {
     const navigate = useNavigate();
-    // CUT HERE
+    // State variables
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [linked_nconst, setLinkedNconst] = useState('');
@@ -16,12 +16,44 @@ export default function Signup() {
     const [email, setEmail] = useState('');
     const [birthday, setBirthday] = useState('');
     const [affiliation, setAffiliation] = useState('');
-    // END CUT
+    const [hashtags, setHashtags] = useState('');
+    const [popularHashtags, setPopularHashtags] = useState([]);
+    const [selectedHashtags, setSelectedHashtags] = useState([]);
 
     const rootURL = config.serverRootURL;
 
+    // Fetch popular hashtags on component mount
+    useEffect(() => {
+        const fetchPopularHashtags = async () => {
+            try {
+                const response = await axios.get(`${rootURL}/popularHashtags`);
+                // truncate if more than 10
+                setPopularHashtags(response.data.hashtags.slice(0, 10));
+            } catch (error) {
+                console.error('Error fetching popular hashtags:', error);
+            }
+        };
+
+        fetchPopularHashtags();
+    }, [rootURL]);
+
+    // select hashtags
+    const toggleHashtag = (tag) => {
+        const isSelected = selectedHashtags.includes(tag);
+        
+        if (isSelected) {
+            setSelectedHashtags(selectedHashtags.filter(t => t !== tag));
+        } else {
+            setSelectedHashtags([...selectedHashtags, tag]);
+        }
+    };
+
+    // update hashtags string when selected hashtags change
+    useEffect(() => {
+        setHashtags(selectedHashtags.join(','));
+    }, [selectedHashtags]);
+
     const handleSubmit = (event) => {
-        // CUT HERE
         event.preventDefault();
 
         // Make sure passwords match
@@ -32,7 +64,6 @@ export default function Signup() {
 
         // Send registration request to backend
         try {
-            // const response = await 
             axios.post(`${rootURL}/register`, {
                 username: username,
                 password: password,
@@ -41,7 +72,8 @@ export default function Signup() {
                 last_name: lastName,
                 email: email,
                 birthday: birthday,
-                affiliation: affiliation
+                affiliation: affiliation,
+                hashtags: hashtags // Send the comma-separated hashtags
             }, { withCredentials: true }).then((response) => {
                 console.log(response);
                 alert('Welcome ' + username + '!');
@@ -61,15 +93,10 @@ export default function Signup() {
                 console.error('Registration error:', error.response.data.error);
                 alert('Registration failed:' + error.response.data.error);
             });
-
-            // Handle successful registration
-            // Redirect to another page or perform other actions as needed
-        } catch (error: any) {
-            // Handle errors
-            console.error('Registration error:', error.response.data.error);
-            alert('Registration failed:' + error.response.data.error);
+        } catch (error) {
+            console.error('Registration error:', error.response?.data?.error);
+            alert('Registration failed:' + error.response?.data?.error);
         }
-        // END CUT
     };
 
     const login = () => {
@@ -77,8 +104,8 @@ export default function Signup() {
     }
 
     return (
-        <div className="bg-gradient-to-br from-yellow-300 via-pink-500 to-purple-600 w-screen h-screen flex items-center justify-center">
-            <div className="bg-white border border-gray-200 shadow-lg rounded-xl p-8 max-w-sm w-full">
+        <div className="bg-gradient-to-br from-yellow-300 via-pink-500 to-purple-600 w-screen h-screen flex items-center justify-center overflow-hidden">
+            <div className="bg-white border border-gray-200 shadow-lg rounded-xl p-8 max-w-sm w-full max-h-screen overflow-y-auto">
                 <div className="relative mb-6">
                     <button
                         type="button"
@@ -154,6 +181,36 @@ export default function Signup() {
                             value={affiliation}
                             onChange={(e) => setAffiliation(e.target.value)}
                             required
+                        />
+                    </div>
+                    {/* Interest Hashtags Section */}
+                    <div className="border p-3 rounded-md bg-gray-50">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Select your interests (Top 10 Popular Hashtags)
+                        </label>
+                        <div className="flex flex-wrap gap-2 mb-3">
+                            {popularHashtags.map((item, index) => (
+                                <button
+                                    key={index}
+                                    type="button"
+                                    onClick={() => toggleHashtag(item.tag)}
+                                    className={`text-sm px-3 py-1 rounded-full ${
+                                        selectedHashtags.includes(item.tag)
+                                            ? 'bg-pink-500 text-white'
+                                            : 'bg-gray-200 text-gray-800'
+                                    }`}
+                                >
+                                    #{item.tag}
+                                </button>
+                            ))}
+                        </div>
+                        <input
+                            id="hashtags"
+                            type="text"
+                            placeholder="Or add custom interests (comma-separated)"
+                            className="w-full p-3 bg-white border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+                            value={hashtags}
+                            onChange={(e) => setHashtags(e.target.value)}
                         />
                     </div>
                     <div>
