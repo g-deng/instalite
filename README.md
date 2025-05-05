@@ -23,15 +23,24 @@ And set `DATABASE_SERVER=localhost` in the .env in home directory
 #### AWS RDS
 Set `DATABASE_SERVER` to the AWS RDS endpoint (doesn't change betwen labs) in the .env in home directory
 
+Want to directly access the AWS RDS database (not required for the app, just for testing and seeing what's going on)
+```
+mysql -h imdb-basic.cb26cw0q8lhw.us-east-1.rds.amazonaws.com -P 3306 -u nets2120_hw2 -p imdb_basic
+```
+And then enter the DB password (the one that ends in a comma)
+
 ### Spark
 The automated Spark job from the backend (via `npm run start`) is now set to Livy. Therefore you must complete the For Livy section. Local execution can be used for basic testing. (Or if you want to populate your local DB and not the RDS).
+
+If you don't have an updated `spark-jobs\target\framework.jar` also must call from spark-jobs directory to create the .jar file (it is run automatically by the CRON scheduler). No need to call multiple times, unless the Spark job code was updated.
+```mvn clean package```
 
 #### For Livy
 To add in spark-jobs/.env and the .env in home directory: 
 - Set `LIVY_HOST` to Primary node public DNS from EMR cluster 
 - Set `DATABASE_SERVER` to the AWS RDS endpoint (doesn't change between labs)
 
-Note Livy uses the AWS RDS database to read and write data. Additionally, note that it is not necessary to compile via `mvn clean package`, as we will use a pre-uploaded `.jar` on S3.
+Note Livy uses the AWS RDS database to read and write data. Additionally, note that when running directly via Maven (as below) it is not necessary to compile via `mvn clean package`, as we will use a pre-uploaded `.jar` on S3.
 
 ```
 mvn exec:java@livy
