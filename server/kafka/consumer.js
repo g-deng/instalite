@@ -54,11 +54,13 @@ const runKafkaConsumer = async () => {
                     // && helper.isOK(post.username + post.post_text + post.content_type + post.source_site + post.author.displayName)
                 ) {
                     console.log('Reading post from Bluesky...');
+                    console.log(post);
                     parsedData = {
-                        text_content: `${post.author.displayName} on BlueSky ${post.post_text}`, 
+                        text_content: `${post.author.displayName} on BlueSky: ${post.post_text}`, 
                         username: post.author.displayName,
                         source_site: post.source_site,
-                        topic: 'BlueSky'
+                        topic: 'BlueSky',
+                        image_url: post.uri
                     };
                     console.log(parsedData);
                 }
@@ -73,11 +75,13 @@ const runKafkaConsumer = async () => {
                     // && helper.isOK(post.username) && helper.isOK(post.text) && helper.isOK(post.content_type) && helper.isOK(post.source_site)
                 ) {
                     console.log('Reading post from FederatedPosts...');
+                    console.log(postData);
                     parsedData = {
                         text_content: `${postData.username} on ${postData.source_site}: ${postData.post_text}`, 
                         username: postData.username,
                         source_site: postData.source_site,
-                        topic: topic
+                        topic: topic,
+                        image_url: postData.attach
                     };
                     console.log(parsedData);
                 } 
