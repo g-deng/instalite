@@ -6,9 +6,10 @@ import { spawn } from 'child_process';
 export function runComputeRanks() {
   return new Promise((resolve, reject) => {
     const child = spawn('java', [
-      '-jar',
-      '/root/nets2120/project-instalite-wahoo/spark-jobs/target/framework.jar'
-    ]);
+      '-cp',
+      '/root/nets2120/project-instalite-wahoo/spark-jobs/target/framework.jar',
+      'instalite.wahoo.jobs.ComputeRanksLivy'
+    ]);    
 
     let stdout = '';
 
