@@ -1,24 +1,40 @@
-import { exec } from 'child_process';
+import { spawn } from 'child_process';
 
 /**
  * Runs the ComputeRanksLocal Java job.
- * @returns {Promise<string>} Resolves with stdout or rejects on error
  */
 export function runComputeRanks() {
   return new Promise((resolve, reject) => {
-    exec('java -jar /root/nets2120/project-instalite-wahoo/spark-jobs/target/framework.jar', (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error running ComputeRanksLocal: ${error.message}`);
-        reject(error);
-        return;
-      }
+    const child = spawn('java', [
+      '-jar',
+      '/root/nets2120/project-instalite-wahoo/spark-jobs/target/framework.jar'
+    ]);
 
-      if (stderr) {
-        console.warn(`stderr: ${stderr}`);
-      }
+    let stdout = '';
 
-      console.log(`stdout: ${stdout}`);
-      resolve(stdout);
+    child.stdout.on('data', (data) => {
+      const text = data.toString().trim();
+      console.log(`stdout: ${text}`);
+      stdout += text;
+    });
+
+    child.stderr.on('data', (data) => {
+      reject(data);
+    });
+
+    child.on('error', (err) => {
+      console.error(`Error spawning process: ${err.message}`);
+      reject(err);
+    });
+
+    child.on('close', (code) => {
+      if (code !== 0) {
+        const err = new Error(`Process exited with code ${code}`);
+        console.error(err.message);
+        reject(err);
+      } else {
+        resolve(stdout);
+      }
     });
   });
 }
