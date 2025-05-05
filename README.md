@@ -40,7 +40,7 @@ When you make an S3 bucket for image posts, go to the permissions tab and paste 
             "Effect": "Allow",
             "Principal": "*",
             "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::nets2120-chroma-andrew08/posts/uploads/*"
+            "Resource": "arn:aws:s3:::nets2120-chroma-wahoo/posts/uploads/*"
         }
     ]
 }
