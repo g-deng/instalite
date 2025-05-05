@@ -4,7 +4,8 @@ import axios from 'axios';
 import config from '../../config.json';
 import { useNavigate } from 'react-router-dom';
 import {getSocket} from '../Socket';
-import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare } from "react-icons/fi";
+import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut } from "react-icons/fi";
+
 const FriendComponent = ({ name, add=true, remove=true , online=false}: { name: string, add: boolean|undefined, remove: boolean|undefined, online: boolean|undefined}) => {
     return (
         <div className='rounded-md bg-slate-100 p-3 flex space-x-2 items-center flex-auto justify-between'>
@@ -56,6 +57,13 @@ export default function Friends() {
       const chatMode = () => {
         navigate("/"+ username+"/chatMode");
       };
+
+          const logout = async () => {
+            await axios.post(`${rootURL}/logout`, { withCredentials: true });
+            const sock = getSocket();
+            sock.disconnect();
+            navigate("/");
+          }
   
     const fetchData = async () => {
         console.log('fetching data');
@@ -188,6 +196,17 @@ export default function Friends() {
             <FiSearch size={24} />
             <span className="text-xs mt-1">Search</span>
             </button>
+                <div className="mt-auto" />
+                <button
+                  type="button"
+                  onClick={logout}
+                  className={`p-2 rounded-lg flex flex-col items-center ${
+                    'hover:bg-gray-100'
+                  }`}
+                >
+                  <FiLogOut size={24} />
+                  <span className="text-xs mt-1">Logout</span>
+                </button>
             </aside>
     
       <main className="flex-1 flex flex-col">
@@ -203,11 +222,11 @@ export default function Friends() {
             <div className="space-y-2">
               {friends.map((f) => (
                 <FriendComponent
-                  key={f.followed}
-                  name={f.username}
+                  key={f['followed']}
+                  name={f['username']}
                   add={false}
                   remove={true}
-                  online={online.includes(f.user_id)}
+                  online={online.includes(f['user_id'])}
                 />
               ))}
             </div>
@@ -220,11 +239,11 @@ export default function Friends() {
             <div className="space-y-2">
               {recs.map((r) => (
                 <FriendComponent
-                  key={r.recommendation}
-                  name={r.username}
+                  key={r['recommendation']}
+                  name={r['username']}
                   add={true}
                   remove={false}
-                  online={online.includes(r.user_id)}
+                  online={online.includes(r['user_id'])}
                 />
               ))}
             </div>

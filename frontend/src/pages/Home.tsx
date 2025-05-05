@@ -4,7 +4,9 @@ import axios from 'axios';
 import config from '../../config.json';
 import PostComponent from '../components/PostComponent'
 import { useNavigate } from 'react-router-dom';
-import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare } from "react-icons/fi";
+import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut } from "react-icons/fi";
+import { getSocket } from "../Socket"; 
+
 export default function Home() {
 
     const { username } = useParams();
@@ -32,6 +34,13 @@ export default function Home() {
     const chatMode = () => {
       navigate("/"+ username+"/chatMode");
     };
+
+    const logout = async () => {
+      await axios.post(`${rootURL}/logout`, { withCredentials: true });
+      const sock = getSocket();
+      sock.disconnect();
+      navigate("/");
+    }
 
   const fetchData = async () => {
       // CUT HERE
@@ -145,6 +154,18 @@ export default function Home() {
       <FiSearch size={24} />
       <span className="text-xs mt-1">Search</span>
     </button>
+
+    <div className="mt-auto" />
+    <button
+      type="button"
+      onClick={logout}
+      className={`p-2 rounded-lg flex flex-col items-center ${
+        'hover:bg-gray-100'
+      }`}
+    >
+      <FiLogOut size={24} />
+      <span className="text-xs mt-1">Logout</span>
+    </button>
     </aside>
       {/* Main Feed Column */}
       <div className="flex-1 flex flex-col overflow-hidden">
@@ -156,7 +177,7 @@ export default function Home() {
         {
           // CUT HERE
           posts.map(p => <PostComponent onLike={() => onLike(p['post_id'])} user={p['username']} text={p['text_content']} 
-          hashtags={p['hashtags']} likes={p['likes']} comments={p['comments']} key={p['post_id']} weight={[p['weight']]}
+          hashtags={p['hashtags']} likes={p['likes']} comments={p['comments']} key={p['post_id']}
           onComment={(parent_id, comment)=>onComment(p['post_id'], parent_id, comment)} imageUrl={p['image_url']}/>)
           // END CUT
         }

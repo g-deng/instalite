@@ -4,7 +4,9 @@ import axios from 'axios';
 import config from '../../config.json';
 import CreatePostComponent from '../components/CreatePostComponent';
 import { useNavigate } from 'react-router-dom';
-import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare } from "react-icons/fi";
+import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut } from "react-icons/fi";
+import { getSocket } from "../Socket"; 
+
 export default function Home() {
 
     const { username } = useParams();
@@ -32,6 +34,13 @@ export default function Home() {
     const chatMode = () => {
       navigate("/"+ username+"/chatMode");
     };
+
+    const logout = async () => {
+        await axios.post(`${rootURL}/logout`, { withCredentials: true });
+        const sock = getSocket();
+        sock.disconnect();
+        navigate("/");
+      }
 
   const fetchData = async () => {
       // CUT HERE
@@ -109,6 +118,19 @@ export default function Home() {
       <FiSearch size={24} />
       <span className="text-xs mt-1">Search</span>
     </button>
+    
+    <div className="mt-auto" />
+    <button
+        type="button"
+        onClick={logout}
+        className={`p-2 rounded-lg flex flex-col items-center ${
+        'hover:bg-gray-100'
+        }`}
+    >
+        <FiLogOut size={24} />
+        <span className="text-xs mt-1">Logout</span>
+    </button>
+    
     </aside>
       {/* Main Feed Column */}
       <div className="flex-1 flex flex-col overflow-hidden">

@@ -2,7 +2,10 @@ import { useState } from 'react'
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare } from "react-icons/fi";
+import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut } from "react-icons/fi";
+import config from '../../config.json';
+import { getSocket } from "../Socket"; 
+
 const MessageComponent = ({ sender, message }: { sender: string, message: string }) => {
     return (
         <div className={`w-full flex ${sender === 'user' && 'justify-end'}`}>
@@ -18,7 +21,7 @@ export default function ChatInterface() {
     const [input, setInput] = useState<string>('');
     const { username } = useParams();
     const navigate = useNavigate(); 
-
+    const rootURL = config.serverRootURL;
     const feed = () => {
         navigate('/' + username + '/home');
     };
@@ -38,6 +41,13 @@ export default function ChatInterface() {
     const chatMode = () => {
         navigate("/"+ username+"/chatMode");
     };
+
+        const logout = async () => {
+          await axios.post(`${rootURL}/logout`, { withCredentials: true });
+          const sock = getSocket();
+          sock.disconnect();
+          navigate("/");
+        }
 
     const sendMessage = async () => {
         // CUT HERE 
@@ -117,6 +127,18 @@ export default function ChatInterface() {
     >
       <FiSearch size={24} />
       <span className="text-xs mt-1">Search</span>
+    </button>
+
+    <div className="mt-auto" />
+    <button
+        type="button"
+        onClick={logout}
+        className={`p-2 rounded-lg flex flex-col items-center ${
+        'hover:bg-gray-100'
+        }`}
+    >
+        <FiLogOut size={24} />
+        <span className="text-xs mt-1">Logout</span>
     </button>
     </aside>
       <main className="flex-1 flex flex-col items-center justify-center p-4 space-y-6">

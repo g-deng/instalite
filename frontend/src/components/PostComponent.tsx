@@ -12,7 +12,6 @@ interface Comment {
 export default function PostComponent({
     onLike,
     onComment,
-    weight = '0',
     user = 'arnavchopra',
     hashtags = 'iamhavingsomuchfun, aaaaa',
     likes = 0,
