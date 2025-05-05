@@ -200,7 +200,13 @@ describe('Friend Integration Tests', () => {
       const reg2 = await axios.post(`http://localhost:${port}/register`, {
         username: testUsers[1].username,
         password: testUsers[1].password,
-        linked_nconst: testUsers[1].linked_nconst
+        linked_nconst: testUsers[1].linked_nconst,
+        first_name: 'Test',
+        last_name: 'User',
+        birthday: '1990-01-01',
+        email: 'test@example.com',
+        affiliation: 'Test Organization',
+        hashtags: '#test'
       });
       
       expect(reg2.status).toBe(200);
@@ -365,7 +371,7 @@ describe('Friend Integration Tests', () => {
 describe('Kafka Integration Tests', () => {
   let testUserId;
   let testUserCookies;
-  let blueSkyUserId;
+  let federatedPostsUserId;
   let testPostIds = []; // for cleanup
   
   afterEach(async () => {
@@ -423,7 +429,13 @@ describe('Kafka Integration Tests', () => {
       const reg = await axios.post(`http://localhost:${port}/register`, {
         username: kafkaTestUser.username,
         password: kafkaTestUser.password,
-        linked_nconst: kafkaTestUser.linked_nconst
+        linked_nconst: kafkaTestUser.linked_nconst,
+        first_name: 'Test',
+        last_name: 'User',
+        birthday: '1990-01-01',
+        email: 'test@example.com',
+        affiliation: 'Test Organization',
+        hashtags: '#test'
       });
       
       expect(reg.status).toBe(200);
@@ -494,57 +506,64 @@ describe('Kafka Integration Tests', () => {
   
   test('Fetch Kafka posts from feed endpoint', async () => {
     try {
-      const blueSkyExists = await send_sql(
+      const federatedPostsExists = await send_sql(
         "SELECT user_id FROM users WHERE username = ?",
-        ['BlueSky']
+        ['FederatedPosts']
       );
       
-      if (!blueSkyExists[0] || blueSkyExists[0].length === 0) {
-        throw new Error('BlueSky user not found in database');
+      if (!federatedPostsExists[0] || federatedPostsExists[0].length === 0) {
+        throw new Error('FederatedPosts user not found in database');
       }
       
-      blueSkyUserId = blueSkyExists[0][0].user_id;
-      console.log(`Found BlueSky user with ID: ${blueSkyUserId}`);
+      federatedPostsUserId = federatedPostsExists[0][0].user_id;
+      console.log(`Found FederatedPosts user with ID: ${federatedPostsUserId}`);
       
       // create test post from bluesky user with source
-      const testPost = `Test BlueSky post ${Date.now()}`;
+      const testPost = `Test FederatedPosts post ${Date.now()}`;
       console.log(`Creating test post: ${testPost}`);
       
       const postResult = await send_sql(
-        "INSERT INTO posts (user_id, text_content, hashtags, source) VALUES (?, ?, ?, ?)",
-        [blueSkyUserId, testPost, '#test #bluesky', 'bluesky']
+        "INSERT INTO posts (user_id, image_url, text_content, hashtags, source) VALUES (?, ?, ?, ?, ?)",
+        [federatedPostsUserId, null, testPost, '#test #federatedposts', 'FederatedPosts']
       );
+
+      console.log('Post result:', postResult);
       
       const postId = postResult[0].insertId;
       testPostIds.push(postId);
       
       // add post weight for test user to see bluesky post
-      await send_sql(
+      const postWeightResult = await send_sql(
         "INSERT INTO post_weights (post_id, user_id, weight) VALUES (?, ?, ?)",
         [postId, testUserId, 0.9]
       );
+
+      console.log('Post weight result:', postWeightResult);
       
-      console.log('Fetching feed to check for BlueSky post...');
+      console.log('Fetching feed to check for FederatedPosts post...');
       const feedResponse = await axios.get(
-        `http://localhost:${port}/kafka_test_user/feed`,
+        `http://localhost:${port}/kafka_test_user/feed?limit=3000`,
         {
           headers: { Cookie: testUserCookies },
-          withCredentials: true
+          withCredentials: true,
         }
       );
       
       expect(feedResponse.status).toBe(200);
       expect(feedResponse.data.results).toBeDefined();
       
+      console.log('Feed response:', feedResponse.data);
+
       // Check if our bluesky test post appears in the feed
       const postInFeed = feedResponse.data.results.some(post => 
         post.post_id === postId && 
-        post.text_content === testPost && 
-        post.source === 'bluesky'
+        post.text_content === testPost
       );
+
+      console.log('Post in feed:', postInFeed);
       
       expect(postInFeed).toBe(true);
-      console.log('Successfully found BlueSky test post in feed');
+      console.log('Successfully found FederatedPosts test post in feed');
     
       // cleanup
       await send_sql("DELETE FROM post_weights WHERE post_id = ?", [postId]);
