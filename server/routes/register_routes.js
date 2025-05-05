@@ -1,4 +1,4 @@
-import { getHelloWorld, postLogin, postRegister, getMovie, uploadImage, getOnlineUsers } from './routes.js';
+import { getHelloWorld, postLogin, postRegister, getMovie, uploadImage, getOnlineUsers, postLogout } from './routes.js';
 import { getFriends, getFriendRecs, addFriend, removeFriend } from './friend_routes.js';
 import { createPost, getFeed, getKafkaDemo, createLike, createComment } from './feed_routes.js';
 import { postComputeRanks } from '../algorithms/run_compute_ranks.js';
@@ -18,6 +18,7 @@ function register_routes(app) {
     app.post('/:username/addFriend', addFriend);
     app.post('/:username/removeFriend', removeFriend);
     app.get('/:username/onlineUsers', getOnlineUsers);
+    app.post('/logout', postLogout)
 
     // FEED 
     app.post('/:username/createPost', upload.single('image'), createPost); 

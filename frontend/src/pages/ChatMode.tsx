@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import config from '../../config.json';
 import { io } from 'socket.io-client';
 import { getSocket } from '../Socket';
-import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare } from "react-icons/fi";
+import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut } from "react-icons/fi";
+
 const MessageComponent = ({ sender, content, timestamp }: { sender: string, content: string, timestamp: string }) => {
   const formatTime = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -61,6 +62,13 @@ export default function ChatMode() {
     const chatMode = () => {
       navigate("/"+ username+"/chatMode");
     };
+
+    const logout = async () => {
+      await axios.post(`${rootURL}/logout`, { withCredentials: true });
+      const sock = getSocket();
+      sock.disconnect();
+      navigate("/");
+    }
 
   // Connect to socket when we go to this page
   useEffect(() => {
@@ -378,6 +386,18 @@ export default function ChatMode() {
       <FiSearch size={24} />
       <span className="text-xs mt-1">Search</span>
     </button>
+
+      <div className="mt-auto" />
+      <button
+        type="button"
+        onClick={logout}
+        className={`p-2 rounded-lg flex flex-col items-center ${
+          'hover:bg-gray-100'
+        }`}
+      >
+        <FiLogOut size={24} />
+        <span className="text-xs mt-1">Logout</span>
+      </button>
     </aside>
       
       <div className='h-[calc(100%-4rem)] w-full mx-auto max-w-[1800px] flex space-x-4 p-3'>

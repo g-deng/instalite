@@ -31,7 +31,7 @@ Go to the S3 section in AWS and create a new bucket with the following name. Acc
 nets2120-chroma-[USER_ID]
 
 When you make an S3 bucket for image posts, go to the permissions tab and paste in the following under Bucket Policy:
-
+```
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -40,10 +40,11 @@ When you make an S3 bucket for image posts, go to the permissions tab and paste 
             "Effect": "Allow",
             "Principal": "*",
             "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::nets2120-chroma-andrew08/posts/uploads/*"
+            "Resource": "arn:aws:s3:::nets2120-chroma-wahoo/posts/uploads/*"
         }
     ]
 }
+```
 
 ### Kafka
 Need to create Spark job jar file.
