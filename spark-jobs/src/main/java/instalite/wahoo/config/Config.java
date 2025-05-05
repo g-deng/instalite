@@ -19,7 +19,7 @@ public class Config {
 
     public static String LOCAL_SPARK = "local[*]";
 
-    public static String JAR = "target/nets2120-hw3-0.0.1-SNAPSHOT.jar";
+    public static String JAR = "target/nets2120-instalite-wahoo-0.0.1-SNAPSHOT.jar";
 
     public static String DATABASE_CONNECTION = null;
     public static String DATABASE_USERNAME = null;

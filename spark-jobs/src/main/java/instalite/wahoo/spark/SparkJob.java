@@ -1,10 +1,10 @@
 package instalite.wahoo.spark;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
+import java.util.Map;
 
 import org.apache.livy.Job;
 import org.apache.livy.JobContext;
@@ -13,7 +13,7 @@ import org.apache.livy.LivyClientBuilder;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
 
-import instalite.wahoo.config.Config;
+import instalite.wahoo.config.AppConfig;
 import instalite.wahoo.jobs.utils.FlexibleLogger;
 
 /**
@@ -32,21 +32,25 @@ public abstract class SparkJob<T> implements Job<T> {
      * Connection to Apache Spark
      */
     protected SparkSession spark;
-    protected JavaSparkContext context;
-    protected Config config;
-
+    protected transient JavaSparkContext context;
     protected boolean isLocal = true;
+    protected Map<String, String> envVars;
+    protected AppConfig appConfig;
     boolean run_with_debug = false;
 
-    public SparkJob(FlexibleLogger logger, Config config, SparkSession spark, boolean isLocal, boolean debug) {
+    public SparkJob(FlexibleLogger logger, SparkSession spark, boolean isLocal, boolean debug) {
         System.setProperty("file.encoding", "UTF-8");
         this.isLocal = isLocal;
-        this.spark = spark;
+        if (isLocal) {
+            this.spark = spark;
+        }   
 
-        this.config = config;
         this.run_with_debug = debug;
-
         this.logger = logger;
+    }
+
+    public void setParams(Map<String, String> envVars) {
+        this.envVars = envVars;
     }
 
     /**
@@ -57,9 +61,16 @@ public abstract class SparkJob<T> implements Job<T> {
      */
     public void initialize() throws IOException, InterruptedException {
         logger.info("Connecting to Spark...");
-
-        spark = SparkConnector.getSparkConnection(config);
-        context = SparkConnector.getSparkContext(config);
+        if (appConfig == null) appConfig = new AppConfig(envVars);
+        
+        spark = SparkConnector.getSparkConnection(
+            appConfig.sparkAppName,
+            appConfig.sparkMaster,
+            appConfig.accessKeyId,
+            appConfig.secretAccessKey,
+            appConfig.sessionToken
+        );
+        context = SparkConnector.getSparkContext(spark);
 
         logger.debug("Connected!");
     }
@@ -152,17 +163,17 @@ public abstract class SparkJob<T> implements Job<T> {
      * @throws InterruptedException
      * @throws ExecutionException
      */
-    public static <T> T runJob(String livyUrl, SparkJob<T> job) throws IOException, URISyntaxException, InterruptedException, ExecutionException {
+    public static <T> T runJob(String livyUrl, String jarPath, SparkJob<T> job) throws IOException, URISyntaxException, InterruptedException, ExecutionException {
 
         LivyClient client = new LivyClientBuilder()
                 .setURI(new URI(livyUrl))
                 .build();
 
         try {
-            String jar = Config.JAR;
 
-            System.out.printf("Uploading %s to the Spark context...\n", jar);
-            client.uploadJar(new File(jar)).get();
+            System.out.printf("Uploading %s to the Spark context...\n", jarPath);
+            //client.uploadJar(new File(jarPath)).get();
+            client.addJar(new URI("s3://nets2120-livyjars-wahoo/framework-livy.jar"));
 
             System.out.printf("Running job...\n");
             T result = client.submit(job).get();

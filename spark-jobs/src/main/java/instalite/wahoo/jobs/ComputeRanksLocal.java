@@ -2,10 +2,12 @@ package instalite.wahoo.jobs;
 
 import instalite.wahoo.config.Config;
 import instalite.wahoo.config.ConfigSingleton;
+import instalite.wahoo.config.AppConfig;
 import instalite.wahoo.jobs.utils.SerializablePair;
 
 import instalite.wahoo.jobs.utils.FlexibleLogger;
 import instalite.wahoo.spark.SparkJob;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,16 +17,15 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Connection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ComputeRanksLocal {
     static Logger logger = LogManager.getLogger(ComputeRanksLocal.class);
 
     public static void main(String[] args) {
         boolean debug;
-
-        Config config = ConfigSingleton.getInstance();
-
         double d_max;
         int i_max;
 
@@ -52,19 +53,37 @@ public class ComputeRanksLocal {
             .getOrCreate();
 
         FlexibleLogger rankLogger = new FlexibleLogger(LogManager.getLogger(SparkJob.class), true, debug);
+       
+        // Set up serializable config
+        Dotenv dotenv = Dotenv.configure().load();
+
+        Map<String, String> envVars = new HashMap<>();
+        for (String key : new String[] {
+            "DATABASE_SERVER", "DATABASE_NAME", "DATABASE_USER", "DATABASE_PASSWORD",
+            "SPARK_MASTER", "LIVY_HOST",
+            "ACCESS_KEY_ID", "SECRET_ACCESS_KEY", "SESSION_TOKEN"
+        }) {
+            String val = dotenv.get(key);
+            if (val == null) throw new RuntimeException("Missing: " + key);
+            envVars.put(key, val);
+        }
+
+        envVars.put("DATABASE_SERVER", "localhost");
         
         // SOCIAL RANKING
         logger.info("*** Starting social network ranking! ***");
-        SocialRankJob socialRankJob = new SocialRankJob(d_max, i_max, spark, false, true, debug, rankLogger, config);
+        SocialRankJob socialRankJob = new SocialRankJob(d_max, i_max, spark, false, true, debug, rankLogger);
+        socialRankJob.setParams(envVars);
         List<SerializablePair<String, Double>> socialRanks = socialRankJob.mainLogic();
-        sendSocialRanksToDB(socialRanks);
+        //sendSocialRanksToDB(socialRanks);
         logger.info("*** Finished sending social ranks to DB! ***");
 
         // POST RANKING & FRIEND RANKING
         logger.info("*** Starting post ranking! ***");
-        PostRankJob postRankJob = new PostRankJob(d_max, i_max, spark, true, debug, rankLogger, config);
+        PostRankJob postRankJob = new PostRankJob(d_max, i_max, spark, true, debug, rankLogger);
+        postRankJob.setParams(envVars);
         List<SerializablePair<String, Double>> postRanks = postRankJob.mainLogic();
-        sendPostRanksToDB(postRanks);
+        //sendPostRanksToDB(postRanks);
         logger.info("*** Finished sending post ranks to DB! ***");
 
         // FOLLOWER OF FOLLOWERS

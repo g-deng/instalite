@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 
 import instalite.wahoo.jobs.utils.FlexibleLogger;
 import org.apache.livy.JobContext;
@@ -12,9 +13,13 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.RowFactory;
+import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructType;
 
-import instalite.wahoo.config.Config;
+import instalite.wahoo.config.AppConfig;
 import instalite.wahoo.jobs.utils.SerializablePair;
 import instalite.wahoo.spark.SparkJob;
 
@@ -25,28 +30,27 @@ public class PostRankJob extends SparkJob<List<SerializablePair<String, Double>>
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
     
 	// Convergence condition variables
 	double d_max; // largest change in a node's rank from iteration i to iteration i+1
 	int i_max; // max number of iterations
 
-	public PostRankJob(double d_max, int i_max, SparkSession spark, boolean isLocal, boolean debug, FlexibleLogger logger, Config config) {
-		super(logger, config, spark, isLocal, debug);
+	public PostRankJob(double d_max, int i_max, SparkSession spark, boolean isLocal, boolean debug, FlexibleLogger logger) {
+		super(logger, spark, isLocal, debug);
 		this.d_max = d_max;
 		this.i_max = i_max;
 	}
 
 	protected Dataset<Row> queryMySQL(String query) {
 		logger.debug("queryMySQL started");
-
+		
 		Dataset<Row> df = spark.read()
 			.format("jdbc")
-			.option("url", Config.DATABASE_CONNECTION)
+			.option("url", appConfig.dbUrl)
 			.option("driver", "com.mysql.cj.jdbc.Driver")
 			.option("dbtable", "(" + query + ") AS query")
-			.option("user", Config.DATABASE_USERNAME)
-			.option("password", Config.DATABASE_PASSWORD)
+			.option("user", appConfig.dbUser)
+			.option("password", appConfig.dbPassword)
 			.load();
 
 		logger.debug("queryMySQL completed");
@@ -160,9 +164,9 @@ public class PostRankJob extends SparkJob<List<SerializablePair<String, Double>>
 				return Arrays.asList(new Tuple2<>("u" + userId, "p" + postId)).iterator();
 			});
 
-		Dataset<Row> uu_df = queryMySQL("SELECT followed, follower FROM friends WHERE followed IS NOT NULL AND follower IS NOT NULL");
+		Dataset<Row> uu_df = queryMySQL("SELECT user1_id, user2_id FROM friends WHERE user1_id IS NOT NULL AND user2_id IS NOT NULL");
 		JavaPairRDD<String,String> uuRDD = uu_df
-			.select("followed", "follower")
+			.select("user1_id", "user2_id")
 			.javaRDD()
 			.flatMapToPair(row -> {
 				int followedId = row.getInt(0);
@@ -204,6 +208,7 @@ public class PostRankJob extends SparkJob<List<SerializablePair<String, Double>>
 	public List<SerializablePair<String, Double>> run(boolean debug) throws IOException, InterruptedException {
 		logger.info("Running");
 
+		if (appConfig == null) appConfig = new AppConfig(envVars);
 		// (u, (v, weight))
 		JavaPairRDD<String, Tuple2<String, Double>> edgeRDD = getEdges();
 
@@ -212,9 +217,9 @@ public class PostRankJob extends SparkJob<List<SerializablePair<String, Double>>
 		JavaPairRDD<String, Tuple2<String, Double>> labelRDD = getNodes();
 
 
-		long labels = labelRDD.count();
-		long edges = edgeRDD.distinct().count();
-		logger.info("This graph contains " + labels + " labels and " + edges + " edges.");
+		// long labels = labelRDD.count();
+		// long edges = edgeRDD.distinct().count();
+		// logger.info("This graph contains " + labels + " labels and " + edges + " edges.");
 
 		double d = d_max;
 		int i = 0; // completed rounds
@@ -286,11 +291,13 @@ public class PostRankJob extends SparkJob<List<SerializablePair<String, Double>>
 		logger.info("postRank interative calculations complete.");
 
 		// Filter out labels with 0 weight
-		labelRDD = labelRDD.filter(pair -> pair._2()._2() != 0.0);
+		labelRDD = labelRDD.filter(pair -> pair._2()._2() != 0.0).distinct();
+
+		writeOutputToMySQL(labelRDD);
 
 		List<SerializablePair<String, Double>> out = labelRDD
 			.map(pair -> new SerializablePair<>(pair._1() + "," + pair._2()._1(), pair._2()._2()))
-			.collect();
+			.take(1000);
 
 		logger.info("PostRankJob run complete");
 		return out;
@@ -301,5 +308,83 @@ public class PostRankJob extends SparkJob<List<SerializablePair<String, Double>>
 		initialize();
 		return run(false);
 	}
+
+	public void writeOutputToMySQL(JavaPairRDD<String, Tuple2<String,Double>> outputRDD) {
+        // Split into post_weights and friend_recs entries
+        JavaRDD<Row> postRows = outputRDD.map(tuple -> {
+			String node = tuple._1;
+			String user = tuple._2._1;
+            char nodeType = node.charAt(0);
+            char userType = user.charAt(0);
+            if (nodeType != 'p' || userType != 'u') return null;
+
+            int postId = Integer.parseInt(node.substring(1));
+            int userId = Integer.parseInt(user.substring(1));
+            double weight = tuple._2._2;
+			System.out.println(postId + " " + userId + " " + weight);
+            return RowFactory.create(postId, userId, weight);
+
+        }).filter(Objects::nonNull);
+
+        JavaRDD<Row> friendRows = outputRDD.map(tuple -> {
+			String node = tuple._1;
+			String user = tuple._2._1;
+
+            char nodeType = node.charAt(0);
+            char userType = user.charAt(0);
+            if (nodeType != 'u' || userType != 'u') return null;
+
+            int userId = Integer.parseInt(node.substring(1));
+            int recId = Integer.parseInt(user.substring(1));
+            if (userId == recId) return null; // skip self-recs
+            double strength = tuple._2._2;
+            return RowFactory.create(userId, recId, strength);
+        }).filter(Objects::nonNull);
+
+        // Schemas
+        StructType postSchema = new StructType()
+            .add("post_id", DataTypes.IntegerType)
+            .add("user_id", DataTypes.IntegerType)
+            .add("weight", DataTypes.DoubleType);
+
+        StructType friendSchema = new StructType()
+            .add("user", DataTypes.IntegerType)
+            .add("recommendation", DataTypes.IntegerType)
+            .add("strength", DataTypes.DoubleType);
+
+        // Create DataFrames
+        Dataset<Row> postDF = spark.createDataFrame(postRows, postSchema);
+        Dataset<Row> friendDF = spark.createDataFrame(friendRows, friendSchema);
+
+        // Clear the target tables
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection(
+                appConfig.dbUrl, appConfig.dbUser, appConfig.dbPassword);
+             java.sql.Statement stmt = conn.createStatement()
+        ) {
+            stmt.executeUpdate("DELETE FROM post_weights");
+            stmt.executeUpdate("DELETE FROM friend_recs");
+        } catch (Exception e) {
+            System.err.println("Failed to clear MySQL tables: " + e.getMessage());
+        }
+
+        // Write DataFrames to MySQL via JDBC
+        postDF.write()
+            .mode(SaveMode.Overwrite)
+            .format("jdbc")
+            .option("url", appConfig.dbUrl)
+            .option("dbtable", "post_weights")
+            .option("user", appConfig.dbUser)
+            .option("password", appConfig.dbPassword)
+            .save();
+
+        friendDF.write()
+            .mode(SaveMode.Overwrite)
+            .format("jdbc")
+            .option("url", appConfig.dbUrl)
+            .option("dbtable", "friend_recs")
+            .option("user", appConfig.dbUser)
+            .option("password", appConfig.dbPassword)
+            .save();
+    }
 
 }

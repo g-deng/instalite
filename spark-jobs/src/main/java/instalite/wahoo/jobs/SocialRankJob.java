@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import instalite.wahoo.config.AppConfig;
 import instalite.wahoo.jobs.utils.FlexibleLogger;
 import org.apache.livy.JobContext;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -11,8 +12,11 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.RowFactory;
+import org.apache.spark.sql.SaveMode;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructType;
 
-import instalite.wahoo.config.Config;
 import instalite.wahoo.jobs.utils.SerializablePair;
 import instalite.wahoo.spark.SparkJob;
 
@@ -24,36 +28,20 @@ public class SocialRankJob extends SparkJob<List<SerializablePair<String, Double
 	 */
 	private static final long serialVersionUID = 1L;
 
-    
 	boolean useBacklinks;
 	// Convergence condition variables
 	double d_max; // largest change in a node's rank from iteration i to iteration i+1
 	int i_max; // max number of iterations
+	
 
-	public SocialRankJob(double d_max, int i_max, SparkSession spark, boolean useBacklinks, boolean isLocal, boolean debug, FlexibleLogger logger, Config config) {
-		super(logger, config, spark, isLocal, debug);
-		this.useBacklinks = useBacklinks;
-		this.d_max = d_max;
-		this.i_max = i_max;
-	}
-
-	/**
-	 * Fetch the social network from the S3 path, and create a (followed, follower)
-	 * edge graph
-	 * 
-	 * @param filePath
-	 * @return JavaPairRDD: (followed: String, follower: String)
-	 */
-	protected JavaPairRDD<String, String> getSocialNetwork(String filePath) {
-		logger.debug("lemon getSocialNetwork started");
-		JavaRDD<String> file = context.textFile(filePath, Config.PARTITIONS);
-		JavaPairRDD<String, String> network = file.mapToPair(row -> {
-			String[] vals = row.split(" ");
-			return new Tuple2<>(vals[1], vals[0]);
-		}).distinct();
-		logger.debug("lemon getSocialNetwork completed");
-		return network;
-	}
+	public SocialRankJob(double d_max, int i_max, SparkSession spark, boolean useBacklinks, boolean isLocal, boolean debug, FlexibleLogger logger) {
+		super(logger, spark, isLocal, debug); 
+		System.out.println("Logger:");
+		System.out.println(logger);
+        this.useBacklinks = useBacklinks;
+        this.d_max = d_max;
+        this.i_max = i_max;
+    }
 
 	/**
  * Fetch the social network from MySQL via JDBC, and create a (followed, follower) edge graph
@@ -62,18 +50,22 @@ public class SocialRankJob extends SparkJob<List<SerializablePair<String, Double
  */
 protected JavaPairRDD<String, String> getSocialNetworkFromMySQL() {
     logger.debug("getSocialNetworkFromMySQL started");
-
+	System.out.println(appConfig);
+	System.out.println(appConfig.dbUrl);
+	System.out.println(appConfig.dbUser);
+	System.out.println(appConfig.dbPassword);
     Dataset<Row> df = spark.read()
         .format("jdbc")
-        .option("url", Config.DATABASE_CONNECTION)
+        .option("url", appConfig.dbUrl)
         .option("driver", "com.mysql.cj.jdbc.Driver")
         .option("dbtable", "friends")
-        .option("user", Config.DATABASE_USERNAME)
-        .option("password", Config.DATABASE_PASSWORD)
+        .option("user", appConfig.dbUser)
+        .option("password", appConfig.dbPassword)
         .load();
 
+
     // Assuming table schema: followed, follower
-    JavaRDD<Row> rowRDD = df.select("followed", "follower").javaRDD();
+    JavaRDD<Row> rowRDD = df.select("user1_id", "user2_id").javaRDD();
 
     JavaPairRDD<String, String> network = rowRDD.mapToPair(row -> {
         String followed = Integer.toString(row.getInt(0));
@@ -112,6 +104,8 @@ protected JavaPairRDD<String, String> getSocialNetworkFromMySQL() {
 	 */
 	public List<SerializablePair<String, Double>> run(boolean debug) throws IOException, InterruptedException {
 		logger.info("Running");
+		
+		if (appConfig == null) appConfig = new AppConfig(envVars);
 
 		// Load the social network, aka. the edges (followed, follower)
 		JavaPairRDD<String, String> edgeRDD = getSocialNetworkFromMySQL();
@@ -178,7 +172,7 @@ protected JavaPairRDD<String, String> getSocialNetworkFromMySQL() {
 		}
 
 		logger.info("socialRank interative calculations complete.");
-
+		writeOutputToMySQL(socialRankRDD, spark);
 		List<Tuple2<String, Double>> top10 = socialRankRDD.mapToPair(x->x.swap()).sortByKey(false).mapToPair(x->x.swap()).take(10);
 		List<SerializablePair<String, Double>> out = new LinkedList<>();
 		for (Tuple2<String, Double> entry : top10) {
@@ -194,5 +188,29 @@ protected JavaPairRDD<String, String> getSocialNetworkFromMySQL() {
 		initialize();
 		return run(false);
 	}
+
+public void writeOutputToMySQL(JavaPairRDD<String, Double> rdd, SparkSession spark) {
+    JavaRDD<Row> rowRDD = rdd.map(pair -> {
+        int userId = Integer.parseInt(pair._1());
+        double rank = pair._2();
+        return RowFactory.create(userId, rank);
+    });
+
+    StructType schema = new StructType()
+        .add("user_id", DataTypes.IntegerType, false)
+        .add("social_rank", DataTypes.DoubleType, false);
+
+    Dataset<Row> df = spark.createDataFrame(rowRDD, schema);
+
+    df.write()
+        .mode(SaveMode.Overwrite)
+        .format("jdbc")
+        .option("url", appConfig.dbUrl)
+        .option("dbtable", "social_rank")
+        .option("user", appConfig.dbUser)
+        .option("password", appConfig.dbPassword)
+        .save();
+}
+
 
 }

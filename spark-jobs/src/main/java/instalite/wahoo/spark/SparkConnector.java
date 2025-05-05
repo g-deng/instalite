@@ -7,71 +7,64 @@ import org.apache.logging.log4j.Logger;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SparkSession;
 
-import instalite.wahoo.config.Config;
-
 public class SparkConnector {
-    /**
-     * The basic logger
-     */
-    static Logger logger = LogManager.getLogger(SparkConnector.class);
-    static SparkSession spark = null;
-    static JavaSparkContext context = null;
+    private static final Logger logger = LogManager.getLogger(SparkConnector.class);
 
-    // Setters for testing - mock objects
+    private static SparkSession spark = null;
+    private static JavaSparkContext context = null;
+
+    // For testing: override injected SparkSession
     public static void setSparkSession(SparkSession s) {
         spark = s;
     }
 
-    // Setters for testing - mock objects
     public static void setSparkContext(JavaSparkContext c) {
         context = c;
     }
 
-    public static SparkSession getSparkConnection(Config config) {
-        return getSparkConnection(null, config);
-    }
-
-    public static synchronized SparkSession getSparkConnection(String host, Config config) {
+    public static synchronized SparkSession getSparkConnection(
+        String appName,
+        String master,
+        String accessKey,
+        String secretKey,
+        String sessionToken
+    ) {
         if (spark == null) {
+            // Ensure Hadoop native libraries are set if needed
             if (System.getenv("HADOOP_HOME") == null) {
                 File workaround = new File(".");
-
                 System.setProperty("hadoop.home.dir", workaround.getAbsolutePath() + "/native-libs");
             }
 
-            if (config.ACCESS_KEY_ID != null) {
-                logger.info("Credentials were provided, using S3");
-                SparkSession.Builder sparkBuilder = SparkSession
-                    .builder()
-                    .appName("Instalite Wahoo Ranker")
-                    .master((host == null) ? config.LOCAL_SPARK : host)
-                    .config("spark.hadoop.fs.s3a.access.key", config.ACCESS_KEY_ID)
-                    .config("spark.hadoop.fs.s3a.secret.key", config.SECRET_ACCESS_KEY);
-                if (config.SESSION_TOKEN != null)
-                    sparkBuilder = sparkBuilder.config("spark.hadoop.fs.s3a.session.token", config.SESSION_TOKEN);
+            SparkSession.Builder builder = SparkSession.builder()
+                .appName(appName)
+                .master(master);
 
-                spark = sparkBuilder
-                    .config("spark.hadoop.fs.s3a.endpoint", "s3.us-east-1.amazonaws.com")
-                    .getOrCreate();
-        } else {
-                logger.info("Credentials were not provided in .env: using AWS profile credentials");
-                spark = SparkSession
-                        .builder()
-                        .appName("Instalite Wahoo Ranker")
-                        .master((host == null) ? config.LOCAL_SPARK : host)
-                        .config("spark.hadoop.fs.s3a.aws.credentials.provider", "com.amazonaws.auth.profile.ProfileCredentialsProvider")
-                        .config("spark.hadoop.fs.s3a.aws.credentials.profile.name", "default")
-                        .getOrCreate();
+            if (accessKey != null && secretKey != null) {
+                logger.info("Using explicit AWS credentials");
+                builder.config("spark.hadoop.fs.s3a.access.key", accessKey)
+                       .config("spark.hadoop.fs.s3a.secret.key", secretKey)
+                       .config("spark.hadoop.fs.s3a.endpoint", "s3.us-east-1.amazonaws.com");
+
+                if (sessionToken != null) {
+                    builder.config("spark.hadoop.fs.s3a.session.token", sessionToken);
+                }
+            } else {
+                logger.info("Using AWS profile credentials");
+                builder.config("spark.hadoop.fs.s3a.aws.credentials.provider",
+                               "com.amazonaws.auth.profile.ProfileCredentialsProvider")
+                       .config("spark.hadoop.fs.s3a.aws.credentials.profile.name", "default");
             }
+
+            spark = builder.getOrCreate();
         }
 
         return spark;
     }
 
-    public static synchronized JavaSparkContext getSparkContext(Config config) {
+    public static synchronized JavaSparkContext getSparkContext(SparkSession sparkSession) {
         if (context == null)
-            context = new JavaSparkContext(getSparkConnection(config).sparkContext());
-
+            context = new JavaSparkContext(sparkSession.sparkContext());
         return context;
     }
 }
