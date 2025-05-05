@@ -36,7 +36,7 @@ export default function Signup() {
             axios.post(`${rootURL}/register`, {
                 username: username,
                 password: password,
-                linked_id: linked_nconst,
+                linked_nconst: linked_nconst,
                 first_name: firstName,
                 last_name: lastName,
                 email: email,
@@ -100,6 +100,60 @@ export default function Signup() {
                             className="w-full p-3 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="flex space-x-2">
+                        <input
+                            id="firstName"
+                            type="text"
+                            placeholder="First Name"
+                            className="w-1/2 p-3 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            required
+                        />
+                        <input
+                            id="lastName"
+                            type="text"
+                            placeholder="Last Name"
+                            className="w-1/2 p-3 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <input
+                            id="email"
+                            type="email"
+                            placeholder="Email"
+                            className="w-full p-3 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <input
+                            id="birthday"
+                            type="date"
+                            placeholder="Birthday"
+                            className="w-full p-3 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+                            value={birthday}
+                            onChange={(e) => setBirthday(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <input
+                            id="affiliation"
+                            type="text"
+                            placeholder="Affiliation (e.g., School, Company)"
+                            className="w-full p-3 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+                            value={affiliation}
+                            onChange={(e) => setAffiliation(e.target.value)}
+                            required
                         />
                     </div>
                     <div>
@@ -120,6 +174,7 @@ export default function Signup() {
                             className="w-full p-3 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            required
                         />
                     </div>
                     <div>
@@ -130,6 +185,7 @@ export default function Signup() {
                             className="w-full p-3 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
+                            required
                         />
                     </div>
                     <button

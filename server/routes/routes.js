@@ -59,7 +59,7 @@ async function getOnlineUsers(req, res) {
 
 // POST /register 
 async function postRegister(req, res) {
-    const linked_id = req.body.linked_id;
+    const linked_nconst = req.body.linked_nconst;
     const user = req.body.username;
     const raw_pass = req.body.password;
     const first_name = req.body.first_name;
@@ -67,7 +67,7 @@ async function postRegister(req, res) {
     const birthday = req.body.birthday;
     const email = req.body.email;
     const affiliation = req.body.affiliation;
-    if (linked_id.trim().length == 0 || 
+    if (linked_nconst.trim().length == 0 || 
         user.trim().length == 0 || 
         raw_pass.trim().length == 0 ||
         first_name.trim().length == 0 ||
@@ -91,10 +91,12 @@ async function postRegister(req, res) {
                 console.log(result[0]);
                 res.status(409).send({error: "An account with this username already exists, please try again."});
             } else {
-                const password = helper.encryptPassword(raw_pass);
+                console.log('Creating user');
+                const password = await helper.encryptPassword(raw_pass);
                 const query = 'INSERT INTO users (username, hashed_password, linked_nconst, first_name, last_name, birthday, email, affiliation) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-                const params = [user, password, linked_id, first_name, last_name, birthday, email, affiliation];
+                const params = [user, password, linked_nconst, first_name, last_name, birthday, email, affiliation];
                 const result = await queryDatabase(query, params);
+                console.log(result);
                 const user_id_query = 'SELECT user_id FROM users WHERE username = ?';
                 const user_id_params = [user];
                 const user_id_result = await queryDatabase(user_id_query, user_id_params);
