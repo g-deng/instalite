@@ -107,13 +107,6 @@ export default function Signup() {
         <div className="bg-gradient-to-br from-yellow-300 via-pink-500 to-purple-600 w-screen h-screen flex items-center justify-center overflow-hidden">
             <div className="bg-white border border-gray-200 shadow-lg rounded-xl p-8 max-w-sm w-full max-h-screen overflow-y-auto">
                 <div className="relative mb-6">
-                    <button
-                        type="button"
-                        onClick={login}
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-500 font-semibold hover:text-blue-600 transition"
-                    >
-                        Back
-                    </button>
                     <h1 className="text-center text-3xl font-sans font-bold text-gray-800">
                         Sign Up to Pennstagram
                     </h1>
@@ -250,6 +243,13 @@ export default function Signup() {
                         className="w-full py-3 bg-blue-500 rounded-md font-semibold text-white hover:bg-blue-600 transition"
                     >
                         Sign Up
+                    </button>
+                    <button
+                        type="button"
+                        onClick={login}
+                        className="w-full py-3 border border-gray-300 rounded-md font-semibold text-gray-700 hover:bg-gray-100 transition"
+                    >
+                        Back to Login
                     </button>
                 </form>
             </div>

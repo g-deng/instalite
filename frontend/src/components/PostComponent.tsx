@@ -21,7 +21,6 @@ export default function PostComponent({
 }: {
     onLike: () => void,
     onComment: (parentIndex: number, text: string) => void,
-    weight: string,
     user: string,
     hashtags?: string,
     likes: number,
