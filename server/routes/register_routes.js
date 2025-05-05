@@ -7,6 +7,7 @@ import {
     getOnlineUsers,
     selectPhoto,
     saveUserSelfie,
+    getEmbeddingFromSelfieKey,
     postLogout,
 } from './routes.js';
 import {
@@ -50,6 +51,7 @@ function register_routes(app) {
     app.get('/:username/onlineUsers', getOnlineUsers);
     app.post('/logout', postLogout);
     app.post('/:username/selectPhoto', upload.single('image'), selectPhoto);
+    app.post('/getEmbeddingFromSelfieKey', getEmbeddingFromSelfieKey);
 
     // FEED
     app.post('/:username/createPost', upload.single('image'), createPost);

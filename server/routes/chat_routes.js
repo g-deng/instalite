@@ -225,7 +225,12 @@ async function getUserProfile(req, res) {
       res.status(403).send({error: 'Not logged in.'});
     } else {
       try {
-        const query = 'SELECT user_id, username FROM users WHERE username = ?';
+        const query = `
+          SELECT user_id, username, first_name, last_name, email, 
+                 affiliation, birthday, profile_photo, selfie_photo, linked_nconst
+          FROM users 
+          WHERE username = ?
+        `;
         const params = [username];
         const [result] = await queryDatabase(query, params);
         

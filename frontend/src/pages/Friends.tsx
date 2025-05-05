@@ -4,7 +4,7 @@ import axios from 'axios';
 import config from '../../config.json';
 import { useNavigate } from 'react-router-dom';
 import {getSocket} from '../Socket';
-import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut } from "react-icons/fi";
+import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut, FiUser } from "react-icons/fi";
 
 const FriendComponent = ({ name, add=true, remove=true , online=false}: { name: string, add: boolean|undefined, remove: boolean|undefined, online: boolean|undefined}) => {
     return (
@@ -58,12 +58,16 @@ export default function Friends() {
         navigate("/"+ username+"/chatMode");
       };
 
-          const logout = async () => {
-            await axios.post(`${rootURL}/logout`, { withCredentials: true });
-            const sock = getSocket();
-            sock.disconnect();
-            navigate("/");
-          }
+      const profile = () => {
+        navigate(`/${username}/profile`);
+      };
+
+      const logout = async () => {
+        await axios.post(`${rootURL}/logout`, { withCredentials: true });
+        const sock = getSocket();
+        sock.disconnect();
+        navigate("/");
+      }
   
     const fetchData = async () => {
         console.log('fetching data');
@@ -195,6 +199,16 @@ export default function Friends() {
             >
             <FiSearch size={24} />
             <span className="text-xs mt-1">Search</span>
+            </button>
+            <button
+            type="button"
+            onClick={profile}
+            className={`p-2 rounded-lg flex flex-col items-center ${
+                'hover:bg-gray-100'
+            }`}
+            >
+            <FiUser size={24} />
+            <span className="text-xs mt-1">Profile</span>
             </button>
                 <div className="mt-auto" />
                 <button

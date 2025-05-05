@@ -12,6 +12,7 @@ import Upload from "./pages/Upload";
 import KafkaDemo from "./pages/KafkaDemo";
 import { getSocket } from "./Socket";
 import PhotoSelection from "./pages/PhotoSelection";
+import Profile from "./pages/Profile";
 
 function App() {
     useEffect(() => {
@@ -38,6 +39,7 @@ function App() {
                 <Route path="/:username/selectPhoto" element={<PhotoSelection />} />
                 <Route path="/:username/chatMode" element={<ChatMode />} />
                 <Route path="/kafkademo" element={<KafkaDemo />} />
+                <Route path="/:username/profile" element={<Profile />} />
             </Routes>
         </BrowserRouter>
     )

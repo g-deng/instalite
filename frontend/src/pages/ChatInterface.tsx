@@ -2,7 +2,7 @@ import { useState } from 'react'
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut } from "react-icons/fi";
+import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut, FiUser } from "react-icons/fi";
 import config from '../../config.json';
 import { getSocket } from "../Socket"; 
 
@@ -40,6 +40,10 @@ export default function ChatInterface() {
   
     const chatMode = () => {
         navigate("/"+ username+"/chatMode");
+    };
+
+    const profile = () => {
+      navigate(`/${username}/profile`);
     };
 
         const logout = async () => {
@@ -127,6 +131,17 @@ export default function ChatInterface() {
     >
       <FiSearch size={24} />
       <span className="text-xs mt-1">Search</span>
+    </button>
+
+    <button
+      type="button"
+      onClick={profile}
+      className={`p-2 rounded-lg flex flex-col items-center ${
+        'hover:bg-gray-100'
+      }`}
+    >
+      <FiUser size={24} />
+      <span className="text-xs mt-1">Profile</span>
     </button>
 
     <div className="mt-auto" />

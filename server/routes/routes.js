@@ -194,7 +194,6 @@ async function getMovie(req, res) {
 
 async function uploadImage(req, res) {
     const bucketName = 'nets2120-chroma-' + process.env.USER_ID;
-
     const s3_user = new S3KeyValueStore(bucketName, "user");
 
     try {
@@ -279,6 +278,29 @@ async function saveUserSelfie(req, res) {
     }
 }
 
+async function getEmbeddingFromSelfieKey(req, res) {
+  const key = req.body.key;
+  if (!key) {
+    return res.status(400).send({ error: "Image key is required." });
+  }
+
+  const bucketName = 'nets2120-chroma-' + process.env.USER_ID;
+  const s3_user = new S3KeyValueStore(bucketName, "user");
+
+  try {
+    const file_obj = await s3_user.fetchFileBinary(key);
+    const embeddings = await face.getEmbeddingsFromBuffer(file_obj);
+    const embedding = embeddings[0];
+    
+    res.status(200).send({
+      embedding: embedding
+    });
+  } catch (error) {
+    console.error("Error getting embedding:", error);
+    res.status(500).send({ error: "An error occurred while getting the embedding." });
+  }
+}
+
 /* Here we construct an object that contains a field for each route
    we've defined, so we can call the routes from app.js. */
 
@@ -292,5 +314,6 @@ export {
     getOnlineUsers,
     selectPhoto,
     saveUserSelfie,
+    getEmbeddingFromSelfieKey,
 };
 
