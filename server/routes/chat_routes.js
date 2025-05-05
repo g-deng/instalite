@@ -227,7 +227,7 @@ async function getUserProfile(req, res) {
       try {
         const query = `
           SELECT user_id, username, first_name, last_name, email, 
-                 affiliation, birthday, profile_photo, selfie_photo, linked_nconst
+                 affiliation, birthday, profile_photo, selfie_photo, linked_nconst, hashtags
           FROM users 
           WHERE username = ?
         `;

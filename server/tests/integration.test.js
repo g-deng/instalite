@@ -44,12 +44,12 @@ const testUsers = [
   { 
     username: 'test_friend1', 
     password: 'testpass1', 
-    linked_id: 'nm0000122' 
+    linked_nconst: 'nm0000122' 
   },
   { 
     username: 'test_friend2', 
     password: 'testpass2', 
-    linked_id: 'nm0003424'
+    linked_nconst: 'nm0003424'
   }
 ];
 let user1Id, user2Id;
@@ -177,7 +177,13 @@ describe('Friend Integration Tests', () => {
       const reg1 = await axios.post(`http://localhost:${port}/register`, {
         username: testUsers[0].username,
         password: testUsers[0].password,
-        linked_id: testUsers[0].linked_id
+        linked_nconst: testUsers[0].linked_nconst,
+        first_name: 'Test',
+        last_name: 'User',
+        birthday: '1990-01-01',
+        email: 'test@example.com',
+        affiliation: 'Test Organization',
+        hashtags: '#test'
       });
       
       expect(reg1.status).toBe(200);
@@ -194,7 +200,7 @@ describe('Friend Integration Tests', () => {
       const reg2 = await axios.post(`http://localhost:${port}/register`, {
         username: testUsers[1].username,
         password: testUsers[1].password,
-        linked_id: testUsers[1].linked_id
+        linked_nconst: testUsers[1].linked_nconst
       });
       
       expect(reg2.status).toBe(200);
@@ -406,7 +412,7 @@ describe('Kafka Integration Tests', () => {
       const kafkaTestUser = {
         username: 'kafka_test_user',
         password: 'testpass',
-        linked_id: 'nm0000122'
+        linked_nconst: 'nm0000122'
       };
       
       // remove and clean up existing test users
@@ -417,7 +423,7 @@ describe('Kafka Integration Tests', () => {
       const reg = await axios.post(`http://localhost:${port}/register`, {
         username: kafkaTestUser.username,
         password: kafkaTestUser.password,
-        linked_id: kafkaTestUser.linked_id
+        linked_nconst: kafkaTestUser.linked_nconst
       });
       
       expect(reg.status).toBe(200);

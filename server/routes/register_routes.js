@@ -10,6 +10,7 @@ import {
     getEmbeddingFromSelfieKey,
     postLogout,
     getPopularHashtags,
+    updateHashtags,
 } from './routes.js';
 import {
     getFriends,
@@ -79,6 +80,7 @@ function register_routes(app) {
     app.post('/:username/checkGroupValidity', checkGroupValidity);
     app.post('/saveUserSelfie', saveUserSelfie);
     app.get('/popularHashtags', getPopularHashtags);
+    app.post('/:username/updateHashtags', updateHashtags);
 }
 
 export default register_routes;

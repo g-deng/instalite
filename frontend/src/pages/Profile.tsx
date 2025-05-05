@@ -17,6 +17,7 @@ interface UserProfile {
   email: string;
   affiliation: string;
   birthday: string;
+  hashtags: string;
 }
 
 const Profile = () => {
@@ -26,6 +27,10 @@ const Profile = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [hashtags, setHashtags] = useState('');
+  const [selectedHashtags, setSelectedHashtags] = useState([]);
+  const [popularHashtags, setPopularHashtags] = useState([]);
+  const [hashtagsUpdateSuccess, setHashtagsUpdateSuccess] = useState(false);
   const { username } = useParams();
   const navigate = useNavigate();
   
@@ -63,11 +68,38 @@ const Profile = () => {
     navigate("/");
   }
 
+  // get popular hashtags for recommendation
+  useEffect(() => {
+    const fetchPopularHashtags = async () => {
+      try {
+        const response = await axios.get(`${rootURL}/popularHashtags`);
+        setPopularHashtags(response.data.hashtags.slice(0, 10));
+      } catch (error) {
+        console.error('Error fetching popular hashtags:', error);
+      }
+    };
+
+    fetchPopularHashtags();
+  }, [rootURL]);
+
+  // profile data fetch on loading
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(`${rootURL}/${username}/profile`, { withCredentials: true });
         setProfileData(response.data);
+        
+        // get hashtags from profile data
+        if (response.data.hashtags) {
+          const hashtagsString = response.data.hashtags;
+          console.log('Fetched hashtags:', hashtagsString);
+          setHashtags(hashtagsString);
+          
+          // split and clean
+          const hashtagArray = hashtagsString.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+          console.log('Parsed hashtags array:', hashtagArray);
+          setSelectedHashtags(hashtagArray);
+        }
         
         // get embedding from selfie and find matches initially
         if (response.data.selfie_photo) {
@@ -81,6 +113,54 @@ const Profile = () => {
 
     fetchProfile();
   }, [username, rootURL]);
+
+  const toggleHashtag = (tag) => {
+    const isSelected = selectedHashtags.includes(tag);
+    
+    if (isSelected) {
+      setSelectedHashtags(selectedHashtags.filter(t => t !== tag));
+    } else {
+      setSelectedHashtags([...selectedHashtags, tag]);
+    }
+  };
+
+  // update hashtags string when selected hashtags change
+  useEffect(() => {
+    setHashtags(selectedHashtags.join(','));
+  }, [selectedHashtags]);
+
+  // update user hashtags
+  const updateHashtags = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.post(
+        `${rootURL}/${username}/updateHashtags`, 
+        { hashtags: hashtags }, 
+        { withCredentials: true }
+      );
+      
+      if (response.status === 200) {
+        setHashtagsUpdateSuccess(true);
+        // update profile data
+        setProfileData(prev => {
+          if (prev) {
+            return { ...prev, hashtags: hashtags };
+          }
+          return prev;
+        });
+        
+        // reset success message after 3 seconds
+        setTimeout(() => {
+          setHashtagsUpdateSuccess(false);
+        }, 3000);
+      }
+    } catch (err) {
+      console.error('Error updating hashtags:', err);
+      setError(err.response?.data?.error || 'Failed to update hashtags');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const fetchEmbeddingAndFindMatches = async (selfieKey) => {
     try {
@@ -187,15 +267,23 @@ const Profile = () => {
     }
   };
 
-  const handleSelectPhoto = async (img_path: string) => {
+  const handleSelectPhoto = async (img) => {
     try {
-      const response = await axios.post(`${rootURL}/${username}/selectPhoto`, { image_path: img_path }, { withCredentials: true });
+      const response = await axios.post(
+        `${rootURL}/${username}/selectPhoto`, 
+        { 
+          image_path: img.path,
+          actor_name: img.name
+        }, 
+        { withCredentials: true }
+      );
+      
       if (response.status === 200) {
         console.log('Photo selected successfully:', response.data);
         // update profile photo
         setProfileData(prev => {
           if (prev) {
-            return { ...prev, profile_photo: img_path };
+            return { ...prev, profile_photo: img.path };
           }
           return prev;
         });
@@ -317,6 +405,56 @@ const Profile = () => {
                     </div>
                   </div>
 
+                  {/* Hashtags section */}
+                  <div className="mt-8 border-t pt-8">
+                    <h2 className="text-xl font-semibold mb-4">Your Interests</h2>
+                    <div className="space-y-4">
+                      <div className="border p-3 rounded-md bg-gray-50">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Current interests: {profileData.hashtags}
+                        </label>
+                        
+                        <div className="flex flex-wrap gap-2 mb-3">
+                          {popularHashtags.map((item, index) => (
+                            <button
+                              key={index}
+                              type="button"
+                              onClick={() => toggleHashtag(item.tag)}
+                              className={`text-sm px-3 py-1 rounded-full ${
+                                selectedHashtags.includes(item.tag)
+                                  ? 'bg-pink-500 text-white'
+                                  : 'bg-gray-200 text-gray-800'
+                              }`}
+                            >
+                              #{item.tag}
+                            </button>
+                          ))}
+                        </div>
+                        
+                        <input
+                          id="hashtags"
+                          type="text"
+                          placeholder="Enter interests (comma-separated)"
+                          className="w-full p-3 bg-white border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+                          value={hashtags}
+                          onChange={(e) => setHashtags(e.target.value)}
+                        />
+                        
+                        <button
+                          onClick={updateHashtags}
+                          disabled={isLoading}
+                          className="mt-3 w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded"
+                        >
+                          {isLoading ? 'Updating...' : 'Update Interests'}
+                        </button>
+                        
+                        {hashtagsUpdateSuccess && (
+                          <p className="text-green-500 text-sm mt-2">Interests updated successfully!</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Selfie */}
                   <div className="mt-8 border-t pt-8">
                     <h2 className="text-xl font-semibold mb-4">Your Selfie</h2>
@@ -369,7 +507,7 @@ const Profile = () => {
                                 <ActorCardComponent imagePath={img} />
                                 <div className="mt-2 text-sm text-center font-medium">{img.name}</div>
                                 <button
-                                  onClick={() => handleSelectPhoto(img.path)}
+                                  onClick={() => handleSelectPhoto(img)}
                                   className="mt-2 w-full py-1 px-2 bg-green-500 hover:bg-green-600 text-white text-sm rounded"
                                 >
                                   Select

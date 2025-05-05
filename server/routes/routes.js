@@ -14,6 +14,7 @@ import RouteHelper from '../routes/route_helper.js';
 import bcrypt from 'bcrypt';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import fs from 'fs';
+import { sendPostToKafka } from '../kafka/producer.js';
 
 // Database connection setup
 const db = get_db_connection();
@@ -64,24 +65,18 @@ async function postRegister(req, res) {
     const linked_nconst = req.body.linked_nconst;
     const user = req.body.username;
     const raw_pass = req.body.password;
-    const first_name = req.body.first_name;
-    const last_name = req.body.last_name;
-    const birthday = req.body.birthday;
-    const email = req.body.email;
-    const affiliation = req.body.affiliation;
-    const hashtags = req.body.hashtags;
+    const first_name = req.body.first_name || '';
+    const last_name = req.body.last_name || '';
+    const birthday = req.body.birthday || '';
+    const email = req.body.email || '';
+    const affiliation = req.body.affiliation || '';
+    const hashtags = req.body.hashtags || '';
     
-    if (linked_nconst.trim().length == 0 || 
-        user.trim().length == 0 || 
-        raw_pass.trim().length == 0 ||
-        first_name.trim().length == 0 ||
-        last_name.trim().length == 0 ||
-        birthday.trim().length == 0 ||
-        email.trim().length == 0 ||
-        affiliation.trim().length == 0 || 
-        !helper.isOK(user)) {
+    if (!linked_nconst || linked_nconst.trim().length == 0 || 
+        !user || user.trim().length == 0 || 
+        !raw_pass || raw_pass.trim().length == 0) {
         console.log('Invalid values in the request');
-        res.status(400).send({error: "One or more of the fields you entered was empty or invalid, please try again."}); 
+        res.status(400).send({error: "One or more of the required fields (username, password, linked_id) was empty or invalid."}); 
     } else {
         console.debug('Checking if user exists');
 
@@ -233,7 +228,9 @@ async function uploadImage(req, res) {
 
 async function selectPhoto(req, res) {
     const user_id = req.session.user_id;
+    const username = req.session.username;
     const image_path = req.body.image_path;
+    const actor_name = req.body.actor_name;
 
     const sql_command = 'UPDATE users SET profile_photo = ? WHERE user_id = ?';
     const sql_params = [image_path, user_id];
@@ -242,6 +239,30 @@ async function selectPhoto(req, res) {
         if (result[0].affectedRows == 0) {
             return res.status(404).send({ error: "User not found." });
         } else {
+            // create a status post about actor change
+            if (actor_name) {
+                const text_content = `${username} is now linked to ${actor_name}`;
+                
+                // insert post into the database
+                const postQuery = `INSERT INTO posts (user_id, text_content) VALUES (?, ?)`;
+                const postParams = [user_id, text_content];
+                const postResult = await queryDatabase(postQuery, postParams);
+                const post_id = postResult[0].insertId;
+                
+                // prepare post for Kafka
+                const post_json = {
+                    username: username,
+                    post_text: text_content,
+                    post_uuid_within_site: post_id,
+                    content_type: 'text/html',
+                    source_site: 'instalite-wahoo',
+                };
+                
+                // send to Kafka
+                await sendPostToKafka({post_json: post_json});
+                console.log('Status post sent to Kafka:', post_json);
+            }
+            
             res.status(200).send({message: `Image selected successfully`});
         }
     } catch (error) {
@@ -338,6 +359,31 @@ async function getPopularHashtags(req, res) {
     }
 }
 
+async function updateHashtags(req, res) {
+  const user_id = req.session.user_id;
+  const hashtags = req.body.hashtags;
+
+  if (!user_id) {
+    return res.status(403).send({ error: "Not logged in." });
+  }
+
+  try {
+    const sql_command = 'UPDATE users SET hashtags = ? WHERE user_id = ?';
+    const sql_params = [hashtags, user_id];
+    
+    const result = await queryDatabase(sql_command, sql_params);
+    
+    if (result[0].affectedRows == 0) {
+      return res.status(404).send({ error: "User not found." });
+    } else {
+      res.status(200).send({ message: "Hashtags updated successfully" });
+    }
+  } catch (error) {
+    console.error("Error updating hashtags:", error);
+    res.status(500).send({ error: "An error occurred while updating hashtags." });
+  }
+}
+
 /* Here we construct an object that contains a field for each route
    we've defined, so we can call the routes from app.js. */
 
@@ -353,5 +399,6 @@ export {
     saveUserSelfie,
     getEmbeddingFromSelfieKey,
     getPopularHashtags,
+    updateHashtags,
 };
 
