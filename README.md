@@ -12,7 +12,49 @@ Also copy credentials into .env in home directory under the [user] credentials
 
 Also copy credentials into .env in spark-jobs directory
 
-### RDS and EC2
+### RDS
+#### Local
+If you are using local MySQL
+```
+service mysql start
+```
+And set `DATABASE_SERVER=localhost` in the .env in home directory
+
+#### AWS RDS
+Set `DATABASE_SERVER` to the AWS RDS endpoint (doesn't change betwen labs) in the .env in home directory
+
+### Spark
+The automated Spark job from the backend (via `npm run start`) is now set to Livy. Therefore you must complete the For Livy section. Local execution can be used for basic testing. (Or if you want to populate your local DB and not the RDS).
+
+#### For Livy
+To add in spark-jobs/.env: 
+- Set `LIVY_HOST` to Primary node public DNS from EMR cluster 
+- Set `DATABASE_SERVER` to the AWS RDS endpoint (doesn't change between labs)
+
+Note Livy uses the AWS RDS database to read and write data. Additionally, note that it is not necessary to compile via `mvn clean package`, as we will use a pre-uploaded `.jar` on S3.
+
+```
+mvn exec:java@livy
+```
+
+
+#### For Local
+Note Local Spark execution uses your local MySQL database to read and write data. 
+```
+service mysql start
+```
+Make sure you are in spark-jobs.
+```
+mvn exec:java@local
+```
+or
+```
+mvn clean package
+java -jar target/framework.jar
+```
+
+
+### EC2
 - if you have some keychain problems, also add `-o IgnoreUnknown=UseKeychain`
 
 
@@ -46,10 +88,6 @@ When you make an S3 bucket for image posts, go to the permissions tab and paste 
 }
 
 ### Kafka
-Need to create Spark job jar file.
-```bash
-mvn clean build
-```
 Set up MySQL and Kafka.
 ```bash
 service mysql start
