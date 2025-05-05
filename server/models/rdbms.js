@@ -45,15 +45,18 @@ class RelationalDB {
             return this;
 
         console.log("New connection request");
+        console.log(this.dbconfig);
         // Connect to MySQL
         var conn = await mysql.createConnection(this.dbconfig);
-        if (this.conn == null) {
-            console.log("New connection used");
-            this.conn = conn;
-        } else {
-            console.log("New connection discarded");
-            conn.close();
-        }
+
+        console.log("New connection used");
+        this.conn = conn;
+
+        await this.conn.ping();
+        console.log("MySQL connection established and ping successful");
+        const [tables] = await this.conn.query("SHOW TABLES");
+        console.log("Tables:", tables);
+
 
         return this;
     }

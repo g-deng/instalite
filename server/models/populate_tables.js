@@ -73,12 +73,12 @@ async function populate_tables() {
     // POPULATING FRIENDS
     const addFriend = async (user1_id, user2_id) => {
         await dbaccess.send_sql(`
-            INSERT IGNORE INTO friends (followed, follower) 
+            INSERT IGNORE INTO friends (user1_id, user2_id) 
             VALUES (?, ?)`, 
             [user1_id, user2_id]
         );
         await dbaccess.send_sql(`
-            INSERT IGNORE INTO friends (followed, follower)
+            INSERT IGNORE INTO friends (user1_id, user2_id)
             VALUES (?, ?)`,
             [user2_id, user1_id]
         );
@@ -116,7 +116,7 @@ async function populate_tables() {
     const post10_id = await addPost(acd_id, 'https://i.imgur.com/10.jpg', 'Sherlock Holmes', 'novel,book');
     const post11_id = await addPost(ms_id, 'https://i.imgur.com/11.jpg', 'Frankenstein', 'novel,spooky');
     const post12_id = await addPost(cd_id, 'https://i.imgur.com/12.jpg', 'David Copperfield', 'novel,book');
-
+    
     // POPULATING COMMENTS
     const addComment = async (post_id, user_id, text_content) => {
         const result = await dbaccess.send_sql(`

@@ -100,10 +100,10 @@ async function create_tables() {
     // FRIENDS
     await dbaccess.create_tables(`
         CREATE TABLE IF NOT EXISTS friends (
-            followed INT,
-            follower INT,
-            FOREIGN KEY (follower) REFERENCES users(user_id),
-            FOREIGN KEY (followed) REFERENCES users(user_id)
+            user1_id INT,
+            user2_id INT,
+            FOREIGN KEY (user1_id) REFERENCES users(user_id),
+            FOREIGN KEY (user2_id) REFERENCES users(user_id)
         );
     `);
 
