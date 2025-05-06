@@ -1,163 +1,48 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios'; 
+import axios from 'axios';
 import config from '../../config.json';
 import CreatePostComponent from '../components/CreatePostComponent';
-import { useNavigate } from 'react-router-dom';
-import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut, FiUser } from "react-icons/fi";
-import { getSocket } from "../Socket"; 
+import Sidebar from '../components/Sidebar';
 
 export default function Home() {
 
     const { username } = useParams();
     const rootURL = config.serverRootURL;
     // CUT HERE
-    const [posts, setPosts] = useState([]); 
+    const [_, setPosts] = useState([]);
     // END CUT
-    const navigate = useNavigate(); 
 
-    const feed = () => {
-      navigate('/' + username + '/home');
-  };
-    const friends = () => {
-        navigate("/"+ username+"/friends");
-    };
-
-    const post = () => {
-        navigate("/"+username+"/createPost");
-    }
-
-    const chat = () => {
-      navigate("/"+ username+"/chat");
-    };
-
-    const chatMode = () => {
-      navigate("/"+ username+"/chatMode");
-    };
-
-    const profile = () => {
-      navigate(`/${username}/profile`);
-    };
-
-    const logout = async () => {
-        await axios.post(`${rootURL}/logout`, { withCredentials: true });
-        const sock = getSocket();
-        sock.disconnect();
-        navigate("/");
-      }
-
-  const fetchData = async () => {
-      // CUT HERE
-      try {
-        const response = await axios.get(`${rootURL}/${username}/feed`, { withCredentials: true });
-        setPosts(response.data.results);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-      // END CUT
+    const fetchData = async () => {
+        // CUT HERE
+        try {
+            const response = await axios.get(`${rootURL}/${username}/feed`, { withCredentials: true });
+            setPosts(response.data.results);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        // END CUT
     };
     useEffect(() => {
-      fetchData();
+        fetchData();
     }, []);
 
 
-  return (
-    <div className='w-screen h-screen flex flex-row'>
-      {/* Sidebar */}
-      <aside className="w-24 bg-white p-4 flex flex-col items-center border-r">
-    <div className="mb-6">
-      <span className="text-3xl font-black tracking-tight">Insta</span>
-    </div>
+    return (
+        <div className='w-screen h-screen flex flex-row'>
+            {/* Sidebar */}
+            <Sidebar />
+            {/* Main Feed Column */}
+            <div className="flex-1 flex flex-col overflow-hidden">
+                <header className="h-16 bg-white flex items-center justify-center border-b shadow-sm flex-shrink-0">
+                    <span className="text-2xl font-medium">{`New Post`}</span>
+                </header>
 
-    <button
-      type="button"
-      onClick={feed}
-      className={`mb-6 p-2 rounded-lg flex flex-col items-center ${
-         'hover:bg-gray-100'
-      }`}
-    >
-      <FiHome size={24} />
-      <span className="text-xs mt-1">Home</span>
-    </button>
+                <div className="flex-1 overflow-y-auto mx-auto w-full max-w-[600px] flex flex-col items-center space-y-4 p-4">
+                    <CreatePostComponent updatePosts={fetchData} />
+                </div>
+            </div>
 
-    <button
-      type="button"
-      onClick={post}
-      className={`mb-6 p-2 rounded-lg flex flex-col items-center ${
-         'bg-gray-100'
-      }`}
-    >
-      < FiPlusSquare size={24} />
-      <span className="text-xs mt-1">Post</span>
-    </button>
-    <button
-      type="button"
-      onClick={friends}
-      className={`mb-6 p-2 rounded-lg flex flex-col items-center ${
-         'hover:bg-gray-100'
-      }`}
-    >
-      <FiUsers size={24} />
-      <span className="text-xs mt-1">Friends</span>
-    </button>
-
-    <button
-      type="button"
-      onClick={chatMode}
-      className={`mb-6 p-2 rounded-lg flex flex-col items-center ${
-        'hover:bg-gray-100'
-      }`}
-    >
-      <FiMessageCircle size={24} />
-      <span className="text-xs mt-1">Chat</span>
-    </button>
-
-    <button
-      type="button"
-      onClick={chat}
-      className={`p-2 rounded-lg flex flex-col items-center ${
-        'hover:bg-gray-100'
-      }`}
-    >
-      <FiSearch size={24} />
-      <span className="text-xs mt-1">Search</span>
-    </button>
-
-    <button
-      type="button"
-      onClick={profile}
-      className={`p-2 rounded-lg flex flex-col items-center ${
-        'hover:bg-gray-100'
-      }`}
-    >
-      <FiUser size={24} />
-      <span className="text-xs mt-1">Profile</span>
-    </button>
-
-    <div className="mt-auto" />
-    <button
-        type="button"
-        onClick={logout}
-        className={`p-2 rounded-lg flex flex-col items-center ${
-        'hover:bg-gray-100'
-        }`}
-    >
-        <FiLogOut size={24} />
-        <span className="text-xs mt-1">Logout</span>
-    </button>
-    
-    </aside>
-      {/* Main Feed Column */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="h-16 bg-white flex items-center justify-center border-b shadow-sm flex-shrink-0">
-          <span className="text-2xl font-medium">{`New Post`}</span>
-        </header>
-
-        <div className="flex-1 overflow-y-auto mx-auto w-full max-w-[600px] flex flex-col items-center space-y-4 p-4">
-        <CreatePostComponent updatePosts={fetchData} />
         </div>
-      </div>
-
-    </div>
-  )
+    )
 }
