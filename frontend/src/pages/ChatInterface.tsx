@@ -14,7 +14,7 @@ const MessageComponent = ({ sender, message }: { sender: string, message: string
 }
 
 export default function ChatInterface() {
-    const [messages, setMessages] = useState([{ sender: 'chatbot', message: 'Hi there! What movie review questions do you have?' }]);
+    const [messages, setMessages] = useState([{ sender: 'chatbot', message: 'Hi there! What questions do you have?' }]);
     const [input, setInput] = useState<string>('');
     const { username } = useParams();
 
