@@ -100,6 +100,7 @@ class S3KeyValueStore {
   }
 
   async uploadFile(filePath, bucketName, keyPrefix) {
+    console.log("Try to upload");
     const fileContent = fs.readFileSync(filePath);
     const key = path.join(keyPrefix, path.relative(process.cwd(), filePath));
   
@@ -115,6 +116,7 @@ class S3KeyValueStore {
       return key;
     } catch (err) {
       console.error(`Error uploading ${key}:`, err);
+      console.error("Stack trace:", err.stack);
       return null;
     }
   }

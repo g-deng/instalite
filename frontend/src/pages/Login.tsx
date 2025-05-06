@@ -35,9 +35,15 @@ export default function Login() {
       const obj = JSON.parse(jsonStr);
 
       const sock = getSocket();
-      console.log(response.data);
-      sock.emit('user_connect', obj.user_id);
-
+      if (sock.connected) {
+        console.log("sock already connected");
+        sock.emit('user_connect', obj.user_id);
+      } else {
+        console.log("making new sock connection");
+        sock.on('connect', () => {
+          sock.emit('user_connect', obj.user_id);
+        });
+      }
       navigate(`/${username}/home`);
     } catch (error) {
       // Handle login error

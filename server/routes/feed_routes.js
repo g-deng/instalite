@@ -57,8 +57,8 @@ async function getKafkaDemo(req, res) {
 
 // POST /createPost
 async function createPost(req, res) {
-    const file = req.file;
-    var image_url = null;
+    var file = req.file;
+    var s3_key = req.body.s3_image_path;
     var text_content = req.body.text_content;
     var hashtags = req.body.hashtags; //  a comma seperated string
     var content_type = 'text/html';
@@ -70,14 +70,11 @@ async function createPost(req, res) {
         return res.status(400).send({error: 'One or more of the fields you entered was empty, please try again.'});
     } else {
         try {
-            if (file) {
+            let image_url = null;
+            if (file || s3_key) {
                 const bucketName = `nets2120-chroma-${process.env.USER_ID}`;
-                const s3store = new S3KeyValueStore(bucketName, 'user');
-                const keyPrefix = 'posts/';
-                // uploadFile returns the key path
-                const key = await s3store.uploadFile(file.path, bucketName, keyPrefix);
                 // Construct the public URL
-                image_url = `https://${bucketName}.s3.amazonaws.com/${key}`;
+                image_url = `https://${bucketName}.s3.amazonaws.com/${s3_key}`;
                 content_type = file.mimetype;
             }
             console.log('Inserting post into database with image_url:', image_url);

@@ -14,14 +14,14 @@ export function runComputeRanks() {
     let stdout = '';
 
     child.stdout.on('data', (data) => {
-      const text = data.toString().trim();
+      const text = data.toString();
       console.log(`stdout: ${text}`);
       stdout += text;
     });
 
     child.stderr.on('data', (data) => {
-      // const errText = data.toString().trim();
-      // console.error('[CRON] stderr:', errText);
+      const errText = data.toString().trim();
+      console.error('[CRON] stderr:', errText);
     });
     
 

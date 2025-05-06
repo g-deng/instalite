@@ -22,6 +22,7 @@ function CreatePostComponent({ updatePosts }) {
 
 
     const handleImageChange = (e) => {
+        console.log(e.target.files);
         if (e.target.files && e.target.files[0]) {
             setImageFile(e.target.files[0]);
         }
@@ -36,8 +37,37 @@ function CreatePostComponent({ updatePosts }) {
             // backend expects comma-separated list
             formData.append('hashtags', hashtags.trim());
         }
+
         if (imageFile) {
+            console.log(imageFile);
             formData.append('image', imageFile);
+            formData.append('no_embed', true);
+            try {
+                const response = await axios.post(`${config.serverRootURL}/upload`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    withCredentials: true,
+                });
+
+                console.log('Upload response:', response.data);
+                // Store the key and embedding
+            const embedding = response.data.embedding;
+            const key = response.data.key;
+            
+            if (!key) {
+                console.error('No key in response data');
+                return;
+            }
+            
+            console.log('Embedding:', embedding);
+            console.log('S3 Key:', key);
+
+            formData.append("s3_image_path", key);
+
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }       
         }
         try {
             /*
