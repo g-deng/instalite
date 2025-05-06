@@ -17,8 +17,8 @@ export default function Signup() {
     const [birthday, setBirthday] = useState('');
     const [affiliation, setAffiliation] = useState('');
     const [hashtags, setHashtags] = useState('');
-    const [popularHashtags, setPopularHashtags] = useState([]);
-    const [selectedHashtags, setSelectedHashtags] = useState([]);
+    const [popularHashtags, setPopularHashtags] = useState<{ tag: string }[]>([]);
+    const [selectedHashtags, setSelectedHashtags] = useState<string[]>([]);
 
     const rootURL = config.serverRootURL;
 
@@ -40,7 +40,7 @@ export default function Signup() {
     // select hashtags
     const toggleHashtag = (tag) => {
         const isSelected = selectedHashtags.includes(tag);
-        
+
         if (isSelected) {
             setSelectedHashtags(selectedHashtags.filter(t => t !== tag));
         } else {
@@ -93,7 +93,7 @@ export default function Signup() {
                 console.error('Registration error:', error.response.data.error);
                 alert('Registration failed:' + error.response.data.error);
             });
-        } catch (error) {
+        } catch (error: any) {
             console.error('Registration error:', error.response?.data?.error);
             alert('Registration failed:' + error.response?.data?.error);
         }
@@ -187,11 +187,10 @@ export default function Signup() {
                                     key={index}
                                     type="button"
                                     onClick={() => toggleHashtag(item.tag)}
-                                    className={`text-sm px-3 py-1 rounded-full ${
-                                        selectedHashtags.includes(item.tag)
-                                            ? 'bg-pink-500 text-white'
-                                            : 'bg-gray-200 text-gray-800'
-                                    }`}
+                                    className={`text-sm px-3 py-1 rounded-full ${selectedHashtags.includes(item.tag)
+                                        ? 'bg-pink-500 text-white'
+                                        : 'bg-gray-200 text-gray-800'
+                                        }`}
                                 >
                                     #{item.tag}
                                 </button>

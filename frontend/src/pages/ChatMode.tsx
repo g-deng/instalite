@@ -3,9 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import config from '../../config.json';
-import { io } from 'socket.io-client';
 import { getSocket } from '../Socket';
-import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut, FiUser } from "react-icons/fi";
 import Sidebar from '../components/Sidebar';
 
 const MessageComponent = ({ sender, content, timestamp }: { sender: string, content: string, timestamp: string }) => {

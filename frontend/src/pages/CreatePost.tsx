@@ -3,9 +3,6 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import config from '../../config.json';
 import CreatePostComponent from '../components/CreatePostComponent';
-import { useNavigate } from 'react-router-dom';
-import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut, FiUser } from "react-icons/fi";
-import { getSocket } from "../Socket";
 import Sidebar from '../components/Sidebar';
 
 export default function Home() {
@@ -13,9 +10,8 @@ export default function Home() {
     const { username } = useParams();
     const rootURL = config.serverRootURL;
     // CUT HERE
-    const [posts, setPosts] = useState([]);
+    const [_, setPosts] = useState([]);
     // END CUT
-    const navigate = useNavigate();
 
     const fetchData = async () => {
         // CUT HERE

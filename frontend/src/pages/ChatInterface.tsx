@@ -1,10 +1,6 @@
 import { useState } from 'react'
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut, FiUser } from "react-icons/fi";
-import config from '../../config.json';
-import { getSocket } from "../Socket";
 import Sidebar from '../components/Sidebar';
 
 const MessageComponent = ({ sender, message }: { sender: string, message: string }) => {
@@ -21,8 +17,6 @@ export default function ChatInterface() {
     const [messages, setMessages] = useState([{ sender: 'chatbot', message: 'Hi there! What movie review questions do you have?' }]);
     const [input, setInput] = useState<string>('');
     const { username } = useParams();
-    const navigate = useNavigate();
-    const rootURL = config.serverRootURL;
 
     const sendMessage = async () => {
         // CUT HERE 

@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import config from '../../config.json';
 import ActorCardComponent from '../components/ActorCardComponent';
-import { useParams, useNavigate } from 'react-router-dom';
-import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut, FiUser } from 'react-icons/fi';
-import { getSocket } from "../Socket";
+import { useParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 
 interface UserProfile {
@@ -21,19 +19,26 @@ interface UserProfile {
     hashtags: string;
 }
 
+interface MatchResult {
+    birthYear: number;
+    deathYear: number;
+    name: string;
+    nconst: string;
+    path: string;
+}
+
 const Profile = () => {
     const [profileData, setProfileData] = useState<UserProfile | null>(null);
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchResults, setSearchResults] = useState<MatchResult[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const [hashtags, setHashtags] = useState('');
-    const [selectedHashtags, setSelectedHashtags] = useState([]);
-    const [popularHashtags, setPopularHashtags] = useState([]);
+    const [selectedHashtags, setSelectedHashtags] = useState<string[]>([]);
+    const [popularHashtags, setPopularHashtags] = useState<{ tag: string }[]>([]);
     const [hashtagsUpdateSuccess, setHashtagsUpdateSuccess] = useState(false);
     const { username } = useParams();
-    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -86,7 +91,7 @@ const Profile = () => {
                 if (response.data.selfie_photo) {
                     await fetchEmbeddingAndFindMatches(response.data.selfie_photo);
                 }
-            } catch (err) {
+            } catch (err: any) {
                 console.error('Error fetching profile:', err);
                 setError(err.response?.data?.error || 'An error occurred');
             }
@@ -119,7 +124,7 @@ const Profile = () => {
                     setEmailUpdateSuccess(false);
                 }, 3000);
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error('Error updating email:', err);
             setEmailError(err.response?.data?.error || 'Failed to update email');
         } finally {
@@ -156,7 +161,7 @@ const Profile = () => {
                     setPasswordUpdateSuccess(false);
                 }, 3000);
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error('Error updating password:', err);
             setPasswordError(err.response?.data?.error || 'Failed to update password');
         } finally {
@@ -164,7 +169,7 @@ const Profile = () => {
         }
     };
 
-    const toggleHashtag = (tag) => {
+    const toggleHashtag = (tag: any) => {
         const isSelected = selectedHashtags.includes(tag);
 
         if (isSelected) {
@@ -204,7 +209,7 @@ const Profile = () => {
                     setHashtagsUpdateSuccess(false);
                 }, 3000);
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error('Error updating hashtags:', err);
             setError(err.response?.data?.error || 'Failed to update hashtags');
         } finally {
@@ -288,13 +293,13 @@ const Profile = () => {
                     }
                     return prev;
                 });
-            } catch (saveErr) {
+            } catch (saveErr: any) {
                 console.error('Error saving selfie:', saveErr);
                 console.error('Save error details:', saveErr.response ? saveErr.response.data : saveErr.message);
             }
 
             await findMatches(embedding);
-        } catch (err) {
+        } catch (err: any) {
             console.error('Upload error:', err);
             console.error('Error details:', err.response ? err.response.data : err.message);
             setError(err.response ? err.response.data.error : 'An error occurred');
@@ -310,7 +315,7 @@ const Profile = () => {
             console.log('Match response:', response.data);
             setSearchResults(response.data);
             setError('');
-        } catch (err) {
+        } catch (err: any) {
             console.error('Match error:', err);
             setSearchResults([]);
             setError(err.response ? err.response.data.error : 'An error occurred');
@@ -340,7 +345,7 @@ const Profile = () => {
             } else {
                 console.error('Error selecting photo:', response.data);
             }
-        } catch (err) {
+        } catch (err: any) {
             setError(err.response ? err.response.data.error : 'An error occurred');
         }
     };
@@ -478,8 +483,8 @@ const Profile = () => {
                                                             type="button"
                                                             onClick={() => toggleHashtag(item.tag)}
                                                             className={`text-sm px-3 py-1 rounded-full ${selectedHashtags.includes(item.tag)
-                                                                    ? 'bg-pink-500 text-white'
-                                                                    : 'bg-gray-200 text-gray-800'
+                                                                ? 'bg-pink-500 text-white'
+                                                                : 'bg-gray-200 text-gray-800'
                                                                 }`}
                                                         >
                                                             #{item.tag}
@@ -561,10 +566,9 @@ const Profile = () => {
                                                         {searchResults.map((img, idx) => (
                                                             <div key={idx} className="relative">
                                                                 <ActorCardComponent imagePath={img} />
-                                                                <div className="mt-2 text-sm text-center font-medium">{img.name}</div>
                                                                 <button
                                                                     onClick={() => handleSelectPhoto(img)}
-                                                                    className="mt-2 w-full py-1 px-2 bg-green-500 hover:bg-green-600 text-white text-sm rounded"
+                                                                    className="mt-2 w-full py-1 px-2 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded"
                                                                 >
                                                                     Select
                                                                 </button>

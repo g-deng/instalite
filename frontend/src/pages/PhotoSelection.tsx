@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import config from '../../config.json';
 import ActorCardComponent from '../components/ActorCardComponent';
-import { Navigate, useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const PhotoSelection = () => {
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchResults, setSearchResults] = useState<{ path: string }[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [uploadSuccess, setUploadSuccess] = useState(false);
-    const username = useParams();
+    const { username } = useParams();
     const navigate = useNavigate();
 
     const rootURL = config.serverRootURL;
@@ -42,7 +42,7 @@ const PhotoSelection = () => {
             });
 
             console.log('Upload response:', response.data);
-            
+
             // check for key
             if (!response.data.key) {
                 console.error('No key in response data');
@@ -50,29 +50,29 @@ const PhotoSelection = () => {
                 setIsLoading(false);
                 return;
             }
-            
+
             const embedding = response.data.embedding;
             const key = response.data.key;
             console.log('Embedding:', embedding);
             console.log('S3 Key:', key);
-            
+
             // Save the selfie key to the user's profile
             try {
                 console.log('Saving selfie to user profile...');
                 const saveResponse = await axios.post(
-                    `${rootURL}/saveUserSelfie`, 
-                    { image_path: key }, 
+                    `${rootURL}/saveUserSelfie`,
+                    { image_path: key },
                     { withCredentials: true }
                 );
                 console.log('Save selfie response:', saveResponse.data);
                 setUploadSuccess(true);
-            } catch (saveErr) {
+            } catch (saveErr: any) {
                 console.error('Error saving selfie:', saveErr);
                 console.error('Save error details:', saveErr.response ? saveErr.response.data : saveErr.message);
             }
-            
+
             await findMatches(embedding);
-        } catch (err) {
+        } catch (err: any) {
             console.error('Upload error:', err);
             console.error('Error details:', err.response ? err.response.data : err.message);
             setError(err.response ? err.response.data.error : 'An error occurred');
@@ -88,14 +88,14 @@ const PhotoSelection = () => {
             console.log('Match response:', response.data);
             setSearchResults(response.data);
             setError('');
-        } catch (err) {
+        } catch (err: any) {
             console.error('Match error:', err);
             setSearchResults([]);
             setError(err.response ? err.response.data.error : 'An error occurred');
         }
     };
 
-    const handleSelectPhoto = async (img_path: string) => {
+    const handleSelectPhoto = async (img_path) => {
         try {
             const response = await axios.post(`${rootURL}/${username}/selectPhoto`, { image_path: img_path }, { withCredentials: true });
             if (response.status === 200) {
@@ -104,116 +104,64 @@ const PhotoSelection = () => {
             } else {
                 console.error('Error selecting photo:', response.data);
             }
-        } catch (err) {
+        } catch (err: any) {
             setError(err.response ? err.response.data.error : 'An error occurred');
         }
     };
 
     return (
-        <div
-            style={{
-                maxWidth: '800px',
-                margin: '0 auto',
-                padding: '24px',
-                backgroundColor: '#fff',
-                borderRadius: '12px',
-                boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-                fontFamily: 'sans-serif',
-            }}
-        >
-            <h1
-                style={{
-                    fontSize: '28px',
-                    textAlign: 'center',
-                    marginBottom: '24px',
-                    color: '#333',
-                }}
-            >
-                Photo Selection
-            </h1>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 p-6">
+            <div className="w-full max-w-3xl bg-white rounded-2xl shadow-2xl p-8">
+                <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">Photo Selection</h1>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '32px' }}>
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    style={{
-                        padding: '8px',
-                        fontSize: '14px',
-                    }}
-                />
-                <button
-                    onClick={handleUpload}
-                    disabled={isLoading}
-                    style={{
-                        padding: '10px 16px',
-                        fontSize: '16px',
-                        backgroundColor: isLoading ? '#aaa' : '#007bff',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '6px',
-                        cursor: isLoading ? 'not-allowed' : 'pointer',
-                        transition: 'background-color 0.2s',
-                    }}
-                >
-                    {isLoading ? 'Uploading...' : 'Upload Photo'}
-                </button>
-                {uploadSuccess && (
-                    <p style={{ color: '#28a745', fontSize: '14px' }}>
-                        Selfie saved to your profile!
-                    </p>
-                )}
-                {error && (
-                    <p style={{ color: '#d9534f', fontSize: '14px' }}>
-                        {error}
-                    </p>
+                {/* Upload Section */}
+                <div className="flex flex-col gap-4 mb-8">
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="p-2 text-sm border border-gray-300 rounded"
+                    />
+                    <button
+                        onClick={handleUpload}
+                        disabled={isLoading}
+                        className={`py-3 text-white font-semibold rounded transition ${isLoading
+                            ? 'bg-gray-400 cursor-not-allowed'
+                            : 'bg-blue-500 hover:bg-blue-600'
+                            }`}
+                    >
+                        {isLoading ? 'Uploading...' : 'Upload Photo'}
+                    </button>
+                    {uploadSuccess && (
+                        <p className="text-green-600 text-sm">Selfie saved to your profile!</p>
+                    )}
+                    {error && (
+                        <p className="text-red-500 text-sm">{error}</p>
+                    )}
+                </div>
+
+                {/* Actor Match Section */}
+                {searchResults.length > 0 && (
+                    <div>
+                        <h2 className="text-xl font-semibold text-center text-gray-700 mb-4">
+                            Select Your Profile Photo
+                        </h2>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+                            {searchResults.map((img, idx) => (
+                                <div key={idx} className="relative rounded-lg overflow-hidden shadow-md">
+                                    <ActorCardComponent imagePath={img} />
+                                    <button
+                                        onClick={() => handleSelectPhoto(img.path)}
+                                        className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium py-1 px-3 rounded shadow"
+                                    >
+                                        Select Photo
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 )}
             </div>
-
-            {searchResults.length > 0 && (
-                <div>
-                    <h2
-                        style={{
-                            fontSize: '22px',
-                            marginBottom: '16px',
-                            color: '#444',
-                        }}
-                    >
-                        Select Your Profile Photo
-                    </h2>
-                    <div
-                        style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-                            gap: '16px',
-                        }}
-                    >
-                        {searchResults.map((img, idx) => (
-                            <div key={idx} style={{ position: 'relative' }}>
-                                <ActorCardComponent imagePath={img} />
-                                <button
-                                    onClick={() => handleSelectPhoto(img.path)}
-                                    style={{
-                                        position: 'absolute',
-                                        bottom: '8px',
-                                        left: '50%',
-                                        transform: 'translateX(-50%)',
-                                        padding: '6px 12px',
-                                        fontSize: '12px',
-                                        backgroundColor: '#28a745',
-                                        color: 'white',
-                                        border: 'none',
-                                        borderRadius: '4px',
-                                        cursor: 'pointer',
-                                    }}
-                                >
-                                    Select Photo
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )}
         </div>
     );
 

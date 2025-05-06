@@ -2,10 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import config from '../../config.json';
-import PostComponent from '../components/PostComponent'
-import { useNavigate } from 'react-router-dom';
-import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut, FiUser } from "react-icons/fi";
-import { getSocket } from "../Socket";
+import PostComponent from '../components/PostComponent';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Sidebar from '../components/Sidebar';
 

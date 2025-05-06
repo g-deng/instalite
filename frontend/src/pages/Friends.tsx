@@ -4,10 +4,9 @@ import axios from 'axios';
 import config from '../../config.json';
 import { useNavigate } from 'react-router-dom';
 import { getSocket } from '../Socket';
-import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut, FiUser } from "react-icons/fi";
 import Sidebar from '../components/Sidebar';
 
-const FriendComponent = ({ name, add = true, remove = true, online = false }: { name: string, add: boolean | undefined, remove: boolean | undefined, online: boolean | undefined }) => {
+const FriendComponent = ({ name, online = false }: { name: string, add: boolean | undefined, remove: boolean | undefined, online: boolean | undefined }) => {
     return (
         <div className='rounded-md bg-slate-100 p-3 flex space-x-2 items-center flex-auto justify-between'>
             <div className="flex items-center space-x-2">
