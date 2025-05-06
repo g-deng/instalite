@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { FiHome, FiMessageCircle, FiSearch, FiUsers, FiPlusSquare, FiLogOut, FiUser } from "react-icons/fi";
 import { getSocket } from "../Socket";
 import InfiniteScroll from 'react-infinite-scroll-component';
-
+import Sidebar from '../components/Sidebar';
 
 interface PostType {
     post_id: number;
@@ -31,39 +31,6 @@ export default function Home() {
     const [offset, setOffset] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const pageSize = 10;
-
-
-    const navigate = useNavigate();
-
-    const feed = () => {
-        navigate('/' + username + '/home');
-    };
-
-    const post = () => {
-        navigate("/" + username + "/createPost");
-    }
-    const friends = () => {
-        navigate("/" + username + "/friends");
-    };
-
-    const chat = () => {
-        navigate("/" + username + "/chat");
-    };
-
-    const chatMode = () => {
-        navigate("/" + username + "/chatMode");
-    };
-
-    const profile = () => {
-        navigate(`/${username}/profile`);
-    };
-
-    const logout = async () => {
-        await axios.post(`${rootURL}/logout`, { withCredentials: true });
-        const sock = getSocket();
-        sock.disconnect();
-        navigate("/");
-    }
 
     const fetchData = async () => {
         // CUT HERE
@@ -126,84 +93,7 @@ export default function Home() {
     return (
         <div className='w-screen h-screen flex flex-row'>
             {/* Sidebar */}
-            <aside className="w-24 bg-white p-4 flex flex-col items-center border-r">
-                <div className="mb-6">
-                    <span className="text-3xl font-black tracking-tight">Insta</span>
-                </div>
-
-                <button
-                    type="button"
-                    onClick={feed}
-                    className={`mb-6 p-2 rounded-lg flex flex-col items-center ${'bg-gray-100'
-                        }`}
-                >
-                    <FiHome size={24} />
-                    <span className="text-xs mt-1">Home</span>
-                </button>
-
-
-                <button
-                    type="button"
-                    onClick={post}
-                    className={`mb-6 p-2 rounded-lg flex flex-col items-center ${'hover:bg-gray-100'
-                        }`}
-                >
-                    <FiPlusSquare size={24} />
-                    <span className="text-xs mt-1">Post</span>
-                </button>
-
-
-                <button
-                    type="button"
-                    onClick={friends}
-                    className={`mb-6 p-2 rounded-lg flex flex-col items-center ${'hover:bg-gray-100'
-                        }`}
-                >
-                    <FiUsers size={24} />
-                    <span className="text-xs mt-1">Friends</span>
-                </button>
-
-                <button
-                    type="button"
-                    onClick={chatMode}
-                    className={`mb-6 p-2 rounded-lg flex flex-col items-center ${'hover:bg-gray-100'
-                        }`}
-                >
-                    <FiMessageCircle size={24} />
-                    <span className="text-xs mt-1">Chat</span>
-                </button>
-
-                <button
-                    type="button"
-                    onClick={chat}
-                    className={`p-2 rounded-lg flex flex-col items-center ${'hover:bg-gray-100'
-                        }`}
-                >
-                    <FiSearch size={24} />
-                    <span className="text-xs mt-1">Search</span>
-                </button>
-
-                <button
-                    type="button"
-                    onClick={profile}
-                    className={`p-2 rounded-lg flex flex-col items-center ${'hover:bg-gray-100'
-                        }`}
-                >
-                    <FiUser size={24} />
-                    <span className="text-xs mt-1">Profile</span>
-                </button>
-                
-                <div className="mt-auto" />
-                <button
-                    type="button"
-                    onClick={logout}
-                    className={`p-2 rounded-lg flex flex-col items-center ${'hover:bg-gray-100'
-                        }`}
-                >
-                    <FiLogOut size={24} />
-                    <span className="text-xs mt-1">Logout</span>
-                </button>
-            </aside>
+            <Sidebar />
             {/* Main Feed Column */}
             <div className="flex-1 flex flex-col overflow-hidden">
                 <header className="h-16 bg-white flex items-center justify-center border-b shadow-sm flex-shrink-0">
