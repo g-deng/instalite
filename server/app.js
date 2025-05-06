@@ -19,6 +19,7 @@ const server = http.createServer(app);
 
 var host = process.env.SITE_HOST; // Use SITE_HOST from .env
 
+console.log('Host:', host);
 // set up socket io
 const io = new Server(server, {
   cors: {
