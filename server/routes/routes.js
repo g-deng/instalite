@@ -188,11 +188,8 @@ async function getMovie(req, res) {
 }
 
 async function uploadImage(req, res) {
-    console.log("Trying to upload");
     const bucketName = 'nets2120-chroma-' + process.env.USER_ID;
     const s3_user = new S3KeyValueStore(bucketName, "user");
-
-    console.log("Bucket object created");
 
     try {
         // Check if a file is provided
@@ -201,9 +198,6 @@ async function uploadImage(req, res) {
         }
 
         const file = req.file;
-
-        console.log(file);
-        console.log("Check if exists file.path");
 
         // Generate a unique file name
         const filePath = file.path;
@@ -217,26 +211,15 @@ async function uploadImage(req, res) {
 
         console.log(`Image uploaded to S3: ${filePath}`);
 
-        if (!req.body.no_embed) {
-            console.log("Getting embeddings");
-            const file_obj = await s3_user.convertFileToBinary(filePath, bucketName, keyPrefix);
-            const embeddings = await face.getEmbeddingsFromBuffer(file_obj);
-            const embedding = embeddings[0];
+        const file_obj = await s3_user.convertFileToBinary(filePath, bucketName, keyPrefix);
+        const embeddings = await face.getEmbeddingsFromBuffer(file_obj);
+        const embedding = embeddings[0];
 
-            res.status(200).send({
-                message: `Image uploaded successfully to ${filePath}`,
-                embedding: embedding,
-                key: key
-            });
-        } else {
-            console.log("Skipping embeddings");
-            res.status(200).send({
-                message: `Image uploaded successfully to ${filePath}`,
-                embedding: null,
-                key: key
-            });
-        }
-        
+        res.status(200).send({
+            message: `Image uploaded successfully to ${filePath}`,
+            embedding: embedding,
+            key: key
+        });
     } catch (error) {
         console.error("Error uploading image:", error);
         res.status(500).send({ error: "An error occurred while uploading the image." });

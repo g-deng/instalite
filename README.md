@@ -1,6 +1,70 @@
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=18988697&assignment_repo_type=AssignmentRepo)
 # NETS 2120 Course Project
 
+## Team Details
+
+Team Name: wahoo
+
+Names:
+- Andrew Chang: andrew08@seas.upenn.edu
+- Wesley Liu: wesliu@seas.upenn.edu
+- Grace Deng: gdeng@seas.upenn.edu
+- Daniel Li: dli2004@seas.upenn.edu
+
+Features Implemented:
+- Signup (with image upload and vector database matching)
+- Login
+- Profile (with image upload and vector database matching)
+- Home/Feed (with infinite scrolling and kafka)
+- Create Post (with kafka)
+- Chat Mode (with WebSockets)
+- Natural Language Search
+- Friends
+
+Extra Credit Claimed:
+- Infinite scrolling
+- Websockets for chat
+
+Source Files: 
+
+Frontend:
+- frontend/src/App.tsx
+- frontend/src/Socket.tsx
+- frontend/src/main.tsx
+- frontend/src/index.css
+- frontend/src/pages/* (All files in pages directory)
+- frontend/src/components/* (All files in components directory)
+- frontend/public/* (Static assets)
+- frontend/vite.config.ts
+- frontend/tailwind.config.js
+- frontend/postcss.config.js
+- frontend/tsconfig.json
+- frontend/tsconfig.node.json
+
+Backend:
+- server/app.js (Main Express server)
+- server/index_data.js
+- server/routes/routes.js
+- server/routes/feed_routes.js
+- server/routes/register_routes.js
+- server/routes/chat_routes.js
+- server/routes/friend_routes.js
+- server/routes/route_helper.js
+- server/routes/embedding_routes.js
+- server/models/* (Database models)
+- server/util/* (Utility functions)
+- server/kafka/* (Kafka integration)
+- server/algorithms/* (Custom algorithms)
+
+Spark Jobs:
+- spark-jobs/src/main/java/instalite/wahoo/spark/* (Spark job implementations)
+- spark-jobs/src/main/java/instalite/wahoo/jobs/* (Job definitions)
+- spark-jobs/src/main/java/instalite/wahoo/config/* (Configuration files)
+- spark-jobs/pom.xml (Maven configuration)
+- spark-jobs/run_livy.sh (Script to run Spark jobs via Livy)
+
+The code submitted was written by us.
+
 ## Setup Notes
 
 ### AWS credentials
