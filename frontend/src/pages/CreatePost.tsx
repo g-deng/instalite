@@ -8,7 +8,7 @@ import Sidebar from '../components/Sidebar';
 export default function Home() {
 
     const { username } = useParams();
-    const rootURL = config.serverRootURL;
+    const rootURL = process.env.API_URL;
     // CUT HERE
     const [_, setPosts] = useState([]);
     // END CUT

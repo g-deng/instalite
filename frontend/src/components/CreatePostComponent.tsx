@@ -43,7 +43,7 @@ function CreatePostComponent({ updatePosts }) {
             formData.append('image', imageFile);
             formData.append('no_embed', true);
             try {
-                const response = await axios.post(`${config.serverRootURL}/upload`, formData, {
+                const response = await axios.post(`${process.env.API_URL}/upload`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
@@ -52,32 +52,32 @@ function CreatePostComponent({ updatePosts }) {
 
                 console.log('Upload response:', response.data);
                 // Store the key and embedding
-            const embedding = response.data.embedding;
-            const key = response.data.key;
-            
-            if (!key) {
-                console.error('No key in response data');
-                return;
-            }
-            
-            console.log('Embedding:', embedding);
-            console.log('S3 Key:', key);
+                const embedding = response.data.embedding;
+                const key = response.data.key;
 
-            formData.append("s3_image_path", key);
+                if (!key) {
+                    console.error('No key in response data');
+                    return;
+                }
+
+                console.log('Embedding:', embedding);
+                console.log('S3 Key:', key);
+
+                formData.append("s3_image_path", key);
 
             } catch (error) {
                 console.error('Error uploading image:', error);
-            }       
+            }
         }
         try {
             /*
-            const response = await axios.post(`${config.serverRootURL}/${username}/createPost`, {
+            const response = await axios.post(`${process.env.API_URL}/${username}/createPost`, {
               title,
               text_content: content,
             }, {withCredentials: true });
             */
             const response = await axios.post(
-                `${config.serverRootURL}/${username}/createPost`,
+                `${process.env.API_URL}/${username}/createPost`,
                 formData,
                 {
                     headers: { 'Content-Type': 'multipart/form-data' },

@@ -47,7 +47,7 @@ const Profile = () => {
     const [emailError, setEmailError] = useState<string | null>(null);
     const [passwordError, setPasswordError] = useState<string | null>(null);
 
-    const rootURL = config.serverRootURL;
+    const rootURL = process.env.API_URL;
 
     // get popular hashtags for recommendation
     useEffect(() => {

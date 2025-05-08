@@ -7,7 +7,7 @@ function KafkaDemo() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [posts, setPosts] = useState<any[]>([]);
     const [topic, setTopic] = useState<'BlueSky' | 'FederatedPosts'>('BlueSky');
-    const rootURL = config.serverRootURL;
+    const rootURL = process.env.API_URL;
 
     const switchPosts = async () => {
         const response = await axios.get(`${rootURL}/kafkademo/${(topic === 'BlueSky') ? 'FederatedPosts' : 'BlueSky'}`);

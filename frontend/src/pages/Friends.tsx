@@ -26,7 +26,7 @@ export default function Friends() {
 
     const navigate = useNavigate();
     const { username } = useParams();
-    const rootURL = config.serverRootURL;
+    const rootURL = process.env.API_URL;
 
     // CUT HERE
     const [friends, setFriends] = useState([]);

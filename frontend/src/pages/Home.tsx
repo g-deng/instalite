@@ -20,7 +20,7 @@ interface PostType {
 export default function Home() {
 
     const { username } = useParams();
-    const rootURL = config.serverRootURL;
+    const rootURL = process.env.API_URL;
     // CUT HERE
     const [posts, setPosts] = useState<PostType[]>([]);
     // END CUT

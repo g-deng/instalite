@@ -6,13 +6,13 @@ let socket: Socket | null = null;
 
 export function getSocket(): Socket {
     if (!socket) {
-        socket = io(config.serverRootURL, { withCredentials: true });
+        socket = io(process.env.API_URL, { withCredentials: true });
     }
     return socket;
 }
 
 if (!socket) {
-    socket = io(config.serverRootURL, { withCredentials: true });
+    socket = io(process.env.API_URL, { withCredentials: true });
 }
 
 socket.on('connect', () => {

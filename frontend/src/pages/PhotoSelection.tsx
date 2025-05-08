@@ -13,7 +13,7 @@ const PhotoSelection = () => {
     const { username } = useParams();
     const navigate = useNavigate();
 
-    const rootURL = config.serverRootURL;
+    const rootURL = process.env.API_URL;
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {

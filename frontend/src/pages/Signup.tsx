@@ -20,7 +20,7 @@ export default function Signup() {
     const [popularHashtags, setPopularHashtags] = useState<{ tag: string }[]>([]);
     const [selectedHashtags, setSelectedHashtags] = useState<string[]>([]);
 
-    const rootURL = config.serverRootURL;
+    const rootURL = process.env.API_URL;
 
     // Fetch popular hashtags on component mount
     useEffect(() => {

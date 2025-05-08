@@ -7,7 +7,7 @@ import { getSocket } from "../Socket";
 
 const Sidebar = () => {
     const { username } = useParams();
-    const rootURL = config.serverRootURL;
+    const rootURL = process.env.API_URL;
     const navigate = useNavigate();
 
     const feed = () => {

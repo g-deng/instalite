@@ -18,7 +18,6 @@ const port = config.serverPort;
 const server = http.createServer(app);
 
 var host = process.env.SITE_HOST; // Use SITE_HOST from .env
-// host = null;
 
 // set up socket io
 const io = new Server(server, {
