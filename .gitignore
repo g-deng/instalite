@@ -18,3 +18,4 @@ package-lock.json
 .vscode/
 uploads/
 credentials
+**/.env.production
