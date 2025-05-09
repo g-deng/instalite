@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import config from '../../config.json';
 import { getSocket } from "../Socket";
 
 export default function Signup() {

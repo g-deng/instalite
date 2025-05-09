@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import axios from 'axios';
-import config from '../../config.json';
 import PostComponent from '../components/PostComponent';
 
 function KafkaDemo() {

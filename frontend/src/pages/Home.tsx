@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import config from '../../config.json';
 import PostComponent from '../components/PostComponent';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Sidebar from '../components/Sidebar';
