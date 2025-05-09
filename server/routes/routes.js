@@ -209,7 +209,7 @@ async function getMovie(req, res) {
     console.log('Ready to run RAG chain...');
 
     const prompt = PromptTemplate.fromTemplate(
-        `Answer the question. Context: ${context}. Question: ${question}`
+        `Answer the question based on the following context: {context}\n\nQuestion: {question}`
     );
     const llm = new ChatOpenAI({ modelName: 'gpt-4o-mini', temperature: 0 });
 

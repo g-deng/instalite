@@ -17,6 +17,7 @@ export default function ChatInterface() {
     const [messages, setMessages] = useState([{ sender: 'chatbot', message: 'Hi there! What questions do you have?' }]);
     const [input, setInput] = useState<string>('');
     const { username } = useParams();
+    const rootURL = process.env.API_URL;
 
     const sendMessage = async () => {
         // CUT HERE 
@@ -24,7 +25,7 @@ export default function ChatInterface() {
             setMessages(prev => [...prev, { sender: 'user', message: input }]);
 
             console.log(input);
-            var response = await axios.post('http://localhost:8080/' + username + '/movies', {
+            var response = await axios.post(rootURL + '/' + username + '/movies', {
                 username: username,
                 question: input
             })
