@@ -1,6 +1,5 @@
 // src/socket.ts
 import { io, Socket } from 'socket.io-client';
-import config from '../config.json';
 
 let socket: Socket | null = null;
 

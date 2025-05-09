@@ -2,7 +2,6 @@ import { FiHome, FiPlusSquare, FiUsers, FiMessageCircle, FiSearch, FiUser, FiLog
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import config from '../../config.json';
 import { getSocket } from "../Socket";
 
 const Sidebar = () => {

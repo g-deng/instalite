@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import config from '../../config.json';
 import ActorCardComponent from '../components/ActorCardComponent';
 import { useParams, useNavigate } from 'react-router-dom';
 
