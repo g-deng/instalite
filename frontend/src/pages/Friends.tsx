@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import config from '../../config.json';
 import { useNavigate } from 'react-router-dom';
 import { getSocket } from '../Socket';
 import Sidebar from '../components/Sidebar';
