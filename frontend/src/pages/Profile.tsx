@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import config from '../../config.json';
 import ActorCardComponent from '../components/ActorCardComponent';
 import { useParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
@@ -47,7 +46,7 @@ const Profile = () => {
     const [emailError, setEmailError] = useState<string | null>(null);
     const [passwordError, setPasswordError] = useState<string | null>(null);
 
-    const rootURL = process.env.API_URL;
+    const rootURL = import.meta.env.VITE_API_URL;
 
     // get popular hashtags for recommendation
     useEffect(() => {

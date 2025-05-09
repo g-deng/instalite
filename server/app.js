@@ -14,15 +14,18 @@ dotenv.config();
 const config = JSON.parse(configFile);
 
 const app = express();
-const port = config.serverPort;
+const port = config.serverPort || 8080;
+console.log('CONFIG PORT:', config.serverPort);
 const server = http.createServer(app);
 
-var host = process.env.SITE_HOST; // Use SITE_HOST from .env
+var host = process.env.VITE_API_URL; // Use SITE_HOST from .env
 
 // set up socket io
 const io = new Server(server, {
     cors: {
-        origin: host == null ? 'http://localhost:4567' : host,
+        // origin: host == null ? 'http://localhost:4567' : host,
+        // origin: host == null ? 'http://localhost:4567' : host,
+        origin: '*',
         methods: ['GET', 'POST'],
         credentials: true,
     },
@@ -307,7 +310,7 @@ io.on('connection', (socket) => {
 
 app.use(
     cors({
-        origin: host == null ? 'http://localhost:4567' : host,
+        origin: '*',
         methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD'],
         credentials: true,
     })
@@ -340,10 +343,6 @@ cron.schedule('*/5 * * * *', async () => {
 
 register_routes(app);
 
-// app.listen(port, () => {
-//   console.log(`Main app listening on port ${port}`)
-// })
-
-server.listen(port, () => {
+server.listen(port, '0.0.0.0', () => {
     console.log(`Server running on port ${port}`);
 });

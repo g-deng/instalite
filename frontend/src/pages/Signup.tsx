@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import config from '../../config.json';
 import { getSocket } from "../Socket";
 
 export default function Signup() {
@@ -20,7 +19,7 @@ export default function Signup() {
     const [popularHashtags, setPopularHashtags] = useState<{ tag: string }[]>([]);
     const [selectedHashtags, setSelectedHashtags] = useState<string[]>([]);
 
-    const rootURL = process.env.API_URL;
+    const rootURL = import.meta.env.VITE_API_URL;
 
     // Fetch popular hashtags on component mount
     useEffect(() => {

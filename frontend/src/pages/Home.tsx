@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import config from '../../config.json';
 import PostComponent from '../components/PostComponent';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Sidebar from '../components/Sidebar';
@@ -20,7 +19,7 @@ interface PostType {
 export default function Home() {
 
     const { username } = useParams();
-    const rootURL = process.env.API_URL;
+    const rootURL = import.meta.env.VITE_API_URL;
     // CUT HERE
     const [posts, setPosts] = useState<PostType[]>([]);
     // END CUT

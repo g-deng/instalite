@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import axios from 'axios'; // Import Axios
-import config from '../../config.json';
 import { useNavigate } from 'react-router-dom';
 import { getSocket } from '../Socket';
 
@@ -12,7 +11,9 @@ export default function Login() {
     const [password, setPassword] = useState('');
     // END CUT
 
-    const rootURL = process.env.API_URL;
+    const rootURL = import.meta.env.VITE_API_URL;
+
+    console.log("rootURL", import.meta.env.VITE_API_URL);
 
     const handleLogin = async () => {
         // CUT HERE

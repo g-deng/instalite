@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import config from '../../config.json';
 import { useNavigate } from 'react-router-dom';
 import { getSocket } from '../Socket';
 import Sidebar from '../components/Sidebar';
@@ -26,7 +25,7 @@ export default function Friends() {
 
     const navigate = useNavigate();
     const { username } = useParams();
-    const rootURL = process.env.API_URL;
+    const rootURL = import.meta.env.VITE_API_URL;
 
     // CUT HERE
     const [friends, setFriends] = useState([]);

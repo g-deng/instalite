@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import config from '../../config.json';
 import { useParams } from 'react-router-dom';
 
 function CreatePostComponent({ updatePosts }) {
@@ -41,9 +40,9 @@ function CreatePostComponent({ updatePosts }) {
         if (imageFile) {
             console.log(imageFile);
             formData.append('image', imageFile);
-            formData.append('no_embed', true);
+            formData.append('no_embed', 'true');
             try {
-                const response = await axios.post(`${process.env.API_URL}/upload`, formData, {
+                const response = await axios.post(`${import.meta.env.VITE_API_URL}/upload`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
@@ -71,13 +70,13 @@ function CreatePostComponent({ updatePosts }) {
         }
         try {
             /*
-            const response = await axios.post(`${process.env.API_URL}/${username}/createPost`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/${username}/createPost`, {
               title,
               text_content: content,
             }, {withCredentials: true });
             */
             const response = await axios.post(
-                `${process.env.API_URL}/${username}/createPost`,
+                `${import.meta.env.VITE_API_URL}/${username}/createPost`,
                 formData,
                 {
                     headers: { 'Content-Type': 'multipart/form-data' },

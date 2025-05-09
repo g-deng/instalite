@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import axios from 'axios';
-import config from '../../config.json';
 import PostComponent from '../components/PostComponent';
 
 function KafkaDemo() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [posts, setPosts] = useState<any[]>([]);
     const [topic, setTopic] = useState<'BlueSky' | 'FederatedPosts'>('BlueSky');
-    const rootURL = process.env.API_URL;
+    const rootURL = import.meta.env.VITE_API_URL;
 
     const switchPosts = async () => {
         const response = await axios.get(`${rootURL}/kafkademo/${(topic === 'BlueSky') ? 'FederatedPosts' : 'BlueSky'}`);

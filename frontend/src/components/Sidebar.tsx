@@ -2,12 +2,11 @@ import { FiHome, FiPlusSquare, FiUsers, FiMessageCircle, FiSearch, FiUser, FiLog
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import config from '../../config.json';
 import { getSocket } from "../Socket";
 
 const Sidebar = () => {
     const { username } = useParams();
-    const rootURL = process.env.API_URL;
+    const rootURL = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
 
     const feed = () => {

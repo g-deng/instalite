@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import config from '../../config.json';
 import ActorCardComponent from '../components/ActorCardComponent';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -13,7 +12,7 @@ const PhotoSelection = () => {
     const { username } = useParams();
     const navigate = useNavigate();
 
-    const rootURL = process.env.API_URL;
+    const rootURL = import.meta.env.VITE_API_URL;
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
