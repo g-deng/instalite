@@ -1,0 +1,2 @@
+# prevent extensions from being detected as roff
+models/* linguist-documentation
