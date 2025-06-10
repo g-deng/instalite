@@ -20,7 +20,7 @@ interface PostType {
 export default function Home() {
 
     const { username } = useParams();
-    const rootURL = process.env.API_URL;
+    const rootURL = import.meta.env.VITE_API_URL;
     // CUT HERE
     const [posts, setPosts] = useState<PostType[]>([]);
     // END CUT

@@ -8,7 +8,7 @@ import Sidebar from '../components/Sidebar';
 export default function Home() {
 
     const { username } = useParams();
-    const rootURL = process.env.API_URL;
+    const rootURL = import.meta.env.VITE_API_URL;
     // CUT HERE
     const [_, setPosts] = useState([]);
     // END CUT

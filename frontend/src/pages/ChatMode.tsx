@@ -40,7 +40,7 @@ export default function ChatMode() {
 
     const { username } = useParams();
     const navigate = useNavigate();
-    const rootURL = process.env.API_URL;
+    const rootURL = import.meta.env.VITE_API_URL;
 
     // Connect to socket when we go to this page
     useEffect(() => {

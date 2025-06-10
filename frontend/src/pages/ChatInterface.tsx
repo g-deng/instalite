@@ -17,7 +17,7 @@ export default function ChatInterface() {
     const [messages, setMessages] = useState([{ sender: 'chatbot', message: 'Hi there! What questions do you have?' }]);
     const [input, setInput] = useState<string>('');
     const { username } = useParams();
-    const rootURL = process.env.API_URL;
+    const rootURL = import.meta.env.VITE_API_URL;
 
     const sendMessage = async () => {
         // CUT HERE 

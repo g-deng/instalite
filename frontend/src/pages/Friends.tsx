@@ -26,7 +26,7 @@ export default function Friends() {
 
     const navigate = useNavigate();
     const { username } = useParams();
-    const rootURL = process.env.API_URL;
+    const rootURL = import.meta.env.VITE_API_URL;
 
     // CUT HERE
     const [friends, setFriends] = useState([]);

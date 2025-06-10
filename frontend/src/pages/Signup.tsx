@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import config from '../../config.json';
 import { getSocket } from "../Socket";
 
 export default function Signup() {
@@ -9,7 +8,6 @@ export default function Signup() {
     // State variables
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [linked_nconst, setLinkedNconst] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -20,7 +18,7 @@ export default function Signup() {
     const [popularHashtags, setPopularHashtags] = useState<{ tag: string }[]>([]);
     const [selectedHashtags, setSelectedHashtags] = useState<string[]>([]);
 
-    const rootURL = process.env.API_URL;
+    const rootURL = import.meta.env.VITE_API_URL;
 
     // Fetch popular hashtags on component mount
     useEffect(() => {
@@ -67,7 +65,6 @@ export default function Signup() {
             axios.post(`${rootURL}/register`, {
                 username: username,
                 password: password,
-                linked_nconst: linked_nconst,
                 first_name: firstName,
                 last_name: lastName,
                 email: email,
@@ -77,7 +74,7 @@ export default function Signup() {
             }, { withCredentials: true }).then((response) => {
                 console.log(response);
                 alert('Welcome ' + username + '!');
-                let jsonStr = response.data.message
+                const jsonStr = response.data.message
                     // quote the keys:  username: → "username":
                     .replace(/(\w+):/g, '"$1":')
                     // convert single quotes to double quotes
@@ -203,16 +200,6 @@ export default function Signup() {
                             className="w-full p-3 bg-white border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
                             value={hashtags}
                             onChange={(e) => setHashtags(e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <input
-                            id="linked_nconst"
-                            type="text"
-                            placeholder="Linked nconst"
-                            className="w-full p-3 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
-                            value={linked_nconst}
-                            onChange={(e) => setLinkedNconst(e.target.value)}
                         />
                     </div>
                     <div>

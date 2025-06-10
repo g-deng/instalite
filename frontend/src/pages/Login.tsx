@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import axios from 'axios'; // Import Axios
-import config from '../../config.json';
 import { useNavigate } from 'react-router-dom';
 import { getSocket } from '../Socket';
 
@@ -12,7 +11,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
     // END CUT
 
-    const rootURL = process.env.API_URL;
+    const rootURL = import.meta.env.VITE_API_URL;
 
     const handleLogin = async () => {
         // CUT HERE
@@ -26,7 +25,7 @@ export default function Login() {
             console.log('Login successful:', response.data);
             console.log(response);
 
-            let jsonStr = response.data.message
+            const jsonStr = response.data.message
                 // quote the keys:  username: → "username":
                 .replace(/(\w+):/g, '"$1":')
                 // convert single quotes to double quotes
