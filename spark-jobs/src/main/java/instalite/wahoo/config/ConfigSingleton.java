@@ -5,6 +5,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class ConfigSingleton {
     public static Config config = null;    
 
+    @SuppressWarnings("static-access")
     public static Config getInstance() {
         if (config != null)
             return config;

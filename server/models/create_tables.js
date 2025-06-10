@@ -20,11 +20,10 @@ async function create_tables() {
     // NAMES
     await dbaccess.create_tables(`
         CREATE TABLE IF NOT EXISTS names (
-            nconst VARCHAR(255) UNIQUE,
+            nconst VARCHAR(255) UNIQUE PRIMARY KEY,
             primaryName VARCHAR(255),
             birthYear VARCHAR(4),
-            deathYear VARCHAR(4),
-            nconst VARCHAR(255) PRIMARY KEY
+            deathYear VARCHAR(4)
         );
     `);
 

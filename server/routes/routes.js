@@ -66,7 +66,6 @@ async function getOnlineUsers(req, res) {
 
 // POST /register
 async function postRegister(req, res) {
-    const linked_nconst = req.body.linked_nconst;
     const user = req.body.username;
     const raw_pass = req.body.password;
     const first_name = req.body.first_name || '';
@@ -77,8 +76,6 @@ async function postRegister(req, res) {
     const hashtags = req.body.hashtags || '';
 
     if (
-        !linked_nconst ||
-        linked_nconst.trim().length == 0 ||
         !user ||
         user.trim().length == 0 ||
         !raw_pass ||
@@ -86,7 +83,7 @@ async function postRegister(req, res) {
     ) {
         console.log('Invalid values in the request');
         res.status(400).send({
-            error: 'One or more of the required fields (username, password, linked_id) was empty or invalid.',
+            error: 'One or more of the required fields (username, password) was empty or invalid.',
         });
     } else {
         console.debug('Checking if user exists');
@@ -104,11 +101,10 @@ async function postRegister(req, res) {
                 console.log('Creating user');
                 const password = await helper.encryptPassword(raw_pass);
                 const query =
-                    'INSERT INTO users (username, hashed_password, linked_nconst, first_name, last_name, birthday, email, affiliation, hashtags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                    'INSERT INTO users (username, hashed_password, first_name, last_name, birthday, email, affiliation, hashtags) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
                 const params = [
                     user,
                     password,
-                    linked_nconst,
                     first_name,
                     last_name,
                     birthday,
@@ -282,9 +278,10 @@ async function selectPhoto(req, res) {
     const username = req.session.username;
     const image_path = req.body.image_path;
     const actor_name = req.body.actor_name;
+    const actor_nconst = req.body.actor_nconst;
 
-    const sql_command = 'UPDATE users SET profile_photo = ? WHERE user_id = ?';
-    const sql_params = [image_path, user_id];
+    const sql_command = 'UPDATE users SET profile_photo = ?, linked_nconst = ? WHERE user_id = ?';
+    const sql_params = [image_path, actor_nconst, user_id];
     try {
         const result = await queryDatabase(sql_command, sql_params);
         if (result[0].affectedRows == 0) {

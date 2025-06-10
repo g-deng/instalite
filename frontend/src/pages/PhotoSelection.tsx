@@ -94,9 +94,9 @@ const PhotoSelection = () => {
         }
     };
 
-    const handleSelectPhoto = async (img_path) => {
+    const handleSelectPhoto = async (img) => {
         try {
-            const response = await axios.post(`${rootURL}/${username}/selectPhoto`, { image_path: img_path }, { withCredentials: true });
+            const response = await axios.post(`${rootURL}/${username}/selectPhoto`, { image_path: img.path, actor_name: img.name, actor_nconst: img.nconst }, { withCredentials: true });
             if (response.status === 200) {
                 console.log('Photo selected successfully:', response.data);
                 navigate(`/${username}/home`);
@@ -150,7 +150,7 @@ const PhotoSelection = () => {
                                 <div key={idx} className="relative rounded-lg overflow-hidden shadow-md">
                                     <ActorCardComponent imagePath={img} />
                                     <button
-                                        onClick={() => handleSelectPhoto(img.path)}
+                                        onClick={() => handleSelectPhoto(img)}
                                         className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium py-1 px-3 rounded shadow"
                                     >
                                         Select Photo
