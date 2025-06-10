@@ -18,19 +18,31 @@ const config = JSON.parse(configFile);
 console.log(`Config: ${JSON.stringify(config)}`);
 const helper = new RouteHelper();
 
-// Open connection to Kafka
-const kafka = new Kafka({
-    clientId: 'my-app',
-    brokers: config.bootstrapServers
-});
+const USE_KAFKA = process.env.USE_KAFKA === 'true';
 
-const consumer = kafka.consumer({ 
-    groupId: config.groupId, 
-    bootstrapServers: config.bootstrapServers
-});
+
+let kafka = null;
+let consumer = null;
+
+if (USE_KAFKA) {
+    kafka = new Kafka({
+        clientId: 'my-app',
+        brokers: config.bootstrapServers
+    });
+
+    consumer = kafka.consumer({ 
+        groupId: config.groupId, 
+        bootstrapServers: config.bootstrapServers
+    });
+}
 
 
 const runKafkaConsumer = async () => {
+    if (!USE_KAFKA) {
+        console.log('Kafka is disabled. Skipping consumer startup.');
+        return;
+    }
+
     // Consuming
     await consumer.connect();
 
@@ -164,6 +176,16 @@ const addKafkaPostToDB = async (post) => {
 }
 
 const closeKafkaConsumer = async () => { 
+    const closeKafkaConsumer = async () => { 
+        if (!USE_KAFKA || !consumer) {
+            console.log('Kafka is disabled or not initialized.');
+            return;
+        }
+
+        await consumer.disconnect();
+        console.log('Kafka consumer disconnected');
+    };
+
     await consumer.disconnect();
     console.log('Kafka consumer disconnected');
 }

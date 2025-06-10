@@ -14,21 +14,35 @@ const config = JSON.parse(configFile);
 console.log(`Config: ${JSON.stringify(config)}`);
 const helper = new RouteHelper();
 
-// Open connection to Kafka
-const kafka = new Kafka({
-    clientId: 'my-app',
-    brokers: config.bootstrapServers
-});
+const USE_KAFKA = process.env.USE_KAFKA === 'true';
 
-const producer = kafka.producer({ 
-    bootstrapServers: config.bootstrapServers
-});
+let kafka = null;
+let producer = null;
+
+if (USE_KAFKA) {
+    kafka = new Kafka({
+        clientId: 'my-app',
+        brokers: config.bootstrapServers
+    });
+
+    producer = kafka.producer({ 
+        bootstrapServers: config.bootstrapServers
+    });
+}
 
 const connectProducer = async () => {
+    if (!USE_KAFKA || !producer) {
+        console.log('Kafka producer disabled.');
+        return;
+    }
     await producer.connect();
 };
 
 const sendPostToKafka = async (post) => {
+    if (!USE_KAFKA || !producer) {
+        console.log('Kafka producer disabled. Not sending post.');
+        return;
+    }
     await producer.send({
         topic: 'FederatedPosts',
         messages: [

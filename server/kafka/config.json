@@ -1,5 +1,5 @@
 {
-    "groupId": "whappdemo2",
+    "groupId": "instalite",
     "bootstrapServers": ["localhost:9092"],
     "serverRootURL": "http://localhost:8080"
 }
