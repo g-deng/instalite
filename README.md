@@ -1,214 +1,102 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=18988697&assignment_repo_type=AssignmentRepo)
+# InstaLite
 
-# NETS 2120 Course Project
+InstaLite is a full-stack, scalable social media platform inspired by Instagram. Built with React, Node.js, Apache Kafka, and Apache Spark, it supports image-based user profiles, real-time chat, and intelligent post ranking using graph-based machine learning.
 
-## Team Details
+---
 
-Team Name: wahoo
-
-Names:
-
+## 👥 Team
+-   Grace Deng: gdeng@seas.upenn.edu
 -   Andrew Chang: andrew08@seas.upenn.edu
 -   Wesley Liu: wesliu@seas.upenn.edu
--   Grace Deng: gdeng@seas.upenn.edu
 -   Daniel Li: dli2004@seas.upenn.edu
+---
 
-Features Implemented:
+## 🔧 Overview
 
--   Signup (with image upload and vector database matching)
--   Login
--   Profile (with image upload and vector database matching)
--   Home/Feed (with infinite scrolling and kafka)
--   Create Post (with kafka)
--   Chat Mode (with WebSockets)
--   Natural Language Search
--   Friends
+### 🖼️ Frontend (React)
+- **React + Vite**
+- **Socket.io Client** for live chat
+- **Infinite scrolling**
+- **Image upload** with direct S3 handling via pre-signed URLs
+- **Chat UI** with friend detection and message threading
 
-Extra Credit Claimed:
+### 🌐 Backend (Node.js + Express)
+- **Express.js** REST API server
+- **MySQL (RDS or local)** for persistent user/post/chat data
+- **Kafka** for scalable message queueing of feed and federated posts
+- **ChromaDB** for image and text embedding search
+- **S3** integration for static asset storage (user images, post uploads)
 
--   Infinite scrolling
--   Websockets for chat
+### 🧠 Post Recommendation Algorithm (Apache Spark + Adsorption Algorithm)
+- **Apache Spark** jobs compute a ranking graph over posts, users, hashtags
+- **Livy + EMR** to interface Spark with backend over REST
+- Graph includes:
+  - User-hashtag, user-friend, user-like, and hashtag-post edges
+- **Adsorption algorithm** run hourly to recompute personalized weights
+- Ranked posts persisted in MySQL for fast frontend access
 
-Source Files:
+### 🔍 Natural Language Search
+- **LLM-based RAG (Retrieval-Augmented Generation)** using vector similarity over actors, movies, and posts
+- **ChromaDB** to store and query embeddings
 
-Frontend:
 
--   frontend/src/App.tsx
--   frontend/src/Socket.tsx
--   frontend/src/main.tsx
--   frontend/src/index.css
--   frontend/src/pages/\* (All files in pages directory)
--   frontend/src/components/\* (All files in components directory)
--   frontend/public/\* (Static assets)
--   frontend/vite.config.ts
--   frontend/tailwind.config.js
--   frontend/postcss.config.js
--   frontend/tsconfig.json
--   frontend/tsconfig.node.json
+### 🧵 Real-time Messaging (Kafka & Socket.io)
+- **Kafka topics** handle federated post exchange
+- **WebSockets** for user-to-user live chat
+- **Message persistence** stored in MySQL
 
-Backend:
+### 🌐 AWS Services
+| Service | Purpose |
+|--------|--------|
+| **EC2** | Hosts backend and frontend apps |
+| **RDS (MySQL)** | User/post/chat database |
+| **S3** | Publicly accessible post & profile images |
+| **EMR + Livy** | Spark cluster for ranking algorithm |
+| **Kafka (via EC2 tunnel)** | Federated feed post distribution |
 
--   server/app.js (Main Express server)
--   server/index_data.js
--   server/routes/routes.js
--   server/routes/feed_routes.js
--   server/routes/register_routes.js
--   server/routes/chat_routes.js
--   server/routes/friend_routes.js
--   server/routes/route_helper.js
--   server/routes/embedding_routes.js
--   server/models/\* (Database models)
--   server/util/\* (Utility functions)
--   server/kafka/\* (Kafka integration)
--   server/algorithms/\* (Custom algorithms)
+---
 
-Spark Jobs:
+## Features
 
--   spark-jobs/src/main/java/instalite/wahoo/spark/\* (Spark job implementations)
--   spark-jobs/src/main/java/instalite/wahoo/jobs/\* (Job definitions)
--   spark-jobs/src/main/java/instalite/wahoo/config/\* (Configuration files)
--   spark-jobs/pom.xml (Maven configuration)
--   spark-jobs/run_livy.sh (Script to run Spark jobs via Livy)
+| Feature | Description |
+|--------|-------------|
+| **Signup/Login** | Secure user auth with salted passwords |
+| **Image Embeddings** | Upload selfie → match with 5 closest actors (ChromaDB) |
+| **Feed + Infinite Scroll** | Ranked posts from friends, hashtags, federated streams |
+| **Post Creation** | Text + image posts with hashtag tagging |
+| **WebSockets Chat** | Real-time chat with history and group support |
+| **Natural Language Search** | Actor, post, and user discovery via LLM + vector DB |
+| **Friends System** | Add/remove friends with online status |
+| **Federated Kafka Stream** | Cross-site posts broadcasted and consumed via Kafka |
+| **Hourly Spark Ranking** | Graph-based feed curation using Apache Spark |
 
-The code submitted was written by us.
+---
 
-## Setup Notes
+## 📸 Pics
 
-### AWS credentials
+![login page](images/login.png)
+![sign up page](images/sign_up.png)
+![feed page](images/feed.png)
+![profile page](images/profile.png)
+![post page](images/post.png)
+![chats page](images/chats.png)
+---
 
-Launch Learner Lab and copy AWS credentials into `credentials` then run:
+## Setup
 
-```
-cp credentials ~/.aws
-```
+Instalite is no longer hosted on AWS for cost reasons, but can be demoed locally. 
 
-Also copy credentials into .env in home directory under the [user] credentials
+### 1. Environment Prep
 
-Also copy credentials into .env in spark-jobs directory
-
-### RDS
-
-#### Local
-
-If you are using local MySQL
-
-```
-service mysql start
-```
-
-And set `DATABASE_SERVER=localhost` in the .env in home directory
-
-#### AWS RDS
-
-Set `DATABASE_SERVER` to the AWS RDS endpoint (doesn't change betwen labs) in the .env in home directory
-
-Want to directly access the AWS RDS database (not required for the app, just for testing and seeing what's going on)
-
-```
-mysql -h imdb-basic.cb26cw0q8lhw.us-east-1.rds.amazonaws.com -P 3306 -u nets2120_hw2 -p imdb_basic
-```
-
-And then enter the DB password (the one that ends in a comma)
-
-### Spark
-
-The automated Spark job from the backend (via `npm run start`) is now set to Livy. Therefore you must complete the For Livy section. Local execution can be used for basic testing. (Or if you want to populate your local DB and not the RDS).
-
-If you don't have an updated `spark-jobs\target\framework.jar` also must call the following from `spark-jobs` directory to create the .jar file (it is run automatically by the CRON scheduler). No need to call it each time, unless the spark-jobs code was updated.
-
-```
-mvn clean package
-```
-
-#### For Livy
-
-If EMR cluster is terminated, you need to make a new one. EMR clusters terminate whenever the lab ends. If there is one that is `Waiting...`, you're good (skip to the .env edits).
-
--   In security groups my-emr-primary-sg and my-emr-core-sg, remove the rules for 0.0.0.0/0 (AWS won't let you create a cluster with these due to security).
--   Then clone the Livy Cluster settings as used before. (You can use one of the terminated ones.)
--   Wait for the cluster to start (it will say `Starting...`. When it is ready it will say `Waiting...`). Takes about 5 min.
--   Once it's started, add the rules back to allow traffic from 0.0.0.0/0 to port 8998 to both my-emr-primary-sg and my-emr-core-sg (so that we can access the cluster).
-
-To add in spark-jobs/.env and the .env in home directory:
-
--   Set `LIVY_HOST` to Primary node public DNS from EMR cluster
--   Set `DATABASE_SERVER` to the AWS RDS endpoint (doesn't change between labs)
-
-Note Livy uses the AWS RDS database to read and write data. Additionally, note that when running directly via Maven (as below) it is not necessary to compile via `mvn clean package`, as we will use a pre-uploaded `.jar` on S3.
-
-The following command can be run for testing of the computing job. It is unnecessary if you only want to see the automated calling from the backend.
-
-```
-mvn exec:java@livy
-```
-
-#### For Local
-
-Note Local Spark execution uses your local MySQL database to read and write data.
-
-```
-service mysql start
-```
-
-Make sure you are in spark-jobs.
-
-```
-mvn exec:java@local
-```
-
-or
-
-```
-mvn clean package
-java -jar target/framework.jar
-```
-
-### EC2
-
--   if you have some keychain problems, also add `-o IgnoreUnknown=UseKeychain`
+Use `.env.example` as a template for your own `.env` file.
 
 ```bash
-ssh -i ~/.ssh/wahoo_remote_keypair.pem ubuntu@[EC2-IP]
+# Clone the repository
+git clone https://github.com/your-username/instalite.git
+cd instalite
 ```
 
-```bash
-ssh -i ~/.ssh/wahoo_remote_keypair.pem -4 -L 8000:localhost:8000 ubuntu@[EC2-IP]
-```
-
-### S3
-
-Go to the S3 section in AWS and create a new bucket with the following name. Accept all default settings.
-
-nets2120-chroma-[USER_ID]
-
-When you make an S3 bucket for image posts, go to the permissions tab and paste in the following under Bucket Policy:
-
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "AllowPublicReadOnUploads",
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::nets2120-chroma-wahoo/posts/uploads/*"
-        }
-    ]
-}
-```
-
-### Kafka
-
-Set up MySQL and Kafka.
-
-```bash
-service mysql start
-
-ssh -i ~/nets2120/nets2120_tunnel -4 -L 9092:localhost:9092 sshtunnel@ec2-18-218-240-208.us-east-2.compute.amazonaws.com
-```
-
-### Frontend
+### 2. Frontend
 
 ```bash
 cd frontend
@@ -216,285 +104,45 @@ npm install
 npm run dev --host
 ```
 
-### Backend
+### 3. Backend
 
 ```bash
-cd server
 npm install
 npm run start
 ```
 
-## Overview
+### 4. Kafka (Optional)
 
-The course project will involve building "InstaLite," an Instagram-like social media site with full support for images. This project is to be done in _teams_ and will build upon components you built over the semester in your homeworks.
+Since the Kafka stream is no longer being hosted, simply set `KAFKA_ENABLED=false` in the .env file in the home directory.
 
-_General Advice_: Read through this entire document and compile a list of (1) data resources you'll need to design, (2) backend endpoints, (3) frontend pages / widgets, (4) interfaces to additional components such as ChatGPT and Apache Spark. Try to establish "core" functionality and build outwards.
+### 5. ChromaDB
 
-_Instructors' note_: During interviews, companies often ask you to tell them about a technical project you worked on. If you invest enough time, this project can play that role; you can add it to your “portfolio” of system that you can show a potential employer! (We do ask that you keep your repo private, however.)
+```bash
+source setup/chroma_setup.sh
 
-## Milestones
-
-You will have a number of _checkins_ and _deliverables_, as follows. For more details, see [Logistics](#Logistics) below.
-
-1. **4/8**: Submit, via Gradescope, a 2-4 page document with a brief overview of the components of your InstaLite system, outlining who will _lead_ each deliverable component of the project (see the next milestone). Settle on who will lead **cross-cutting elements** including (a) database design, (b) integration testing, (c) the ranking backend job and its interaction with the Feed, (d) AWS hosting. You should also decide on some implementation milestones (with deadlines) that will help you meet the demonstration deadlines below.
-2. **4/15**: Submit, via Gradescope, implemented individual components for your team, with test cases:
-    - Chatbot
-    - Websocket chat
-    - Kafka stream read and post
-    - Image upload / match in vector database
-3. **4/16**: In the class period, at least one member of your team should give a **5 minute** demo of the main functionality of the 4 components. This may be to your mentor TA or to the whole class, depending on time availability.
-4. **4/23**: In the class period, at least one member of your team should give a **5 minute** demo of the platform components working under one login on AWS. This may be to your mentor TA or to the whole class, depending on time availability.
-5. **5/5**: Project code-complete with all new functionality. Demos will be scheduled throughout the final exam period.
-
-Again, please also see [Logistics](#Logistics) below.
-
-## Project Technology Stack
-
-Your project will have a number of elements, building upon what you did with the homework. We expect the following:
-
--   **Backend** services in Node.js and/or Java, hosted on Amazon EC2
--   **Database** (accounts, social network, etc.) hosted in RDS and/or DynamoDB (many aspects will work better in RDS)
--   **Image search** based on embeddings similarity, in ChromaDB
--   Large objects stored in S3, as necessary
--   **Natural language search** using GPT or an alternative LLM
--   Social **news streaming** via Apache Kafka
--   Adsorption ranking of posts and individuals via Apache Spark
--   Proper handling of security and sessions
--   **Frontend** in React and Javascript
--   Code in GitHub
-
-## User Signup and User Accounts Backend
-
-This component should generalize parts of your HW4. New users should be able to sign up for an account. They should enter, at the very least, a login name, a password, a first and last name, an email address, an affiliation (such as Penn), and a birthday.
-
--   The password should be _salted_ and encrypted following best practices.
--   Users should be able to _upload a profile photo_ -- on mobile, perhaps even taking a selfie for that photo -- as a starting point.
--   Users should include a number of hashtags of interests. The top-10 most popular hash tags (by occurrence) should be shown so they have a starting point.
-
-**Important new functionality**: The user should be able to link to a given _actor account_ from IMDB by matching the _embedding_ of their selfie with the _profile photos_ of the 5 most similar actors. They will be able to choose from those actors.
-
-We will provide you with a set of precomputed actor embeddings and profile photos in the form of a ChromaDB database. You should use this to match the **user's selfie or uploaded photo** to the actor's profile photos. This will leverage the same image embeddings routines used in Homework 2 Milestone 1, except that you'll need to implement support for uploading images to S3 and creating their embeddings.
-
-## User Login Page
-
-The user should be able to log in with their user ID and password. (See Extra Credit for an option for resetting a forgotten password.)
-
-## The User Page / Main Content Feed
-
-When the user logs in, they should see an Instagram-style feed with status updates, new friendships, and profile updates (posts) made by friends. When Alice posts on Bob’s Feed, her post should appear on both Alice’s and Bob’s Feeds (and thus home pages). Below is an example taken directly from Instagram.
-
-<img src="instagram-screenshot.png" alt="Screenshot" style="width:50%;">
-
-**User Posts**: Each user should be able to make posts, containing an optional image and optional text. **The post might include hashtags**. Although each field is optional, a post should at least have _some_ content to be valid.
-
-**What Goes in the Feed**: Each user should see _posts_ from their friends, themselves, or related to their hashtags of interest; as well as _highly ranked posts_ including those from external social media (see below). Posts can have text and images.
-
-**Commenting**: Users should be able to add a comment under any post they can see (that is, both their own posts and their friends’ posts). These comments should appear under the post they respond to, in a threaded fashion.
-
-The user page should include non-scrolling menu elements on the left (as in the screenshot) or top, for access to other capabilities such as the user profile and search (see below). The main feed should paginate (default behavior) or support infinite scrolling by fetching more data on demand (see Extra Credit).
-
-### Feed and Ranking
-
-Beyond posts made directly by the user and friends (and comments about these) -- you should bring in posts with high ranking from non-friends.
-
-All posts are public, i.e. they will be considered for the feed based on the criteria below even when the post owner and the user aren't friends. These posts:
-
-1. Come from the user's friends
-2. Reference the user's selected hashtags of interests
-3. Come from others with high SocialRank
-4. Come from the course project **Bluesky Feed** and score highly. Bluesky posts on movies will be made accessible to you through an Apache Kafka Topic.
-
-**Feed updates**: Your server, while running, should refresh the data necessary for computing the feed once an hour. This will involve fetching any **"new news" from Kafka** and from **recent posts / activities**; and ranking the content. If you precompute the data, it should be easy for the client to produce the page upon login.
-
-**User actions**:
-Users should be able to “like” posts, and should be able to comment on them. If a post or comment includes **hashtags** a link between the hashtag and post should be established.
-
-**Asynchronous ranking of posts**: Every candidate post should be assigned (for each user) a weight. Weights will be computed with an implementation of the adsorption algorithm in Spark. (For a refresher on adsorption, you can refer to the recorded lectures or refer to [this studio-based recording](https://youtu.be/eP89azdCsFM).) **This should run periodically, once per hour as described above.** The Spark job will need to share state (the database) with your web client (note that this could be done directly, or e.g., by providing REST endpoints to the Spark job to write things).
-
-The Spark job should start by building a graph from the data underlying your social platform. The
-graph should have a node for each user, each movie, each hashtag, and each post. It should also have
-the following directed edges:
-
-1. $(u, h)$ and $(h, u)$, if user $u$ has selected hashtag $h$ as an interest
-2. $(h, p)$ and $(p, h)$, if post $p$ is associated with hashtag $h$
-3. $(u, p)$ and $(p, u)$, if user $u$ has “liked” post $p$
-4. $(u1, u2)$ and $(u2, u1)$ if users $u1$ and $u2$ are friends (we will generalize from directed followers to undirected friends here: either $u1$ follows $u2$, or $u2$ follows $u1$, is sufficient to consider the two friends.)
-
-The Spark jobs should assign weights to the edges.
-
--   For each hashtag node $h$, the weights on the $(h, a)$ edges adjacent should be equal and add up
-    to 1.
--   Similarly, the outgoing edges from a post $p$ should have equal weights that sum to 1.
--   For each user $u$:
-    -   The weights on the $(u, h)$ edges should be equal and sum up to 0.3
-    -   The weights on the $(u, p)$ edges should be equal and sum up to 0.4
-    -   The weights on the $(u, u′)$ edges should be equal and sum up to 0.3
-
-Now run adsorption from the users to assign a user label + weight to each node (including the article nodes). Run to a maximum of 15 iterations or until convergence. Given the ranked graph as above, the social network recommender should take the set of potential articles (those from the same day, minus ones that have already been recommended), and normalize the adsorption-derived weights on these articles. Then it should randomly choose an article based on this weighted random distribution.
-
-**Interfacing the Spark job with the Web Application**: We recommend your group thinks carefully about how the different components (data storage, Spark job to recompute weights, search / recommendation) interface. You likely will want to invoke the Spark task via Livy or the equivalent, with an easily configurable address for the Spark Coordinator Node. Most likely you’ll want to use some form of persistent storage (e.g. RDS) to share the graph and other state.
-
-### Federated Posts
-
-Your site should have a _unique ID_ distinguishing it from all other NETS 2120 sites. This will be your team name or number (e.g. `g01`). Through the Kafka `FederatedPosts` channel, your site should both _read_ and _send_ posts that can be used by other projects' InstaLite sites. Posts should have a JSON component called `post_json`:
-
-```
-{
-    username: '...',
-    source_site: '...',
-    post_uuid_within_site: '...',
-    post_text: '...',
-    content_type: '...'
-}
+# Run chromadb
+source setup/run-chroma.sh
 ```
 
-as well as an optional component, `attach`, including a URL to a world-readable image (e.g., an S3 URL on a public page). The `content_type` field in the JSON should be the HTTP content-type associated with the binary data at the URL.
+### 6. MySQL Database
 
-## Secondary Screens
+```bash
+cd setup
+source install-mysql.sh 
 
-There should be at least the following options in a sidebar or other menu:
+```
 
-1. Profile page
-2. Add/remove friends
-3. Chat mode
-4. Search (can be part of the home screen if you prefer)
+Set `DATABASE_SERVER=localhost` in the .env in home directory.
 
-### 1. Profile Page
+### 7. Spark Jobs (via Livy on EMR)
 
-Users should be able to change their associated actor after the account has been created. As before, the list of the top-5 most-similar actors (by embedding) should be displayed to allow for a change (they should only be able to pick from these 5). Changes should result in an automatic status post (“Alice is now linked to Rebecca Ferguson”). Users should also be able to change their email ID and their password, without triggering a post.
+```bash
+# Build Spark JAR
+cd spark-jobs
+# Enables auto run from server
+mvn clean package
 
-They should be able to update their hashtags representing interests. Additional hashtags should be suggested to them.
+# Or run on command
+mvn exec:java@local
+```
 
-### 2. Add/Remove Friends
-
-As noted above: by default, we will generalize from directed "follows" relationships to undirected "friend" relationships, for simplicity.
-
-**Add/Remove Friends**: Users should be able to add and remove friends, and they should see a list of their current friends. The list of friends should indicate which friends, if any, are **currently logged into the current system**.
-
-**(EC only) Friend Requests**: If a user sends a friend request to another user, the other user should receive a notification of some kind that enables him or her to accept or reject the request. If the request is accepted, the two users should become friends. If the request is rejected, the two users should not become friends.
-
-### 3. Chat Mode
-
-There should be a way for users to chat with each other if they are friends. You can implement this functionality with basic axios requests using polling; for extra credit, consider using WebSockets with socket.io. Read more about the different implementation choices [here](https://medium.com/geekculture/ajax-polling-vs-long-polling-vs-websockets-vs-server-sent-events-e0d65033c9ba). We discussed WebSocket in our client-server lectures, and you can find more detail in the video from a past NETS 2120 TA [on YouTube](https://youtu.be/VASE1g2mDL8).
-
-**Chat invites**: When a user’s friend is currently online, the user should be able to invite the friend to a chat session, and the friend should receive a notification of some kind that enables him or her to join the chat. If the friend accepts the invitation, a chat session should be created between the two users. If the friend rejects the invitation, no chat session should be created.
-
-**Persistence**: The contents of a chat session should be persistent: that is, if two users have chatted before and a new chat session between the same pair of users is established later, the new session should already contain the messages from the previous chat.
-
-**Leaving chat**: Any member of a chat session should be able to leave the chat at any time. The chat should continue to work as long as it contains at least one member. When the last member leaves a chat session, the chat session should be deleted.
-
-**Group chat**: There should also be a way to establish a group chat by inviting additional members to an ongoing chat. When a new member joins a chat, they are able to see previous chat history starting from the creation of the group chat. Each group chat created is a unique and independent chat session, even when the same users are involved (e.g., X, Y, and Z created Chat 1; X, Y, and W created Chat 2; if Z and W leave their chats, X and Y should now have two independent group chats). However, if a new invite results in a chat session involving the same user group as an existing chat session, the invite should not be allowed. You also may not invite an existing member to a chat session.
-
-**Ordering**: The messages in a chat (or group chat) session should be ordered consistently: that is, all members of the chat should see the messages in the same order. One way to ensure this is to associate each chat message with a timestamp, and to sort the messages in the chat by their timestamps.
-
-### 4. Natural Language Search (Chatbot)
-
-Uses should be able to search (1) for people, and (2) for posts. These should use _retrieval-augmented generation_ over the indexed content of actors, movie reviews, and posts; and should use a Large Language Model to find the best matches. Retrieval augmented generation, here, simply means you will fetch content from the database that closely matches the user question, and you generate an LLM prompt that answers the question given this context. This could be:
-
--   Having the LLM generate queries over your database (**except** private data!!!), see https://python.langchain.com/docs/tutorials/sql_qa/
--   Fetching data yourself and populating the vector database (ChromaDB) and using that to match questions
-
-**EC**: ensure the search results return links so users can add friend / follow / interest based on the returned results.
-
-### 5. Recommend Who and What to Follow
-
-Based on the link structure of the graph as well as the activity and hashtag structure of the streaming posts, your system should on a daily basis recompute a list of recommendations for "who to follow".
-
-### Security and Scalability
-
-You should ensure that your design is secure: for instance, users should not be able to impersonate other users (without knowing their password), and they should not be able to modify or delete content that was created by other users.
-
-Your design should also be scalable: if a million users signed up for your system tomorrow, your system should still work and provide good performance (although of course you will have to add some extra resources, e.g., additional EC2 instances). Keep in mind that many of the cloud services we have discussed, such as DynamoDB and Spark/MapReduce, are naturally scalable.
-
-### Opportunities for Extra Credit
-
-We will give a liberal amount of extra credit for creativity in the project. Below are some suggestions for extra-credit items:
-
--   (+2) LinkedIn-style friend requests with confirmation (i.e., users can accept or deny friend requests);
--   (+2) A "forgot password" option that sends to the user's email address a password reset token and a link to the password reset screen;
--   (+2) Privacy controls (e.g., limiting who can see a particular post);
--   (+2) Infinite scrolling;
--   (+5) Groups (i.e. ones similar to Facebook communities);
--   (+5) Targeted advertising, based on users’ interests or on words in their posts;
--   (+3) Site-wide "what’s trending" feature;
--   (+3) WebSockets for chat;
--   (+5) The LLM search always returns valid links to items for search results.
-
-However, these are just examples -- feel free to consider other features as well, e.g., based on functionality that the current Facebook has, or even novel features that you define yourself. If you are considering a particular feature and are not sure whether it would be counted as extra credit, feel free to post a question on Ed Discussion. Extra credit will be awarded based on the complexity of a feature, not just based on its presence; for instance, profile pictures are easier than groups and thus would be worth less, and adding a simple input field where users can declare group memberships would yield considerably less extra credit than a full implementation with separate pages for groups where members can post messages, etc.
-
-For this iteration of the course, we do not set a ceiling on the amount of extra credit that can be earned. You may receive over 100% on the project if you implement a large number of extra-credit features.
-
-## Project Report
-
-At the end of the project, your team must include a short final report, as a PDF file of approximately five pages (excluding images) within your GitHub repository. This report, in the final `final-report.pdf`, will be **part of your project score**. Grading will be based both on clarity of writing and on technical content. The report should contain, at least:
-
--   A short overview of the system you built;
--   A technical description of the components you built;
--   A discussion of nontrivial design decisions;
--   A discussion of changes you made along the way, and lessons you learned;
--   A brief description of the extra-credit features, if any;
--   A series of screenshots of your system in action (one for each main feature/page).
-
-Please try to choose the right level of detail (not too nitty-gritty, not too high-level), and please avoid repeating points that are already in this handout. For instance, don’t write that your solution has a news feed (this was required!); instead, write how you designed the DynamoDB table that the newsfeed uses, and why you did it that way.
-
-## Logistics
-
-### Team Registration
-
-You should already have formed teams of 4 students. You can form your own team, or you can use the discussion group to find teammates. Once you have formed a team, please have one member submit to the Google Form posted on Ed with your team information. If you don't form a team by Friday, April 4, we will assign you to a team via random matching.
-
-### TA Shepherding Process
-
-Once your team has registered, it will be assigned a TA as a mentor. Your mentor TA will be available for advice, particularly on integration and prioritization. You should plan to schedule a couple of consultations with your team's mentor TA during their office hours at least once every 2 weeks.
-
-As noted above, your project plan submission should include some milestones with an eye towards in-class demos as well as the final demonstration.
-
--   Each milestone or objective should be associated with one specific team member, who will be responsible for reaching it. It is okay for team members to help each other, but there has to be a single “lead” who will assume responsibility.
-
--   By the last day of class, you should have at least 80% of the basic/required features; it should be clear that the required features can be completed by May 5th. The milestones do not need to cover extra credit.
-
--   The work should be spread roughly uniformly across the project (there should be no weeks that are substantially busier, or less busy, than others) and it should be split roughly equally between the team members.
-
--   The milestones should be concrete tasks that can be clearly demo-ed or measured. Attempt to reduce dependencies between team members as much as possible (e.g., if one team member is blocked, the others should still be able to make progress).
-
-Your mentor will give you feedback on your materials, and will answer any questions. After the in-class checkins your mentor may email you suggestions.
-
-### Project Demos
-
-Your team must do a short demo (about 15 minutes) during the finals period. A number of time slots on different days will be posted to Ed Discussion near the end of the semester. We cannot reserve slots or create additional slots, so, if you or some of your team members have constraints (holiday travel, final exams, etc.), please discuss this well in advance and pick a suitable slot. Once your team has reserved a slot, the only way to change the slot is to find another team that agrees to swap slots with you. Slots are first-come, first-served. The signup opening time will be announced a few days in advance via Ed.
-
-All team members must be present in-person on campus for the demo by default. If you have any emergencies or unavoidable conflicts, please let us know as soon as possible by emailing the course staff (yuyingf@seas.upenn.edu). We will allow you to participate remotely in such cases, or exempt you from the demo if necessary. All absences or remote participation without advance notice will result in zero credit for the individual.
-
-### Team Contribution Form
-
-Normally, each member of the team will receive the same score for the project report and demo, but we may deviate from this if it is clear that some team members have made substantially more progress than others. We will send out a Google Form after the report due date to collect feedback from everyone on the team about their estimates on the contribution of each team member. This will be used to adjust the final project score for each team member if needed.
-
-### AWS and OpenAI Accounts
-
-We will coordinate with each team to create a new AWS Academy account, using an email account that has not been used with the course before. This account will have a $50 credit. Team members may share access to AWS resources on this account (e.g. DynamoDB tables). It is your responsibility to ensure that you keep your credentials safe and accessible to everyone in your team. Multiple people are allowed to connect to the same Lab session at the same time.
-
-Each team is responsible for the security of its AWS account(s). It is important to make sure that all team members understand how the AWS firewall works, and what a security rule is. In particular, DO NOT just open all ports to anyone on the whole planet (0.0.0.0/0) so hackers can go after your machines.
-
-We will have a shared OpenAI API key. Our expectation is that you will only use a limited number of prompts (<100 requests) so this will be adequate for testing and for the course. If you need more credits, your team can use your own private key under your own billing.
-
-### GitHub Classroom
-
-This assignment is released as a Group Assignment on GitHub Classroom. One member of your team should create a new repository from the assignment link and ask everyone else to join the same repo after accepting the assignment. You should use this repository to store all of your code and documentation for the project. You should also use this repository to submit your final report.
-
-### Submission Checklist
-
--   Your code contains a reasonable amount of useful documentation.
-
--   You have checked your final code into the Git repository.
-
--   You have removed all AWS credentials from the code you are submitting.
-
--   Your repository contains all the files needed to compile and run your solution (including all .js/.ejs files, and all Spark code); as well as README file that describes 1) the team number and team name, 2) the full names and SEAS login names of all team members, 3) a description of features implemented, 4) any extra credit claimed, 5) a list of source files included, 6) a declaration that all the code you are submitting was written by you, and 7) instructions for building an running your project. The instructions must be sufficiently detailed for us to set up and run your application.
-
--   Please avoid checking your `target` folder into GitHub. Please do not include large data files (these can be hosted on S3), or your `node_modules`. If you used third-party libraries and are not including them in your submission, please state in the README file what libraries, and include them in the appropriate `pom.xml` or `package.json` files. We have provided a starter `.gitignore`, but you may need to update it as needed.
-
--   You are submitting your final report as a PDF file of no more than five pages (including appendices, screenshots, images, and any references). **This should be called `final-report.pdf` and be in the root of your GitHub project**.
-
--   You submitted your GitHub repo with your final report via Gradescope, before the deadline on the first page of this handout. Late hours cannot be used for the project.
-
-Good luck and have fun!
